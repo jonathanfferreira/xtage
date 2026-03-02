@@ -30,23 +30,23 @@ async function getUserAchievements(userId: string) {
         supabase.from('leaderboard_weekly').select('user_id').order('weekly_xp', { ascending: false }).limit(10),
     ]);
 
-    const totalXP = (xpHistory || []).reduce((sum: number, h: any) => sum + h.amount, 0);
+    const totalXP = (xpHistory || []).reduce((sum: number, h: { amount: number }) => sum + h.amount, 0);
     const completedCount = completedLessons || 0;
-    const inTop10 = (leaderboard || []).some((r: any) => r.user_id === userId);
+    const inTop10 = (leaderboard || []).some((r: { user_id: string }) => r.user_id === userId);
 
     // Check if any module is fully completed
     // Group completed lessons by module
-    const moduleGroups: Record<string, Set<string>> = {};
-    (progressData || []).forEach((p: any) => {
-        const key = `${p.lessons?.course_id}__${p.lessons?.module_name}`;
-        if (!moduleGroups[key]) moduleGroups[key] = new Set();
-        moduleGroups[key].add(p.lesson_id);
-    });
+    // const moduleGroups: Record<string, Set<string>> = {};
+    // (progressData || []).forEach((p: { lesson_id: string, lessons: { course_id: string, module_name: string } }) => {
+    //     const key = `${p.lessons?.course_id}__${p.lessons?.module_name}`;
+    //     if (!moduleGroups[key]) moduleGroups[key] = new Set();
+    //     moduleGroups[key].add(p.lesson_id);
+    // });
 
     // Check streak (consecutive days with completions)
     const completionDates = (progressData || [])
-        .filter((p: any) => p.completed_at)
-        .map((p: any) => new Date(p.completed_at).toDateString());
+        .filter((p: { completed_at: string | null }) => p.completed_at)
+        .map((p: { completed_at: string }) => new Date(p.completed_at).toDateString());
     const uniqueDays = [...new Set(completionDates)].sort();
     let maxStreak = 0;
     let currentStreak = 1;
@@ -104,10 +104,9 @@ async function getUserAchievements(userId: string) {
         },
     ];
 
-    const unlockedXP = achievements.filter(a => a.unlocked).reduce((sum, a) => sum + a.xp, 0);
     const unlockedCount = achievements.filter(a => a.unlocked).length;
 
-    return { achievements, totalXP, unlockedXP, unlockedCount };
+    return { achievements, totalXP, unlockedCount };
 }
 
 export default async function ConquistasPage() {
@@ -123,7 +122,7 @@ export default async function ConquistasPage() {
         return <div className="text-[#555] text-sm py-20 text-center">Faça login para ver suas conquistas.</div>;
     }
 
-    const { achievements, totalXP, unlockedXP, unlockedCount } = await getUserAchievements(user.id);
+    const { achievements, totalXP, unlockedCount } = await getUserAchievements(user.id);
 
     return (
         <div className="max-w-4xl mx-auto pb-20">
@@ -150,17 +149,15 @@ export default async function ConquistasPage() {
                 {achievements.map((achievement, i) => (
                     <div
                         key={i}
-                        className={`flex items-center gap-4 p-5 rounded-sm border transition-colors ${
-                            achievement.unlocked
+                        className={`flex items-center gap-4 p-5 rounded-sm border transition-colors ${achievement.unlocked
                                 ? 'bg-[#0A0A0A] border-[#222] hover:border-primary/30'
                                 : 'bg-[#050505] border-[#151515] opacity-50'
-                        }`}
+                            }`}
                     >
-                        <div className={`w-12 h-12 rounded-sm flex items-center justify-center shrink-0 ${
-                            achievement.unlocked
+                        <div className={`w-12 h-12 rounded-sm flex items-center justify-center shrink-0 ${achievement.unlocked
                                 ? 'bg-primary/10 border border-primary/20 text-primary'
                                 : 'bg-[#111] border border-[#1a1a1a] text-[#333]'
-                        }`}>
+                            }`}>
                             {achievement.icon}
                         </div>
                         <div className="flex-1">

@@ -1,12 +1,11 @@
 'use client';
 
 import { UploadCloud, CheckCircle2, Film, Info, AlertTriangle, Loader2, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as tus from 'tus-js-client';
 
 interface Course { id: string; title: string; }
-type UploadStatus = 'idle' | 'uploading' | 'processing' | 'success' | 'error';
-
+type UploadStatus = 'idle' | 'uploading' | 'processing' | 'success' | 'error' | 'paused';
 export default function StudioUploadPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loadingCourses, setLoadingCourses] = useState(true);
@@ -14,9 +13,10 @@ export default function StudioUploadPage() {
     const [moduleName, setModuleName] = useState('');
     const [lessonTitle, setLessonTitle] = useState('');
     const [dragActive, setDragActive] = useState(false);
-    const [uploadStatus, setUploadStatus] = useState<UploadStatus>('idle');
+    const [uploadStatus, setUploadStatus] = useState<UploadStatus | 'paused'>('idle');
     const [progress, setProgress] = useState(0);
     const [createdLessonId, setCreatedLessonId] = useState('');
+    const uploadRef = useRef<tus.Upload | null>(null);
 
     useEffect(() => {
         fetch('/api/studio/courses')
@@ -77,10 +77,13 @@ export default function StudioUploadPage() {
             if (!lessonRes.ok) throw new Error(lessonData.error || 'Erro ao criar aula no banco');
             setCreatedLessonId(lessonData.lesson.id);
 
-            // 3. TUS upload direto para o Bunny CDN
+            // 3. TUS upload direto para o Bunny CDN (Pausável/Permitir Resume)
             const upload = new tus.Upload(file, {
                 endpoint: 'https://video.bunnycdn.com/tusupload',
                 retryDelays: [0, 3000, 5000, 10000, 20000],
+                // @ts-ignore
+                resume: true, // Auto save to localStorage
+                removeFingerprintOnSuccess: true, // Cleanup localStorage on finish
                 headers: {
                     AuthorizationSignature: signature,
                     AuthorizationExpire: String(expirationTime),
@@ -89,10 +92,25 @@ export default function StudioUploadPage() {
                 },
                 metadata: { filetype: file.type, title: lessonTitle },
                 onError(error) { console.error('TUS falhou:', error); setUploadStatus('error'); },
-                onProgress(u, t) { setProgress(Math.round((u / t) * 100)); },
-                onSuccess() { setUploadStatus('processing'); setTimeout(() => setUploadStatus('success'), 5000); },
+                onProgress(bytesUploaded, bytesTotal) {
+                    setProgress(Math.round((bytesUploaded / bytesTotal) * 100));
+                },
+                onSuccess() {
+                    setUploadStatus('processing');
+                    setTimeout(() => setUploadStatus('success'), 5000);
+                },
             });
-            upload.start();
+
+            uploadRef.current = upload;
+
+            // Verifica se há envios parciais para retomar imediatamente
+            upload.findPreviousUploads().then(function (previousUploads) {
+                if (previousUploads.length) {
+                    upload.resumeFromPreviousUpload(previousUploads[0]);
+                }
+                upload.start();
+            });
+
         } catch (e: any) {
             console.error(e);
             setUploadStatus('error');
@@ -100,7 +118,27 @@ export default function StudioUploadPage() {
         }
     };
 
+    const handlePause = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (uploadRef.current && uploadStatus === 'uploading') {
+            uploadRef.current.abort();
+            setUploadStatus('paused');
+        }
+    };
+
+    const handleResume = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (uploadRef.current && uploadStatus === 'paused') {
+            uploadRef.current.start();
+            setUploadStatus('uploading');
+        }
+    };
+
     const handleReset = () => {
+        if (uploadRef.current && (uploadStatus === 'uploading' || uploadStatus === 'paused')) {
+            uploadRef.current.abort();
+        }
+        uploadRef.current = null;
         setUploadStatus('idle'); setProgress(0);
         setLessonTitle(''); setModuleName(''); setCreatedLessonId('');
     };
@@ -108,8 +146,8 @@ export default function StudioUploadPage() {
     const uploaderBorderClass = dragActive && isConfigured
         ? 'border-primary bg-primary/5 scale-[1.01]'
         : !isConfigured
-        ? 'border-[#1a1a1a] opacity-50 cursor-not-allowed'
-        : 'border-[#333] hover:border-[#555] cursor-pointer';
+            ? 'border-[#1a1a1a] opacity-50 cursor-not-allowed'
+            : 'border-[#333] hover:border-[#555] cursor-pointer';
 
     return (
         <div className="max-w-4xl mx-auto pb-20">
@@ -205,7 +243,7 @@ export default function StudioUploadPage() {
                                     <h3 className="font-heading font-bold text-lg text-white uppercase mb-2">
                                         {isConfigured ? 'Arraste o Vídeo Aqui' : 'Configure a aula acima'}
                                     </h3>
-                                    <p className="text-sm font-sans text-[#666] text-center max-w-sm">MP4 ou MOV até 2.5GB. Convertido automaticamente para HLS.</p>
+                                    <p className="text-sm font-sans text-[#666] text-center max-w-sm">MP4 ou MOV até 2.5GB. Suporte a Resumable Upload (Pode Pausar).</p>
                                     {isConfigured && (
                                         <button type="button" className="mt-8 px-6 py-2 bg-[#1a1a1a] hover:bg-[#222] text-white font-mono text-xs uppercase tracking-widest border border-[#333] rounded">
                                             Procurar Arquivo
@@ -214,16 +252,31 @@ export default function StudioUploadPage() {
                                 </>
                             )}
 
-                            {uploadStatus === 'uploading' && (
+                            {(uploadStatus === 'uploading' || uploadStatus === 'paused') && (
                                 <div className="w-full text-center z-10">
                                     <div className="flex items-center justify-between mb-2 text-xs font-mono uppercase tracking-widest text-[#888]">
-                                        <span>Enviando para Bunny CDN...</span>
+                                        <span>{uploadStatus === 'paused' ? 'Pausado' : 'Enviando para Bunny CDN...'}</span>
                                         <span className="text-white">{progress}%</span>
                                     </div>
                                     <div className="w-full h-2 bg-[#111] rounded overflow-hidden border border-[#222]">
-                                        <div className="h-full bg-primary transition-all duration-300" style={{ width: `${progress}%` }} />
+                                        <div className={`h-full transition-all duration-300 ${uploadStatus === 'paused' ? 'bg-[#555]' : 'bg-primary'}`} style={{ width: `${progress}%` }} />
                                     </div>
-                                    <p className="text-[#555] text-xs font-mono mt-3">Aula criada no banco. Aguardando upload...</p>
+
+                                    <div className="flex items-center justify-center gap-4 mt-6">
+                                        {uploadStatus === 'uploading' ? (
+                                            <button onClick={handlePause} className="px-6 py-2 bg-[#1a1a1a] hover:bg-[#222] text-white font-mono text-xs uppercase tracking-widest border border-[#333] rounded transition-colors">
+                                                Pausar Upload
+                                            </button>
+                                        ) : (
+                                            <button onClick={handleResume} className="px-6 py-2 bg-primary/20 hover:bg-primary/30 text-primary font-mono text-xs uppercase tracking-widest border border-primary/50 rounded shadow-[0_0_15px_rgba(99,36,178,0.2)] transition-all">
+                                                Retomar Upload
+                                            </button>
+                                        )}
+                                        <button onClick={handleReset} className="px-6 py-2 text-red-400/70 hover:text-red-400 font-mono text-xs uppercase tracking-widest transition-colors">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                    <p className="text-[#555] text-[10px] font-mono mt-4">Pode fechar a aba se a energia cair. Retomaremos automaticamente.</p>
                                 </div>
                             )}
 

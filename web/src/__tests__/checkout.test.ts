@@ -133,7 +133,7 @@ describe('Checkout API - User Lookup (Bug #1 Fix)', () => {
         await POST(request);
 
         // Should have called .from('users') for the user lookup (2nd call — 1st is 'courses')
-        const usersCalls = mockFrom.mock.calls.filter(([table]: [string]) => table === 'users');
+        const usersCalls = mockFrom.mock.calls.filter((args: any[]) => args[0] === 'users');
         expect(usersCalls.length).toBeGreaterThanOrEqual(1);
 
         // Should NOT have called auth.admin.listUsers

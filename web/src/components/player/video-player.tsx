@@ -137,7 +137,7 @@ export function VideoPlayer({ videoId }: { videoId?: string }) {
         }
     };
 
-    const handleTimeUpdate = () => {
+    const handleTimeUpdate = async () => {
         if (videoRef.current) {
             const current = videoRef.current.currentTime;
             const duration = videoRef.current.duration;
@@ -146,13 +146,28 @@ export function VideoPlayer({ videoId }: { videoId?: string }) {
 
             // Recompensa de XP ao completar 90%
             if (currentProgress >= 90 && !xpEarned) {
-                setXpEarned(true);
-                setShowXpAnim(true);
+                setXpEarned(true); // Evita loop no React state
 
-                // Ocultar animação após 3 segundos
-                setTimeout(() => {
-                    setShowXpAnim(false);
-                }, 3000);
+                try {
+                    // Chama a API Segura para validar e salvar o XP
+                    const res = await fetch('/api/progress/track', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lessonId: videoId || 'demo_id', progressPercent: currentProgress })
+                    });
+
+                    const data = await res.json();
+
+                    // Se o ping for aceito para reward ou já concluído e trouxer o block visual de XP anim
+                    if (res.ok && data.status !== 'ignored_ping') {
+                        setShowXpAnim(true);
+                        setTimeout(() => setShowXpAnim(false), 3000);
+                    }
+                } catch (e) {
+                    console.error("Falha ao sincronizar XP:", e);
+                    // Rollback local state
+                    setXpEarned(false);
+                }
             }
         }
     };

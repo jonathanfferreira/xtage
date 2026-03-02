@@ -34,7 +34,7 @@ async function getProfileData(slug: string) {
 
     // Fetch materials count per course
     const courseIds = (courses || []).map(c => c.id);
-    let materialsMap: Record<string, number> = {};
+    const materialsMap: Record<string, number> = {};
     if (courseIds.length > 0) {
         const { data: materials } = await supabase
             .from('course_materials')
@@ -47,7 +47,7 @@ async function getProfileData(slug: string) {
     }
 
     // Fetch lessons count per course
-    let lessonsMap: Record<string, number> = {};
+    const lessonsMap: Record<string, number> = {};
     if (courseIds.length > 0) {
         const { data: lessons } = await supabase
             .from('lessons')

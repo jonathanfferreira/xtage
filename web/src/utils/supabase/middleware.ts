@@ -56,30 +56,11 @@ export async function updateSession(request: NextRequest) {
         const isMasterRoute = request.nextUrl.pathname.startsWith('/master')
         const isStudioRoute = request.nextUrl.pathname.startsWith('/studio')
 
-        // Apenas rodar Queries no banco se for estritamente necessário (Rotas Premium)
+        // Apenas rodar validação se for estritamente necessário (Rotas Premium)
         if (isMasterRoute || isStudioRoute) {
 
-            // Busca a Role Segura no Banco apenas para as rotas bloqueadas
-            // Usamos a chave de servico admin/bypass RLS? Não temos env aqui. Apenas env_anon. 
-            // O RLS policy no public.users diz "Users can read own data" (auth.uid() = id).
-            const { data: dbUser, error } = await supabase.from('users').select('role').eq('id', user.id).single()
-
-            if (process.env.NODE_ENV === 'development') {
-                console.log("RBAC Middleware Debug:", { userId: user.id, isMasterRoute, isStudioRoute, role: dbUser?.role, error: error?.message })
-            }
-
-            let role = dbUser?.role || 'aluno'
-
-            // Se falhou ao buscar do banco de dados (ex: timeout de conexão ou RLS bloqueando server-side)
-            // Usamos os metadados do JWT como fallback seguro
-            if (error || !dbUser) {
-                console.error("RBAC ERROR: Falha ao ler Tabela users no DB:", error)
-                // O trigger handle_new_user salva o role nos metadados do auth.users
-                // Após refresh de sessão, o JWT conterá o role correto
-                const rawRole = user?.user_metadata?.role || user?.app_metadata?.role || 'aluno'
-                if (process.env.NODE_ENV === 'development') console.log("RBAC Fallback Metadata:", rawRole)
-                role = rawRole;
-            }
+            // Otimização de Performance: Lemos a role direto do JWT em vez de bater no banco.
+            const role = user?.app_metadata?.role || user?.user_metadata?.role || 'aluno'
 
             // Proteção Nível Supremo: Apenas o dono
             if (isMasterRoute && role !== 'admin') {

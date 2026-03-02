@@ -31,8 +31,9 @@ export default function ConfigPage() {
         // Inicializa estado visual com base no storage local
         const savedTheme = localStorage.getItem('xpace-theme')
         if (savedTheme === 'light') {
-            setDarkMode(false)
             document.documentElement.classList.add('theme-light')
+        } else {
+            document.documentElement.classList.remove('theme-light')
         }
 
         // Verifica inscrição do Push

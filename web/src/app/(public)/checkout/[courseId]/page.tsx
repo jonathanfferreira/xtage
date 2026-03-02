@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { Lock, CreditCard, ChevronRight, CheckCircle2, FileText, Repeat } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useParams } from "next/navigation";
@@ -139,8 +141,8 @@ export default function CheckoutPage() {
             } else {
                 setSuccessMode(true);
             }
-        } catch (error: any) {
-            setErrorMsg(error.message);
+        } catch (asaasError: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            setErrorMsg(asaasError.message);
         } finally {
             setIsProcessing(false);
         }
@@ -229,12 +231,12 @@ export default function CheckoutPage() {
 
                                 <div className="flex gap-2 mb-6">
                                     <button onClick={() => setPaymentMethod("credit")}
-                                        className={`flex-1 py-4 flex flex-col items-center justify-center gap-2 border transition-all ${paymentMethod === 'credit' ? 'border-primary bg-primary/5 text-white' : 'border-[#222] bg-[#0a0a0a] text-[#666] hover:border-[#444]'}`}>
+                                        className={`flex - 1 py - 4 flex flex - col items - center justify - center gap - 2 border transition - all ${paymentMethod === 'credit' ? 'border-primary bg-primary/5 text-white' : 'border-[#222] bg-[#0a0a0a] text-[#666] hover:border-[#444]'} `}>
                                         <CreditCard size={24} />
                                         <span className="text-xs font-mono uppercase tracking-widest">Cartão de Crédito</span>
                                     </button>
                                     <button onClick={() => setPaymentMethod("pix")}
-                                        className={`flex-1 py-4 flex flex-col items-center justify-center gap-2 border transition-all ${paymentMethod === 'pix' ? 'border-secondary bg-secondary/5 text-white' : 'border-[#222] bg-[#0a0a0a] text-[#666] hover:border-[#444]'}`}>
+                                        className={`flex - 1 py - 4 flex flex - col items - center justify - center gap - 2 border transition - all ${paymentMethod === 'pix' ? 'border-secondary bg-secondary/5 text-white' : 'border-[#222] bg-[#0a0a0a] text-[#666] hover:border-[#444]'} `}>
                                         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7.16 3.48c-1.37-.92-3.15-.31-3.69 1.14l-1.4 3.73c-.23.61-.13 1.28.28 1.83l3.64 4.88c.68.91 2.05.91 2.73 0l3.64-4.88c.41-.55.51-1.22.28-1.83l-1.4-3.73c-.54-1.45-2.32-2.06-3.69-1.14zm11.23 0c-1.37-.92-3.15-.31-3.69 1.14l-1.4 3.73c-.23.61-.13 1.28.28 1.83l3.64 4.88c.68.91 2.05.91 2.73 0l3.64-4.88c.41-.55.51-1.22.28-1.83l-1.4-3.73c-.54-1.45-2.32-2.06-3.69-1.14zM12 11.5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" /></svg>
                                         <span className="text-xs font-mono uppercase tracking-widest mt-1">PIX Instantâneo</span>
                                     </button>
@@ -291,71 +293,68 @@ export default function CheckoutPage() {
                                 <h3 className="text-white font-sans font-bold mb-4">Escaneie para Pagar</h3>
                                 <div className="bg-white p-2 rounded relative mb-4">
                                     <img src={pixData.url || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${pixData.copiaECola}`} alt="PIX QR Code" className="w-48 h-48" />
-                                </div>
-                                <p className="text-[#888] text-xs mb-2">Ou copie a chave abaixo:</p>
-                                <div onClick={() => { navigator.clipboard.writeText(pixData.copiaECola); setIsCopied(true); setTimeout(() => setIsCopied(false), 2000); }}
-                                    className="bg-[#050505] border border-[#222] w-full p-3 font-mono text-[10px] text-[#666] break-all text-left cursor-copy hover:border-[#444] transition-colors">
-                                    {pixData.copiaECola.slice(0, 50)}...
-                                    <span className="text-secondary float-right">{isCopied ? "Copiado!" : "Copiar"}</span>
-                                </div>
+                                </div >
                                 <p className="text-secondary font-mono tracking-widest uppercase text-xs mt-6 animate-pulse">Aguardando Pagamento...</p>
-                            </div>
+                            </div >
                         )}
 
                         {/* Card Success */}
-                        {successMode && (
-                            <div className="p-8 bg-primary/5 border border-primary/30 text-center flex flex-col items-center">
-                                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 text-primary">
-                                    <CheckCircle2 size={32} />
+                        {
+                            successMode && (
+                                <div className="p-8 bg-primary/5 border border-primary/30 text-center flex flex-col items-center">
+                                    <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 text-primary">
+                                        <CheckCircle2 size={32} />
+                                    </div>
+                                    <h3 className="text-white font-sans font-bold text-xl mb-2">Acesso Liberado!</h3>
+                                    <p className="text-[#888] text-sm max-w-sm mb-6">Pagamento processado. Bem-vindo ao XTAGE.</p>
+                                    <Link href="/dashboard" className="bg-primary text-white font-bold py-3 px-8 text-sm uppercase tracking-widest hover:bg-primary/80 transition-colors inline-block w-full max-w-xs">
+                                        Acessar Dashboard
+                                    </Link>
                                 </div>
-                                <h3 className="text-white font-sans font-bold text-xl mb-2">Acesso Liberado!</h3>
-                                <p className="text-[#888] text-sm max-w-sm mb-6">Pagamento processado. Bem-vindo ao XTAGE.</p>
-                                <a href="/dashboard" className="bg-primary text-white font-bold py-3 px-8 text-sm uppercase tracking-widest hover:bg-primary/80 transition-colors inline-block w-full max-w-xs">
-                                    Acessar Dashboard
-                                </a>
-                            </div>
-                        )}
+                            )
+                        }
 
                         {/* Submit */}
-                        {!pixData && !successMode && (
-                            <button
-                                onClick={handleCheckout}
-                                disabled={isProcessing}
-                                className={`w-full font-bold py-5 mt-4 transition-colors flex items-center justify-center gap-2 group ${isProcessing ? 'bg-[#222] text-[#666] cursor-not-allowed' : 'bg-white text-black hover:bg-primary hover:text-white'}`}
-                            >
-                                <span className="uppercase tracking-widest text-sm">
-                                    {isProcessing ? "Processando..." : isSubscription ? "Assinar Agora" : "Completar Inscrição"}
-                                </span>
-                                {!isProcessing && <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />}
-                            </button>
-                        )}
+                        {
+                            !pixData && !successMode && (
+                                <button
+                                    onClick={handleCheckout}
+                                    disabled={isProcessing}
+                                    className={`w-full font-bold py-5 mt-4 transition-colors flex items-center justify-center gap-2 group ${isProcessing ? 'bg-[#222] text-[#666] cursor-not-allowed' : 'bg-white text-black hover:bg-primary hover:text-white'}`}
+                                >
+                                    <span className="uppercase tracking-widest text-sm">
+                                        {isProcessing ? "Processando..." : isSubscription ? "Assinar Agora" : "Completar Inscrição"}
+                                    </span>
+                                </button>
+                            )
+                        }
 
                         <p className="text-center text-[#555] text-xs font-sans mt-4 flex items-center justify-center gap-1.5"><Lock size={12} /> Pagamento 100% processado pelo Asaas.</p>
-                    </div>
-                </div>
+                    </div >
+                </div >
 
                 {/* Right: Order Summary */}
-                <div className="w-full lg:w-[400px] shrink-0 relative z-10">
+                < div className="w-full lg:w-[400px] shrink-0 relative z-10" >
                     <div className="sticky top-24 bg-[#0a0a0a] border border-[#222] p-6">
                         <div className="flex gap-4 mb-6">
                             <div className="w-24 h-24 bg-[#111] relative overflow-hidden border border-[#333] shrink-0">
-                                {course.thumbnail_url ? (
-                                    <img src={course.thumbnail_url} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                                {course?.thumbnail_url ? (
+                                    <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url(${course.thumbnail_url})` }}></div>
                                 ) : (
                                     <div className="absolute inset-0 bg-[url('/images/bg-degrade.png')] bg-cover opacity-50 sepia contrast-150"></div>
                                 )}
                             </div>
                             <div className="flex flex-col justify-center">
-                                <h3 className="font-heading uppercase text-xl text-white leading-tight mb-1">{course.title}</h3>
-                                <span className="text-[#888] font-sans text-xs">Por {course.tenantName}</span>
+                                <h3 className="font-heading uppercase text-xl text-white leading-tight mb-1">{course?.title}</h3>
+                                <span className="text-[#888] font-sans text-xs">Por {course?.tenantName}</span>
                                 <div className="flex items-center gap-2 mt-2">
                                     {isSubscription ? (
                                         <span className="bg-secondary/10 text-secondary text-[10px] font-mono px-2 py-0.5 flex items-center gap-1"><Repeat size={8} /> Mensal</span>
                                     ) : (
                                         <span className="bg-primary/10 text-primary text-[10px] font-mono px-2 py-0.5">Vitalício</span>
                                     )}
-                                    {course.materialsCount > 0 && (
-                                        <span className="bg-white/5 text-[#888] text-[10px] font-mono px-2 py-0.5 flex items-center gap-1"><FileText size={8} /> {course.materialsCount}</span>
+                                    {(course?.materialsCount ?? 0) > 0 && (
+                                        <span className="bg-white/5 text-[#888] text-[10px] font-mono px-2 py-0.5 flex items-center gap-1"><FileText size={8} /> {course?.materialsCount}</span>
                                     )}
                                 </div>
                             </div>
@@ -390,8 +389,8 @@ export default function CheckoutPage() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     );
 }

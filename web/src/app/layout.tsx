@@ -81,6 +81,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Analytics } from "@vercel/analytics/next";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -100,6 +102,7 @@ export default function RootLayout({
             document.documentElement.classList.add('theme-light');
           }
         `}} />
+        <Analytics />
       </body>
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || 'GTM-TESTE'} />
     </html>

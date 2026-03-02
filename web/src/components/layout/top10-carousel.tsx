@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Play, Video } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
+import { unstable_cache } from 'next/cache';
 
 interface Lesson {
     id: string;
@@ -11,33 +12,37 @@ interface Lesson {
     course_title: string;
 }
 
-async function getRecentLessons(): Promise<Lesson[]> {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+const getCachedRecentLessons = unstable_cache(
+    async (): Promise<Lesson[]> => {
+        const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
 
-    const { data } = await supabase
-        .from('lessons')
-        .select('id, title, module_name, course_id, video_id, courses!inner(title, is_published)')
-        .not('video_id', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(10);
+        const { data } = await supabase
+            .from('lessons')
+            .select('id, title, module_name, course_id, video_id, courses!inner(title, is_published)')
+            .not('video_id', 'is', null)
+            .order('created_at', { ascending: false })
+            .limit(10);
 
-    return (data || [])
-        .filter((l: any) => l.courses?.is_published)
-        .map((l: any) => ({
-            id: l.id,
-            title: l.title,
-            module_name: l.module_name,
-            course_id: l.course_id,
-            video_id: l.video_id,
-            course_title: l.courses?.title || '',
-        }));
-}
+        return (data || [])
+            .filter((l: any) => l.courses?.is_published)
+            .map((l: any) => ({
+                id: l.id,
+                title: l.title,
+                module_name: l.module_name,
+                course_id: l.course_id,
+                video_id: l.video_id,
+                course_title: l.courses?.title || '',
+            }));
+    },
+    ['recent-lessons-carousel'],
+    { revalidate: 3600, tags: ['lessons', 'courses'] } // 1 hora de cache (ISR)
+);
 
 export async function Top10Carousel() {
-    const lessons = await getRecentLessons();
+    const lessons = await getCachedRecentLessons();
 
     if (lessons.length === 0) return null;
 

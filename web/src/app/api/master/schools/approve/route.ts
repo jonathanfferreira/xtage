@@ -3,7 +3,6 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 // MOCK CONSTANTS FOR ASAAS (For MVP purposes without demanding real CPFs)
-const ASAAS_API_URL = process.env.ASAAS_API_URL || "https://sandbox.asaas.com/api/v3";
 const ASAAS_API_KEY = process.env.ASAAS_API_KEY;
 
 export async function POST(request: Request) {
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
         }
 
         const ownerEmail = tenant.owner?.email || `contact+${tenantId}@xtage.app`
-        const ownerName = tenant.owner?.full_name || tenant.name
+        // const ownerName = tenant.owner?.full_name || tenant.name
 
         // 3. Criar a Subconta no Asaas (Para que os Splits financeiros funcionem)
         let newWalletId = `mocked_wallet_${Date.now()}`
@@ -82,6 +81,7 @@ export async function POST(request: Request) {
             walletId: newWalletId
         })
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
         console.error("Master Approve Error:", e)
         return NextResponse.json({ error: e.message || 'Server Exception' }, { status: 500 })

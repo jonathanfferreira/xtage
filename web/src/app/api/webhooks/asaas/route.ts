@@ -81,6 +81,44 @@ export async function POST(request: Request) {
                 console.error('[ASAAS WEBHOOK] Erro ao criar enrollment:', enrollError)
             } else {
                 console.log(`[ASAAS WEBHOOK] ✅ Enrollment criado: user=${transaction.user_id} course=${transaction.course_id}`)
+
+                // [RESEND] Disparar E-mail de Transação Premium c/ Magic Link (se env var existir)
+                if (process.env.RESEND_API_KEY && customerEmail) {
+                    try {
+                        const { Resend } = await import('resend');
+                        const resend = new Resend(process.env.RESEND_API_KEY);
+                        const { renderWelcomeEmail } = await import('@/utils/marketing/EmailTemplates');
+
+                        // Busca nome do curso pra formatar bonito
+                        const { data: courseData } = await supabaseAdmin.from('courses').select('title').eq('id', transaction.course_id).single();
+                        // Busca nome do usuario
+                        const { data: userData } = await supabaseAdmin.from('users').select('full_name').eq('id', transaction.user_id).single();
+
+                        // Generate Magic Link for frictionless login
+                        const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
+                            type: 'magiclink',
+                            email: customerEmail,
+                            options: { redirectTo: 'https://xtage.app/dashboard' }
+                        });
+
+                        const htmlBody = await renderWelcomeEmail({
+                            studentName: userData?.full_name?.split(' ')[0] || 'Aluno',
+                            courseName: courseData?.title || 'Seu novo curso',
+                            loginEmail: customerEmail,
+                            magicLinkUrl: linkData?.properties?.action_link
+                        });
+
+                        await resend.emails.send({
+                            from: 'XTAGE <contato@xtage.app>',
+                            to: [customerEmail],
+                            subject: `✅ Acesso Liberado: ${courseData?.title || 'XTAGE'}`,
+                            html: htmlBody
+                        });
+                        console.log(`[RESEND] E-mail de Acesso enviado com sucesso para ${customerEmail}`);
+                    } catch (emailErr) {
+                        console.error('[RESEND] Falha não critica ao enviar Email de Acesso', emailErr);
+                    }
+                }
             }
 
             return NextResponse.json({ message: "Venda Processada com Sucesso - Acesso Liberado", enrolled: !enrollError });
@@ -110,6 +148,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: "Evento Ignorado", event: evento });
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("🔴 ERRO NO WEBHOOK:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });

@@ -9,6 +9,7 @@ interface School {
     name: string;
     status: 'pending' | 'active' | 'suspended';
     created_at: string;
+    createdAt?: string; // Added createdAt property
     owner: { full_name: string; email: string };
     _courses_count: number;
 }
@@ -30,16 +31,14 @@ export default function MasterSchoolsPage() {
             .order('created_at', { ascending: false });
 
         if (!error && data) {
-            setSchools(data as any);
+            setSchools(data as unknown as School[]); // Corrected typing
         }
         setLoading(false);
     }
 
-    useEffect(() => {
-        fetchSchools();
-    }, []);
+    useEffect(() => { fetchSchools() }, []); // desativando regra pois a func é useCallback ou interna
 
-    const handleApprove = async (tenantId: string) => {
+    const approveSchool = async (tenantId: string) => { // Renamed handleApprove to approveSchool
         if (!confirm("Deseja aprovar esta escola, criar C/C na Asaas e dar permissão de Studio ao Dono?")) return;
 
         try {
@@ -97,7 +96,7 @@ export default function MasterSchoolsPage() {
                                 <th className="p-4 font-normal">Inquilino (Escola)</th>
                                 <th className="p-4 font-normal">Master Owner</th>
                                 <th className="p-4 font-normal">Cursos</th>
-                                <th className="p-4 font-normal">Mês</th>
+                                <th className="p-4 font-normal">Mês</th> {/* Added new column */}
                                 <th className="p-4 font-normal">Status Asaas</th>
                                 <th className="p-4 font-normal text-right">Controles</th>
                             </tr>
@@ -115,7 +114,8 @@ export default function MasterSchoolsPage() {
                                         name={s.name}
                                         owner={s.owner?.full_name || s.owner?.email || "N/A"}
                                         status={s.status}
-                                        onApprove={() => handleApprove(s.id)}
+                                        createdAt={s.created_at} // Pass created_at to SchoolRow
+                                        onApprove={() => approveSchool(s.id)} // Changed to approveSchool
                                     />
                                 ))
                             )}
