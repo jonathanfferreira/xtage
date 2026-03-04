@@ -172,12 +172,12 @@ export default async function ExplorePage({ searchParams }: ExploreProps) {
                                     </div>
                                     <div className="px-5 py-3 border-t border-[#1a1a1a] bg-[#050505] flex items-center justify-between text-[#666]">
                                         <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest">
-                                            <Star size={12} className="text-yellow-500" />
-                                            <span>4.9 (12k)</span>
+                                            <Star size={12} className="text-primary" />
+                                            <span>Novo</span>
                                         </div>
                                         <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest">
                                             <Clock size={12} />
-                                            <span>12h 40m</span>
+                                            <span>{course.pricing_type === 'subscription' ? 'Assinatura' : 'Curso Avulso'}</span>
                                         </div>
                                     </div>
                                 </Link>

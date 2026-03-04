@@ -11,20 +11,25 @@ async function getStudioUser() {
         { cookies: { getAll: () => cookieStore.getAll() } }
     );
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-    const { data } = await supabase
+    if (!user) return { user: null, tenant: null };
+    const { data: userData } = await supabase
         .from('users')
-        .select('full_name, role')
+        .select('full_name, role, avatar_url')
         .eq('id', user.id)
         .single();
-    return data;
+    const { data: tenant } = await supabase
+        .from('tenants')
+        .select('id, name, logo_url, brand_color, slug')
+        .eq('owner_id', user.id)
+        .single();
+    return { user: userData, tenant };
 }
 
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
-    const studioUser = await getStudioUser();
+    const { user: studioUser, tenant } = await getStudioUser();
 
     return (
-        <StudioLayoutWrapper studioUser={studioUser}>
+        <StudioLayoutWrapper studioUser={studioUser} tenant={tenant}>
             {children}
         </StudioLayoutWrapper>
     );

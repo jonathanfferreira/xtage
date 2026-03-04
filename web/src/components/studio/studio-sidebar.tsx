@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { LayoutDashboard, Film, LogOut, UploadCloud, ChevronRight, BarChart3, CreditCard, GraduationCap, Palette, Globe, Handshake } from 'lucide-react';
 
-export function StudioSidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
+export function StudioSidebar({ isOpen, onClose, tenant }: { isOpen?: boolean, onClose?: () => void, tenant?: any }) {
     const pathname = usePathname();
 
     const links = [
@@ -17,6 +18,8 @@ export function StudioSidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?:
         { href: '/studio/configuracoes/aparencia', label: 'Aparência', icon: Palette },
         { href: '/studio/configuracoes/dominio', label: 'Domínios', icon: Globe },
     ];
+
+    const brandColor = tenant?.brand_color || '#6324b2';
 
     return (
         <>
@@ -33,12 +36,27 @@ export function StudioSidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?:
             `}>
                 {/* Header School Logo */}
                 <div className="p-6 border-b border-[#1a1a1a] flex items-center gap-3">
-                    <div className="w-8 h-8 rounded bg-primary/20 border border-primary flex items-center justify-center">
-                        <span className="text-primary font-bold font-heading text-lg">XP</span>
-                    </div>
-                    <div>
-                        <h2 className="text-white font-heading font-bold uppercase tracking-wide leading-none">Studio</h2>
-                        <p className="text-[#666] text-xs font-mono uppercase tracking-widest mt-1">Sua Escola</p>
+                    {tenant?.logo_url ? (
+                        <div className="w-9 h-9 rounded overflow-hidden relative shrink-0 border border-[#333]">
+                            <Image src={tenant.logo_url} alt={tenant.name || ''} fill className="object-cover" />
+                        </div>
+                    ) : (
+                        <div
+                            className="w-9 h-9 rounded flex items-center justify-center shrink-0 border"
+                            style={{ backgroundColor: brandColor + '20', borderColor: brandColor + '50' }}
+                        >
+                            <span className="font-bold font-heading text-lg" style={{ color: brandColor }}>
+                                {(tenant?.name || 'XP').substring(0, 2).toUpperCase()}
+                            </span>
+                        </div>
+                    )}
+                    <div className="min-w-0">
+                        <h2 className="text-white font-heading font-bold uppercase tracking-wide leading-none text-sm truncate">
+                            {tenant?.name || 'Studio'}
+                        </h2>
+                        <p className="text-[#666] text-[10px] font-mono uppercase tracking-widest mt-1 truncate">
+                            {tenant?.slug ? `xpace.on/${tenant.slug}` : 'Sua Escola'}
+                        </p>
                     </div>
                 </div>
 
