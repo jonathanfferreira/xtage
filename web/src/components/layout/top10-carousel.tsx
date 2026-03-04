@@ -58,12 +58,12 @@ export async function Top10Carousel() {
                     <Link
                         href={`/dashboard/aula/${lesson.id}`}
                         key={lesson.id}
-                        className="relative shrink-0 w-[280px] h-[160px] group snap-start block"
+                        className="relative shrink-0 w-[280px] h-[160px] group snap-start block pl-10"
                     >
-                        {/* Large background number */}
+                        {/* Large background number - Netflix Style */}
                         <div
-                            className="absolute -left-8 -bottom-6 font-display text-[150px] leading-none text-[#1A1A1A] group-hover:text-[#252525] transition-colors z-0 select-none drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]"
-                            style={{ WebkitTextStroke: '2px #333' }}
+                            className="absolute -left-2 -bottom-4 font-black font-sans text-[160px] leading-[0.75] tracking-tighter sm:text-[180px] text-black group-hover:text-[#111] transition-colors z-20 select-none drop-shadow-2xl"
+                            style={{ WebkitTextStroke: '3px #444' }}
                         >
                             {index + 1}
                         </div>

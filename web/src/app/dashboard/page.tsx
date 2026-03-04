@@ -43,7 +43,7 @@ async function getDashboardData(userId: string) {
             .order('created_at', { ascending: false })
             .limit(1)
             .single(),
-        supabase.from('users').select('full_name').eq('id', userId).single(),
+        supabase.from('users').select('full_name, gender').eq('id', userId).single(),
     ]);
 
     const totalXp = (xpData || []).reduce((acc, p) => acc + (p.xp_awarded || 0), 0);
@@ -94,6 +94,7 @@ async function getDashboardData(userId: string) {
 
     return {
         fullName: userData?.full_name || 'Dancer',
+        gender: userData?.gender || 'N',
         totalXp,
         streak,
         latestCourse: latestEnrollment ? {
@@ -117,12 +118,14 @@ export default async function DashboardPage() {
     const { data: { user } } = await supabase.auth.getUser();
     const data = user ? await getDashboardData(user.id) : null;
 
+    const welcomeMsg = data?.gender === 'F' ? 'Bem-vinda,' : data?.gender === 'M' ? 'Bem-vindo,' : 'Bem-vindo(a),';
+
     return (
         <div className="max-w-6xl mx-auto pb-20">
             {/* Header Panel */}
             <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <h1 className="font-heading text-4xl mb-2 tracking-tight uppercase">Bem-vindo(a), <span className="text-transparent bg-clip-text text-gradient-neon">{data?.fullName || 'Dancer'}</span></h1>
+                    <h1 className="font-heading text-4xl mb-2 tracking-tight uppercase">{welcomeMsg} <span className="text-transparent bg-clip-text text-gradient-neon">{data?.fullName || 'Dancer'}</span></h1>
                     <p className="text-[#888] font-sans">Seu progresso sincronizado. Continue dominando o palco.</p>
                 </div>
                 <div className="flex gap-4 tour-step-1">

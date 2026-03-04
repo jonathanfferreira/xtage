@@ -22,6 +22,7 @@ function urlBase64ToUint8Array(base64String: string) {
 export default function ConfigPage() {
     const [notifications, setNotifications] = useState(true)
     const [language, setLanguage] = useState('pt-BR')
+    const [theme, setTheme] = useState('dark')
     const [antiPiracy, setAntiPiracy] = useState(true)
     const [deviceText, setDeviceText] = useState('Windows • Chrome')
     const [saving, setSaving] = useState(false)
@@ -29,8 +30,13 @@ export default function ConfigPage() {
 
     useEffect(() => {
         // Inicializa estado visual (forçado dark theme local no app para não ser quebrado)
-        document.documentElement.classList.remove('theme-light')
-        localStorage.setItem('xpace-theme', 'dark')
+        const savedTheme = localStorage.getItem('xpace-theme') || 'dark';
+        setTheme(savedTheme);
+        if (savedTheme === 'light') {
+            document.documentElement.classList.add('theme-light')
+        } else {
+            document.documentElement.classList.remove('theme-light')
+        }
 
         // Default Language state
         const savedLang = localStorage.getItem('xpace-lang');
@@ -147,6 +153,25 @@ export default function ConfigPage() {
                     onToggle={() => setAntiPiracy(!antiPiracy)}
                 />
 
+                {/* Theme / Modo Claro */}
+                <SettingRow
+                    icon={<Moon size={18} />}
+                    label="Dark Mode"
+                    description="Alternar entre o visual noturno (Holo) e modo claro"
+                    enabled={theme === 'dark'}
+                    onToggle={() => {
+                        const newTheme = theme === 'dark' ? 'light' : 'dark';
+                        setTheme(newTheme);
+                        localStorage.setItem('xpace-theme', newTheme);
+                        if (newTheme === 'light') {
+                            document.documentElement.classList.add('theme-light');
+                            alert('Modo Claro ativado (Aviso: Estilos em transição contínua. Nem todas as páginas já suportam Light Mode).');
+                        } else {
+                            document.documentElement.classList.remove('theme-light');
+                        }
+                    }}
+                />
+
                 {/* Language */}
                 <div className="bg-[#0A0A0A] border border-[#222] rounded-sm p-5 flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -164,12 +189,18 @@ export default function ConfigPage() {
                             const val = e.target.value;
                             setLanguage(val);
                             localStorage.setItem('xpace-lang', val);
+                            alert(`Idioma alterado para: ${val}. O pacote de tradução será baixado na próxima renderização.`);
                         }}
                         className="bg-[#111] border border-[#222] text-white font-sans text-xs px-3 py-2 rounded outline-none focus:border-primary"
                     >
                         <option value="pt-BR">Português (BR)</option>
-                        <option value="en">English</option>
+                        <option value="en">English (US)</option>
                         <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="zh">Mandarin (中文)</option>
+                        <option value="ja">Japanese (日本語)</option>
+                        <option value="ko">Korean (한국어)</option>
                     </select>
                 </div>
 

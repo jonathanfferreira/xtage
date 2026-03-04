@@ -12,9 +12,18 @@ const CATEGORIES = [
     { id: 'all', label: 'Todos os Estilos' },
     { id: 'hiphop', label: 'Hip Hop' },
     { id: 'jazz', label: 'Jazz Funk' },
+    { id: 'commercial', label: 'Commercial Dance' },
     { id: 'dancehall', label: 'Dancehall' },
     { id: 'heels', label: 'Heels' },
     { id: 'locking', label: 'Locking' },
+    { id: 'popping', label: 'Popping' },
+    { id: 'kpop', label: 'K-Pop' },
+    { id: 'contemporaneo', label: 'Contemporâneo' },
+    { id: 'ballet', label: 'Ballet Clássico' },
+    { id: 'breakdance', label: 'Breakdance' },
+    { id: 'house', label: 'House Dance' },
+    { id: 'afro', label: 'Afrobeat' },
+    { id: 'salsa', label: 'Salsa / Bachata' },
 ];
 
 async function getSearchResults(query: string, category: string) {

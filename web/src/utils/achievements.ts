@@ -98,6 +98,30 @@ export async function getUserAchievements(userId: string, userMetadata: any) {
             claimed: claimedIds.includes('mestre-xp'),
             xp: 100,
         },
+        {
+            id: 'maratonista',
+            name: 'Maratonista',
+            description: 'Completou 30 aulas de treino',
+            unlocked: completedCount >= 30,
+            claimed: claimedIds.includes('maratonista'),
+            xp: 200,
+        },
+        {
+            id: 'lenda-xp',
+            name: 'Lenda do XP',
+            description: 'Acumulou 5.000 XP Globais',
+            unlocked: totalXP >= 5000,
+            claimed: claimedIds.includes('lenda-xp'),
+            xp: 500,
+        },
+        {
+            id: 'foco-diamante',
+            name: 'Foco de Diamante',
+            description: '14 dias seguidos de treinamento',
+            unlocked: maxStreak >= 14,
+            claimed: claimedIds.includes('foco-diamante'),
+            xp: 300,
+        },
     ];
 
     const unlockedCount = achievements.filter(a => a.unlocked).length;

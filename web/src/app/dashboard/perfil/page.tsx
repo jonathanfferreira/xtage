@@ -1,22 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { User, Mail, Camera, Save, Shield, Calendar, Link2, Key, AlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 
+import { createClient } from '@/utils/supabase/client'
+
 export default function PerfilPage() {
-    const [fullName, setFullName] = useState('Jonathan Ferreira')
-    const [email] = useState('fferreira.jonathan@gmail.com')
+    const [fullName, setFullName] = useState('')
+    const [email, setEmail] = useState('')
+    const [gender, setGender] = useState('N')
     const [birthYear, setBirthYear] = useState('')
     const [socialLink, setSocialLink] = useState('')
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showPasswordModal, setShowPasswordModal] = useState(false)
     const [saving, setSaving] = useState(false)
 
+    useEffect(() => {
+        const loadProfile = async () => {
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                setEmail(user.email || '')
+                const { data } = await supabase.from('users').select('full_name, gender').eq('id', user.id).single()
+                if (data) {
+                    setFullName(data.full_name || user.user_metadata?.full_name || '')
+                    if (data.gender) setGender(data.gender)
+                } else {
+                    setFullName(user.user_metadata?.full_name || '')
+                }
+            }
+        }
+        loadProfile()
+    }, [])
+
     const handleSave = async () => {
         setSaving(true)
-        await new Promise(r => setTimeout(r, 1500))
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+            await supabase.from('users').upsert({ id: user.id, full_name: fullName, gender }, { onConflict: 'id' }).select()
+        }
+        await new Promise(r => setTimeout(r, 600))
         setSaving(false)
+        alert('Identidade atualizada na base de dados.')
     }
 
     return (
@@ -41,11 +68,11 @@ export default function PerfilPage() {
                         </div>
                     </label>
                     <div>
-                        <h2 className="font-heading text-xl text-white uppercase">{fullName}</h2>
-                        <p className="text-xs font-sans text-[#666]">{email}</p>
+                        <h2 className="font-heading text-xl text-white uppercase">{fullName || 'Dancer'}</h2>
+                        <p className="text-xs font-sans text-[#666]">{email || 'Carregando infos...'}</p>
                         <div className="flex items-center gap-1 mt-1">
                             <Shield size={12} className="text-emerald-400" />
-                            <span className="text-[10px] font-sans text-emerald-400">Conta verificada via Google</span>
+                            <span className="text-[10px] font-sans text-emerald-400">Conta validada ativamente</span>
                         </div>
                     </div>
                 </div>
@@ -70,23 +97,21 @@ export default function PerfilPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="font-sans text-sm font-medium text-white/70">Ano de Nascimento</label>
-                        <div className="relative">
-                            <Calendar size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#555]" />
-                            <input
-                                type="number"
-                                min="1900"
-                                max="2025"
-                                value={birthYear}
-                                onChange={e => setBirthYear(e.target.value)}
-                                placeholder="Ex: 1998"
-                                className="w-full bg-[#050505] border border-surface focus:border-primary rounded-lg pl-10 pr-4 py-3 font-sans text-white outline-none transition-colors focus:ring-1 focus:ring-primary"
-                            />
-                        </div>
+                        <label className="font-sans text-sm font-medium text-white/70">Como você se identifica? (Gênero)</label>
+                        <select
+                            value={gender}
+                            onChange={e => setGender(e.target.value)}
+                            className="w-full bg-[#050505] border border-surface focus:border-primary rounded-lg px-4 py-3.5 font-sans text-white outline-none transition-colors"
+                        >
+                            <option value="N">Prefiro não dizer</option>
+                            <option value="F">Feminino</option>
+                            <option value="M">Masculino</option>
+                            <option value="O">Outro</option>
+                        </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="font-sans text-sm font-medium text-white/70">Redes Sociais</label>
+                        <label className="font-sans text-sm font-medium text-white/70">Instagram ou TikTok</label>
                         <div className="relative">
                             <Link2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#555]" />
                             <input

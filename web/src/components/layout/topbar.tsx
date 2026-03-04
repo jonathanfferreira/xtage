@@ -114,6 +114,7 @@ function SearchInput() {
 
 export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
     const [userName, setUserName] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
     const [totalXp, setTotalXp] = useState(0);
     const [streakDays, setStreakDays] = useState(0);
 
@@ -122,9 +123,19 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
-                // Buscar nome
+                // Configurar nome e avatar
+                const authMetadata = user.user_metadata || {};
+
                 const { data } = await supabase.from('users').select('full_name').eq('id', user.id).single();
-                if (data?.full_name) setUserName(data.full_name);
+                if (data?.full_name) {
+                    setUserName(data.full_name);
+                } else if (authMetadata.full_name) {
+                    setUserName(authMetadata.full_name);
+                }
+
+                if (authMetadata.avatar_url) {
+                    setUserAvatar(authMetadata.avatar_url);
+                }
 
                 // Buscar XP total
                 const { data: xpData } = await supabase
@@ -189,18 +200,30 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
 
                 <div className="w-px h-8 bg-[#222]"></div>
 
-                <NotificationBell />
+                <div className="flex items-center gap-1 sm:gap-2">
+                    <Link href="/dashboard/xtore" title="Acessar XTORE" className="hidden sm:flex items-center group relative border border-accent/20 bg-accent/5 hover:bg-accent/10 hover:border-accent/40 transition-all rounded px-3 py-1.5 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        <span className="text-accent text-xs font-heading font-bold uppercase tracking-widest drop-shadow-[0_0_8px_rgba(255,51,0,0.5)] z-10">
+                            XTORE
+                        </span>
+                    </Link>
+
+                    <NotificationBell />
+                </div>
 
                 {/* Minimalist Profile HUD */}
                 <Link href="/dashboard/perfil" className="md:pl-4 md:border-l border-[#222] flex items-center gap-3 cursor-pointer group">
                     <div className="hidden md:flex flex-col items-end">
                         <span className="text-white font-heading text-sm font-semibold tracking-wide">{userName || 'Dancer'}</span>
                     </div>
-                    <div className="w-9 h-9 border border-[#333] bg-[#0a0a0a] flex items-center justify-center p-0.5 group-hover:border-primary/50 transition-colors shrink-0">
-                        {/* Using a pseudo-avatar box for that cyberpunk mechanical feel */}
-                        <div className="w-full h-full bg-[#111] flex items-center justify-center">
-                            <div className="w-1/2 h-[2px] bg-[#333] mb-1"></div>
-                        </div>
+                    <div className="w-9 h-9 border border-[#333] bg-[#0a0a0a] flex items-center justify-center p-0.5 group-hover:border-primary/50 transition-colors shrink-0 overflow-hidden rounded-full">
+                        {userAvatar ? (
+                            <img src={userAvatar} alt={userName} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
+                        ) : (
+                            <div className="w-full h-full bg-[#111] flex items-center justify-center rounded-full">
+                                <div className="w-1/2 h-[2px] bg-[#333] mb-1"></div>
+                            </div>
+                        )}
                     </div>
                 </Link>
             </div>

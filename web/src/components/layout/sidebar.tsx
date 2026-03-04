@@ -9,20 +9,8 @@ import { createClient } from '@/utils/supabase/client';
 
 export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
     const pathname = usePathname();
-    const [hasTenant, setHasTenant] = useState(false);
-
     useEffect(() => {
-        const checkTenant = async () => {
-            const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data } = await supabase.from('tenants').select('id').eq('owner_id', user.id).single();
-                if (data) {
-                    setHasTenant(true);
-                }
-            }
-        };
-        checkTenant();
+        // Tenants validation logic moved to creator studio module
     }, []);
 
     return (
@@ -52,7 +40,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                 {/* Navigation */}
                 <nav className="flex-1 py-6 flex flex-col gap-2 px-3 overflow-y-auto no-scrollbar">
 
-                    <SidebarItem href="/dashboard" icon={<Home size={20} />} label="Holo-Deck" active={pathname === '/dashboard'} onClick={onClose} />
+                    <SidebarItem href="/dashboard" icon={<Home size={20} />} label="Home" active={pathname === '/dashboard'} onClick={onClose} />
                     <SidebarItem href="/dashboard/explore" icon={<Compass size={20} />} label="Navegar Cursos" active={pathname?.startsWith('/dashboard/explore')} onClick={onClose} />
                     <SidebarItem href="/dashboard/cursos" icon={<PlaySquare size={20} />} label="Meus Acessos" active={pathname?.startsWith('/dashboard/cursos')} onClick={onClose} />
                     <SidebarItem href="/dashboard/afiliados" icon={<Handshake size={20} />} label="Parcerias" active={pathname?.startsWith('/dashboard/afiliados')} onClick={onClose} />
@@ -70,9 +58,6 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                     <div className="px-4 text-[10px] uppercase tracking-widest text-[#444] font-display opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity mb-2">Criador</div>
 
                     <SidebarItem href="/dashboard/partner" icon={<Rocket size={20} />} label="Seja um Professor" active={pathname?.startsWith('/dashboard/partner')} onClick={onClose} />
-                    {hasTenant && (
-                        <SidebarItem href="/dashboard/os" icon={<Settings size={20} />} label="XTAGE OS" active={pathname?.startsWith('/dashboard/os')} onClick={onClose} />
-                    )}
                 </nav>
 
                 {/* Footer Actions */}

@@ -82,12 +82,36 @@ export default function PartnerOnboardingPage() {
                         <div className="relative bg-[#0a0a0a] border border-[#222] p-8 md:p-10 rounded-2xl shadow-2xl">
 
                             {formState === 'success' ? (
-                                <div className="text-center py-10">
-                                    <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <CheckCircle className="text-green-500 w-10 h-10" />
+                                <div className="py-2">
+                                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                                        <CheckCircle className="text-primary w-8 h-8" />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-4 uppercase">Solicitação Recebida!</h3>
-                                    <p className="text-[#888]">Nossa equipe analisará seu perfil e entrará em contato em breve para liberar seu acesso ao Dashboard de Produtor.</p>
+                                    <h3 className="text-2xl font-bold font-heading tracking-widest text-white mb-4 uppercase">Aplicação Recebida</h3>
+                                    <p className="text-[#888] font-sans text-sm mb-8 leading-relaxed">Nossa diretoria irá examinar o seu portfólio. Se você for aprovado, estes são os próximos passos:</p>
+
+                                    <div className="space-y-4 text-left">
+                                        <div className="bg-[#111] border border-[#222] p-4 rounded flex items-start gap-4">
+                                            <div className="bg-[#1a1a1a] rounded text-[#888] w-6 h-6 flex items-center justify-center shrink-0 font-mono text-xs">1</div>
+                                            <div>
+                                                <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-1">Onboarding Asaas</h4>
+                                                <p className="text-[#666] text-xs">Você receberá um link para ativar sua conta de pagamentos com nosso parceiro bancário.</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-[#111] border border-[#222] p-4 rounded flex items-start gap-4">
+                                            <div className="bg-[#1a1a1a] rounded text-[#888] w-6 h-6 flex items-center justify-center shrink-0 font-mono text-xs">2</div>
+                                            <div>
+                                                <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-1">Acesso ao XTAGE OS</h4>
+                                                <p className="text-[#666] text-xs">Seu dashboard de professor será desbloqueado com todas as ferramentas de creator.</p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-[#111] border border-[#222] p-4 rounded flex items-start gap-4">
+                                            <div className="bg-[#1a1a1a] rounded text-[#888] w-6 h-6 flex items-center justify-center shrink-0 font-mono text-xs">3</div>
+                                            <div>
+                                                <h4 className="text-white font-bold text-sm uppercase tracking-wider mb-1">Upload & Play</h4>
+                                                <p className="text-[#666] text-xs">Cadastre seu primeiro curso em 4K, ajuste os módulos e inicie a revolução.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             ) : (
                                 <>
