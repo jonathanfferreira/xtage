@@ -26,7 +26,7 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
     // Fetch the current lesson (includes course_id and video_id)
     const { data: lesson } = await supabase
         .from('lessons')
-        .select('id, title, description, module_name, video_id, course_id, order_index')
+        .select('id, title, description, module_name, video_id, course_id, order_index, likes_count')
         .eq('id', lessonId)
         .single();
 
@@ -36,7 +36,7 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
     const secureTokenUrl = lesson.video_id ? generateBunnyTokenizedUrl(lesson.video_id) : undefined;
 
     // Fetch all lessons of this course + user progress + course title in parallel
-    const [{ data: allLessons }, { data: userProgress }, { data: courseData }] = await Promise.all([
+    const [{ data: allLessons }, { data: userProgress }, { data: courseData }, { data: userLike }] = await Promise.all([
         supabase
             .from('lessons')
             .select('id, title, module_name, order_index')
@@ -51,6 +51,12 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
             .select('title, is_linear_progression')
             .eq('id', lesson.course_id)
             .single(),
+        supabase
+            .from('lesson_likes')
+            .select('id')
+            .eq('lesson_id', lessonId)
+            .eq('user_id', user.id)
+            .maybeSingle(),
     ]);
 
     // Build completed set from user progress
@@ -114,7 +120,11 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
                         </div>
 
                         {/* Ações Sociais / Relatórios */}
-                        <LessonActions initialLikes={0} />
+                        <LessonActions
+                            lessonId={lessonId}
+                            initialLikes={lesson.likes_count || 0}
+                            initialIsLiked={false} // Will update in client side or hydrate later
+                        />
                     </div>
 
                     <div className="mt-4 border-t border-[#1a1a1a] lesson-step-3">

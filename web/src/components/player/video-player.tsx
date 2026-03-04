@@ -312,7 +312,7 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
                             </button>
                         </div>
 
-                        <button className="text-white hover:text-primary transition-colors ml-2">
+                        <button onClick={() => alert('Em breve:\nPainel de Configurações onde você poderá forçar a resolução do vídeo (1080p, 720p, etc), exibir legendas e autocompletar.')} className="text-white hover:text-primary transition-colors ml-2" title="Configurações (Em Breve)">
                             <Settings size={20} />
                         </button>
                         <button onClick={toggleFullscreen} className="text-white hover:text-primary transition-colors">

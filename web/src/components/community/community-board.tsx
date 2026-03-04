@@ -31,7 +31,8 @@ export function CommunityBoard({ lessonId }: CommunityBoardProps) {
     const [comments, setComments] = useState<Comment[]>([])
     const [currentUserProfile, setCurrentUserProfile] = useState<{ id: string; full_name?: string; avatar_url?: string } | null>(null)
     const [loading, setLoading] = useState(true)
-    const [likingIds, setLikingIds] = useState<Set<string>>(new Set())
+    const [likingIds, setLikingIds] = useState<Set<string>>(new Set()) // Lock prevent spam
+    const [likedCommentIds, setLikedCommentIds] = useState<Set<string>>(new Set()) // Persisted user likes
 
     const timeAgo = (dateStr: string) => {
         const diff = Math.floor((new Date().getTime() - new Date(dateStr).getTime()) / 1000);
@@ -76,6 +77,11 @@ export function CommunityBoard({ lessonId }: CommunityBoardProps) {
             if (user) {
                 const { data: profile } = await supabase.from('users').select('id, full_name, avatar_url').eq('id', user.id).single()
                 setCurrentUserProfile(profile || { id: user.id })
+
+                const { data: userLikes } = await supabase.from('comment_likes').select('comment_id').eq('user_id', user.id)
+                if (userLikes) {
+                    setLikedCommentIds(new Set(userLikes.map((l: any) => l.comment_id)))
+                }
             }
         }
         fetchUser()
@@ -160,23 +166,41 @@ export function CommunityBoard({ lessonId }: CommunityBoardProps) {
     }
 
     const handleLike = async (commentId: string, currentLikes: number) => {
-        if (likingIds.has(commentId)) return
-        setLikingIds(prev => new Set(prev).add(commentId))
+        if (likingIds.has(commentId) || !currentUserProfile?.id) return;
+        setLikingIds(prev => new Set(prev).add(commentId));
 
-        // Optimistic update
-        setComments(prev => prev.map(c => c.id === commentId ? { ...c, likes: currentLikes + 1 } : c))
+        const isCurrentlyLiked = likedCommentIds.has(commentId);
+        const newLikesCount = isCurrentlyLiked ? Math.max(0, currentLikes - 1) : currentLikes + 1;
 
-        const { error } = await supabase
-            .from('comments')
-            .update({ likes: currentLikes + 1 })
-            .eq('id', commentId)
+        // 1. Optimistic Update (UI Local)
+        setLikedCommentIds(prev => {
+            const next = new Set(prev);
+            isCurrentlyLiked ? next.delete(commentId) : next.add(commentId);
+            return next;
+        });
+        setComments(prev => prev.map(c => c.id === commentId ? { ...c, likes: newLikesCount } : c));
 
-        if (error) {
-            // Revert on error
-            setComments(prev => prev.map(c => c.id === commentId ? { ...c, likes: currentLikes } : c))
+        try {
+            // 2. Transaction Database Interaction
+            if (isCurrentlyLiked) {
+                await supabase.from('comment_likes').delete().eq('comment_id', commentId).eq('user_id', currentUserProfile.id);
+                await supabase.rpc('decrement_comment_likes', { c_id: commentId });
+            } else {
+                await supabase.from('comment_likes').insert({ comment_id: commentId, user_id: currentUserProfile.id });
+                await supabase.rpc('increment_comment_likes', { c_id: commentId });
+            }
+        } catch (error) {
+            console.error("Erro ao alterar like:", error);
+            // Revert state if backend fails
+            setLikedCommentIds(prev => {
+                const next = new Set(prev);
+                isCurrentlyLiked ? next.add(commentId) : next.delete(commentId);
+                return next;
+            });
+            setComments(prev => prev.map(c => c.id === commentId ? { ...c, likes: currentLikes } : c));
+        } finally {
+            setLikingIds(prev => { const s = new Set(prev); s.delete(commentId); return s; });
         }
-
-        setLikingIds(prev => { const s = new Set(prev); s.delete(commentId); return s; })
     }
 
     const parentComments = comments.filter(c => !c.parent_id)
@@ -268,9 +292,9 @@ export function CommunityBoard({ lessonId }: CommunityBoardProps) {
                                         <button
                                             onClick={() => handleLike(comment.id, comment.likes)}
                                             disabled={likingIds.has(comment.id)}
-                                            className={`flex items-center gap-1.5 text-xs transition-colors group disabled:opacity-50 ${likingIds.has(comment.id) ? 'text-secondary' : 'text-[#666] hover:text-secondary'}`}
+                                            className={`flex items-center gap-1.5 text-xs transition-colors group disabled:opacity-50 ${likedCommentIds.has(comment.id) ? 'text-secondary' : 'text-[#666] hover:text-secondary'}`}
                                         >
-                                            <Heart size={14} className={likingIds.has(comment.id) ? 'fill-secondary text-secondary' : 'group-hover:fill-secondary/20'} /> {comment.likes}
+                                            <Heart size={14} className={likedCommentIds.has(comment.id) ? 'fill-secondary text-secondary' : 'group-hover:fill-secondary/20'} /> {comment.likes}
                                         </button>
                                         <button
                                             onClick={() => setReplyTo({ id: comment.id, name: comment.users?.full_name || 'Dancer' })}
@@ -306,9 +330,9 @@ export function CommunityBoard({ lessonId }: CommunityBoardProps) {
                                                             <button
                                                                 onClick={() => handleLike(reply.id, reply.likes)}
                                                                 disabled={likingIds.has(reply.id)}
-                                                                className={`flex items-center gap-1.5 text-xs transition-colors group disabled:opacity-50 ${likingIds.has(reply.id) ? 'text-secondary' : 'text-[#666] hover:text-secondary'}`}
+                                                                className={`flex items-center gap-1.5 text-xs transition-colors group disabled:opacity-50 ${likedCommentIds.has(reply.id) ? 'text-secondary' : 'text-[#666] hover:text-secondary'}`}
                                                             >
-                                                                <Heart size={12} className={likingIds.has(reply.id) ? 'fill-secondary text-secondary' : 'group-hover:fill-secondary/20'} /> {reply.likes}
+                                                                <Heart size={12} className={likedCommentIds.has(reply.id) ? 'fill-secondary text-secondary' : 'group-hover:fill-secondary/20'} /> {reply.likes}
                                                             </button>
                                                         </div>
                                                     </div>
