@@ -86,5 +86,33 @@ export async function POST(request: Request) {
         description: `Matrícula no curso`,
     }).then(() => { })
 
+    // Notify the course creator about the new enrollment
+    try {
+        const { data: courseInfo } = await supabase
+            .from('courses')
+            .select('title, tenant_id, tenants!inner(owner_id)')
+            .eq('id', course_id)
+            .single()
+
+        if (courseInfo && (courseInfo.tenants as any)?.owner_id) {
+            const { data: studentInfo } = await supabase
+                .from('users')
+                .select('full_name')
+                .eq('id', user.id)
+                .single()
+
+            await supabase.rpc('create_notification', {
+                p_user_id: (courseInfo.tenants as any).owner_id,
+                p_title: 'Nova Matrícula! 🎉',
+                p_message: `${studentInfo?.full_name || 'Um aluno'} se matriculou no curso "${courseInfo.title}".`,
+                p_type: 'enrollment',
+                p_link_url: '/studio',
+                p_tenant_id: courseInfo.tenant_id,
+            })
+        }
+    } catch (notifErr) {
+        console.error('[ENROLL] Notification error (non-critical):', notifErr)
+    }
+
     return NextResponse.json({ enrollment, message: 'Matrícula realizada com sucesso!' }, { status: 201 })
 }
