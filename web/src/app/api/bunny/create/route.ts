@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
+import { createBunnyVideo } from '@/utils/bunny'
 
 export async function POST(request: Request) {
     try {
@@ -20,39 +21,29 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Você precisa ser um Criador (Professor/Escola) para fazer upload.' }, { status: 403 })
         }
 
+        // Get the tenant's Bunny collection for organized video storage
+        const { data: tenant } = await supabase
+            .from('tenants')
+            .select('bunny_collection_id')
+            .eq('owner_id', user.id)
+            .single()
+
         const body = await request.json()
         const { title } = body;
 
-        const libraryId = process.env.BUNNY_VIDEO_LIBRARY_ID || process.env.BUNNY_LIBRARY_ID
-        const accessKey = process.env.BUNNY_API_KEY || process.env.BUNNY_ACCESS_KEY
+        // Create video in the tenant's collection (or root if no collection)
+        const data = await createBunnyVideo(
+            title || 'Nova Aula XPACE',
+            tenant?.bunny_collection_id || null
+        );
 
-        if (!libraryId || !accessKey) {
-            return NextResponse.json({ error: 'Integração Bunny.net não configurada no servidor (Library / AccessKey ausentes).' }, { status: 500 })
-        }
-
-        // Criar o placeholder do vídeo (Allocating space in the Stream Cloud)
-        const response = await fetch(`https://video.bunnycdn.com/library/${libraryId}/videos`, {
-            method: 'POST',
-            headers: {
-                'AccessKey': accessKey,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ title: title || 'Nova Aula XPACE' })
-        })
-
-        if (!response.ok) {
-            const err = await response.text()
-            console.error("Bunny API error:", err)
-            return NextResponse.json({ error: 'Falha ao pré-alocar vídeo na Bunny.net' }, { status: 500 })
-        }
-
-        const data = await response.json()
         const videoId = data.guid;
+        const libraryId = process.env.BUNNY_VIDEO_LIBRARY_ID || process.env.BUNNY_LIBRARY_ID;
+        const accessKey = process.env.BUNNY_API_KEY || process.env.BUNNY_ACCESS_KEY;
 
-        // Gerar TUS Authentication Signature para permitir o Upload DIreto do Computador do Usuário para o Data Center
-        // Fórmula de Segurança: SHA256(library_id + api_key + expiration_time + video_id)
-        const expirationTime = Math.floor(Date.now() / 1000) + (60 * 60 * 24); // Token Válido por 24 horas
+        // Generate TUS Authentication Signature for browser-to-CDN direct upload
+        // Formula: SHA256(library_id + api_key + expiration_time + video_id)
+        const expirationTime = Math.floor(Date.now() / 1000) + (60 * 60 * 24); // 24h validity
         const signatureString = `${libraryId}${accessKey}${expirationTime}${videoId}`;
         const signature = crypto.createHash('sha256').update(signatureString).digest('hex');
 

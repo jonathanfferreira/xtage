@@ -67,11 +67,27 @@ export async function POST(request: Request) {
             console.warn(`[MASTER] Asaas Key inativa. Usando Mock Wallet: ${newWalletId}`)
         }
 
-        // 4. Efetivar as Aprovações no Banco (Transaction Simulada)
-        // A. Ativa a Escola e Seta a Wallet
+        // 5. Create a Bunny.net Collection for this tenant's videos
+        let bunnyCollectionId: string | null = null;
+        try {
+            const { createBunnyCollection } = await import('@/utils/bunny');
+            bunnyCollectionId = await createBunnyCollection(tenant.name);
+        } catch (bunnyErr) {
+            console.warn('[MASTER] Bunny collection creation failed (non-blocking):', bunnyErr);
+        }
+
+        // 6. Activate tenant, assign wallet and bunny collection
+        const updatePayload: Record<string, any> = {
+            status: 'active',
+            asaas_wallet_id: newWalletId,
+        };
+        if (bunnyCollectionId) {
+            updatePayload.bunny_collection_id = bunnyCollectionId;
+        }
+
         const { error: updateTenantErr } = await supabase
             .from('tenants')
-            .update({ status: 'active', asaas_wallet_id: newWalletId })
+            .update(updatePayload)
             .eq('id', tenantId)
 
         if (updateTenantErr) throw updateTenantErr

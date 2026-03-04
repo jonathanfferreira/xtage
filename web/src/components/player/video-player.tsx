@@ -1,9 +1,17 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, FlipHorizontal, FastForward, SkipBack, SkipForward, FlipHorizontal2, Camera } from "lucide-react";
 
-export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; tokenizedUrl?: string }) {
+interface VideoPlayerProps {
+    videoId?: string;
+    tokenizedUrl?: string;
+    userEmail?: string;
+    lessonId?: string;
+    initialPosition?: number;
+}
+
+export function VideoPlayer({ videoId, tokenizedUrl, userEmail, lessonId, initialPosition }: VideoPlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isMirrored, setIsMirrored] = useState(false);
@@ -15,8 +23,11 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
     const [xpEarned, setXpEarned] = useState(false);
     const [showXpAnim, setShowXpAnim] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [watermarkPos, setWatermarkPos] = useState({ top: '15%', left: '70%' });
     const videoContainerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
+    const lastSaveRef = useRef(0);
+    const hasResumedRef = useRef(false);
 
     // Se tiver urlToken usa o HLS blindado da Bunny, senao deixa vazio para não tocar lixo
     const streamUrl = tokenizedUrl || "";
@@ -81,6 +92,47 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
             }
         };
     }, [streamUrl]);
+
+    // Watermark position rotation (anti-crop)
+    useEffect(() => {
+        if (!userEmail) return;
+        const positions = [
+            { top: '15%', left: '70%' },
+            { top: '75%', left: '10%' },
+            { top: '50%', left: '50%' },
+            { top: '20%', left: '20%' },
+            { top: '70%', left: '75%' },
+        ];
+        let idx = 0;
+        const interval = setInterval(() => {
+            idx = (idx + 1) % positions.length;
+            setWatermarkPos(positions[idx]);
+        }, 30000);
+        return () => clearInterval(interval);
+    }, [userEmail]);
+
+    // Auto-save watch position every 30 seconds
+    const saveProgress = useCallback(async (positionSeconds: number, durationSec: number) => {
+        if (!lessonId || positionSeconds < 5) return;
+        // Throttle: save at most every 25 seconds
+        const now = Date.now();
+        if (now - lastSaveRef.current < 25000) return;
+        lastSaveRef.current = now;
+
+        try {
+            await fetch('/api/lessons/progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    lessonId,
+                    positionSeconds: Math.floor(positionSeconds),
+                    durationSeconds: Math.floor(durationSec),
+                }),
+            });
+        } catch {
+            // Non-critical, silently fail
+        }
+    }, [lessonId]);
 
     const togglePlay = () => {
         if (videoRef.current) {
@@ -155,6 +207,15 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
         if (videoRef.current) {
             setDurationDisplay(formatTime(videoRef.current.duration));
             setCurrentTimeDisplay(formatTime(videoRef.current.currentTime));
+
+            // Resume playback from saved position
+            if (initialPosition && initialPosition > 5 && !hasResumedRef.current) {
+                hasResumedRef.current = true;
+                const resumeTime = Math.min(initialPosition, videoRef.current.duration - 2);
+                if (resumeTime > 0) {
+                    videoRef.current.currentTime = resumeTime;
+                }
+            }
         }
     };
 
@@ -192,9 +253,13 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
                     }
                 } catch (e) {
                     console.error("Falha ao sincronizar XP:", e);
-                    // Rollback local state
                     setXpEarned(false);
                 }
+            }
+
+            // Auto-save watch position
+            if (duration > 0) {
+                saveProgress(current, duration);
             }
         }
     };
@@ -222,6 +287,18 @@ export function VideoPlayer({ videoId, tokenizedUrl }: { videoId?: string; token
                     onClick={togglePlay}
                     poster={tokenizedUrl ? `https://${process.env.NEXT_PUBLIC_BUNNY_STREAM_CDN_URL?.replace(/^https?:\/\//, '')}/${videoId}/thumbnail.jpg` : undefined}
                 />
+
+                {/* Anti-Piracy Watermark — Email overlay that moves position */}
+                {userEmail && isPlaying && (
+                    <div
+                        className="absolute z-30 pointer-events-none select-none transition-all duration-[5000ms] ease-in-out"
+                        style={{ top: watermarkPos.top, left: watermarkPos.left, transform: 'translate(-50%, -50%)' }}
+                    >
+                        <span className="text-white/[0.08] text-sm font-mono tracking-wider rotate-[-15deg] inline-block">
+                            {userEmail}
+                        </span>
+                    </div>
+                )}
 
                 {/* Play Overlay central grande (Fade out no Play) */}
                 {!isPlaying && (

@@ -36,7 +36,7 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
     const secureTokenUrl = lesson.video_id ? generateBunnyTokenizedUrl(lesson.video_id) : undefined;
 
     // Fetch all lessons of this course + user progress + course title in parallel
-    const [{ data: allLessons }, { data: userProgress }, { data: courseData }, { data: userLike }] = await Promise.all([
+    const [{ data: allLessons }, { data: userProgress }, { data: courseData }, { data: userLike }, { data: watchData }] = await Promise.all([
         supabase
             .from('lessons')
             .select('id, title, module_name, order_index')
@@ -54,6 +54,12 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
         supabase
             .from('lesson_likes')
             .select('id')
+            .eq('lesson_id', lessonId)
+            .eq('user_id', user.id)
+            .maybeSingle(),
+        supabase
+            .from('lesson_views')
+            .select('watch_position_seconds')
             .eq('lesson_id', lessonId)
             .eq('user_id', user.id)
             .maybeSingle(),
@@ -97,7 +103,13 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
 
                 {/* Container do Vídeo */}
                 <div className="w-full max-w-5xl mx-auto shadow-2xl rounded-sm overflow-hidden ring-1 ring-[#222] shrink-0 relative lesson-step-1" style={{ aspectRatio: '16/9', minHeight: '30vh' }}>
-                    <VideoPlayer videoId={lesson.video_id ?? undefined} tokenizedUrl={secureTokenUrl} />
+                    <VideoPlayer
+                        videoId={lesson.video_id ?? undefined}
+                        tokenizedUrl={secureTokenUrl}
+                        userEmail={user.email}
+                        lessonId={lessonId}
+                        initialPosition={watchData?.watch_position_seconds || 0}
+                    />
                 </div>
 
                 {/* Metadados da Aula e Interações Base */}
