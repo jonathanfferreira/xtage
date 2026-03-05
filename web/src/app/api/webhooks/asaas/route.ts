@@ -35,8 +35,6 @@ export async function POST(request: Request) {
 
         // =================== PURCHASE EVENTS ===================
         if (evento === "PAYMENT_RECEIVED" || evento === "PAYMENT_CONFIRMED") {
-            console.log(`[ASAAS] 🤑 Pagamento Confirmado: ${paymentId}`);
-
             // [MARKETING] Meta Conversions API (CAPI)
             if (process.env.META_ACCESS_TOKEN && process.env.META_PIXEL_ID) {
                 try {
