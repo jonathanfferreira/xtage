@@ -35,6 +35,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Requisição inválida." }, { status: 403 });
     }
 
+    // eslint-disable-next-line no-console
     console.log("🟢 POST /api/checkout", ASAAS_API_KEY ? "[ASAAS LIVE]" : "[MOCK MODE]", `IP: ${ip}`);
 
     try {
