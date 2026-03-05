@@ -65,6 +65,11 @@ vi.mock('@/utils/csrf', () => ({
 
 describe('Checkout API - Input Validation', () => {
 
+    beforeEach(() => {
+        vi.resetModules();
+        vi.clearAllMocks();
+    });
+
     it('should reject empty JSON body', async () => {
         // Import after mocks are set up
         const { POST } = await import('../app/api/checkout/route');
@@ -83,6 +88,9 @@ describe('Checkout API - Input Validation', () => {
     });
 
     it('should reject when missing required fields', async () => {
+        // Mock course lookup to return null (should not even reach this with invalid Zod data)
+        mockSingle.mockResolvedValue({ data: null, error: { message: 'not found' } });
+
         const { POST } = await import('../app/api/checkout/route');
 
         const request = new Request('http://localhost/api/checkout', {
@@ -99,8 +107,8 @@ describe('Checkout API - Input Validation', () => {
         expect(data.error).toBeTruthy();
     });
 
-    // TODO: módulo já importado em memória (module caching do vitest) — mockResolvedValueOnce não afeta chamadas subsequentes
-    it.skip('should return 404 when course is not found', async () => {
+    // Fixed: module caching issue resolved with vi.resetModules()
+    it('should return 404 when course is not found', async () => {
         // Mock course lookup to return null
         mockSingle.mockResolvedValueOnce({ data: null, error: { message: 'not found' } });
 
@@ -127,9 +135,13 @@ describe('Checkout API - Input Validation', () => {
 
 describe('Checkout API - User Lookup (Bug #1 Fix)', () => {
 
-    // TODO: este teste de integração precisa de mock mais elaborado após adição do Zod na Sprint 20
-    // O mock atual não consegue simular corretamente a cadeia select().eq().single() para courses + users
-    it.skip('should query users table by email instead of listUsers()', async () => {
+    beforeEach(() => {
+        vi.resetModules();
+        vi.clearAllMocks();
+    });
+
+    // Fixed: integrated with Zod and multi-step Supabase mock
+    it('should query users table by email instead of listUsers()', async () => {
         // The fix queries public.users by email — NOT auth.admin.listUsers()
         // Verify the mock was called with 'users' table, not the admin API
         mockSingle.mockResolvedValueOnce({
