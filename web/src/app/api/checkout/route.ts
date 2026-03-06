@@ -122,6 +122,15 @@ export async function POST(request: Request) {
         const customerRes = await fetch(`${ASAAS_API_URL}/customers?email=${encodeURIComponent(email)}`, {
             headers: { "access_token": ASAAS_API_KEY }
         });
+
+        if (!customerRes.ok) {
+            console.error("Asaas customer lookup failed:", customerRes.status);
+            return NextResponse.json(
+                { error: "Erro de autenticação com o gateway de pagamentos. Verifique a configuração da plataforma." },
+                { status: 502 }
+            );
+        }
+
         const customerData = await customerRes.json();
 
         if (customerData.data?.length > 0) {

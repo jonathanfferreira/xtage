@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { Trophy } from 'lucide-react';
+import { Trophy, Instagram } from 'lucide-react';
 
 interface LeaderboardRow {
     user_id: string;
@@ -10,6 +10,7 @@ interface LeaderboardRow {
     avatar_url: string | null;
     weekly_xp: number;
     rank: number;
+    instagram: string | null;
 }
 
 async function getLeaderboard(): Promise<LeaderboardRow[]> {
@@ -23,7 +24,22 @@ async function getLeaderboard(): Promise<LeaderboardRow[]> {
         .order('weekly_xp', { ascending: false })
         .limit(10);
 
-    return (data || []).map((row: any, i: number) => ({ ...row, rank: i + 1 }));
+    if (!data || data.length === 0) return [];
+
+    // Fetch instagram from users table for each leaderboard user
+    const userIds = data.map((row: any) => row.user_id);
+    const { data: usersData } = await supabase
+        .from('users')
+        .select('id, instagram')
+        .in('id', userIds);
+
+    const instagramMap = new Map(usersData?.map(u => [u.id, u.instagram]) || []);
+
+    return data.map((row: any, i: number) => ({
+        ...row,
+        rank: i + 1,
+        instagram: instagramMap.get(row.user_id) || null,
+    }));
 }
 
 async function getCurrentUserId(): Promise<string | null> {
@@ -93,10 +109,16 @@ export async function LeaderboardWeekly() {
                                     <span className="relative z-10 text-sm">{initials}</span>
                                 )}
                             </div>
-                            <div className="flex-1">
-                                <h4 className={`font-heading text-sm uppercase ${isCurrentUser ? 'text-primary drop-shadow-[0_0_8px_#6324b2]' : 'text-white'}`}>
+                            <div className="flex-1 min-w-0">
+                                <h4 className={`font-heading text-sm uppercase truncate ${isCurrentUser ? 'text-primary drop-shadow-[0_0_8px_#6324b2]' : 'text-white'}`}>
                                     {user.full_name || 'Anônimo'} {isCurrentUser && '(Você)'}
                                 </h4>
+                                {user.instagram && (
+                                    <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[10px] text-[#888] hover:text-secondary transition-colors mt-0.5">
+                                        <Instagram size={10} />
+                                        <span>{user.instagram}</span>
+                                    </a>
+                                )}
                             </div>
                             <div className="text-right">
                                 <span className={`font-display text-xl ${isCurrentUser ? 'text-secondary drop-shadow-[0_0_10px_#eb00bc]' : 'text-white'}`}>

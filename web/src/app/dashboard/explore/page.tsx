@@ -138,8 +138,8 @@ export default async function ExplorePage({ searchParams }: ExploreProps) {
                             const tenantName = course.tenants?.name || 'Escola Invisível';
 
                             return (
-                                <Link key={course.id} href={`/dashboard/cursos/${course.id}`} className="group relative bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-primary/50 transition-colors block">
-                                    <div className="aspect-video relative bg-[#111] overflow-hidden">
+                                <Link key={course.id} href={`/dashboard/cursos/${course.id}`} className="group relative bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-primary/50 transition-colors flex flex-col h-full">
+                                    <div className="aspect-video relative bg-[#111] overflow-hidden shrink-0">
                                         {course.thumbnail_url ? (
                                             <Image
                                                 src={course.thumbnail_url}
@@ -159,18 +159,18 @@ export default async function ExplorePage({ searchParams }: ExploreProps) {
                                             {isFree ? 'Gratuito' : `R$ ${price?.toFixed(2)}`}
                                         </div>
                                     </div>
-                                    <div className="p-5">
-                                        <p className="text-xs font-mono text-primary uppercase tracking-widest mb-2 line-clamp-1">
+                                    <div className="p-5 pb-4 flex-1 flex flex-col gap-1">
+                                        <p className="text-xs font-mono text-primary uppercase tracking-widest mb-1 line-clamp-1">
                                             {tenantName}
                                         </p>
-                                        <h3 className="text-lg font-bold text-white leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                        <h3 className="text-lg font-bold text-white leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">
                                             {course.title}
                                         </h3>
-                                        <p className="text-sm text-[#888] line-clamp-2 leading-relaxed">
+                                        <p className="text-sm text-[#888] line-clamp-2 leading-relaxed mb-auto">
                                             {course.description || 'Nenhuma descrição fornecida para este curso.'}
                                         </p>
                                     </div>
-                                    <div className="px-5 py-3 border-t border-[#1a1a1a] bg-[#050505] flex items-center justify-between text-[#666]">
+                                    <div className="px-5 py-3 border-t border-[#1a1a1a] bg-[#050505] flex items-center justify-between text-[#666] mt-auto">
                                         <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest">
                                             <Star size={12} className="text-primary" />
                                             <span>Novo</span>

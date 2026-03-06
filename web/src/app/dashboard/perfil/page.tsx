@@ -24,10 +24,11 @@ export default function PerfilPage() {
             const { data: { user } } = await supabase.auth.getUser()
             if (user) {
                 setEmail(user.email || '')
-                const { data } = await supabase.from('users').select('full_name, gender, avatar_url, username').eq('id', user.id).single()
+                const { data } = await supabase.from('users').select('full_name, gender, avatar_url, username, instagram').eq('id', user.id).single()
                 if (data) {
                     setFullName(data.full_name || user.user_metadata?.full_name || '')
                     if (data.gender) setGender(data.gender)
+                    setSocialLink(data.instagram || '')
                     setAvatarUrl(data.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture || null)
                     setUsername(data.username || null)
                 } else {
@@ -89,8 +90,8 @@ export default function PerfilPage() {
 
             const { error } = await supabase
                 .from('users')
-                .upsert({ id: user.id, full_name: fullName, gender }, { onConflict: 'id' })
-                .select()
+                .update({ full_name: fullName, gender, instagram: socialLink || null })
+                .eq('id', user.id)
 
             if (error) throw error
 

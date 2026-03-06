@@ -32,14 +32,23 @@ export async function claimAchievementAction(achievementId: string) {
         return { error: 'Esta conquista já foi resgatada.' }
     }
 
-    // 3. Increment XP
+    // 3. Increment XP (try RPC first, fallback to direct insert)
     const { error: rpcError } = await supabase.rpc('increment_user_xp', {
         p_user_id: user.id,
         p_xp: targetAchievement.xp
     })
 
     if (rpcError) {
-        return { error: 'Erro ao adicionar XP.' }
+        // Fallback: insert directly into user_xp_history
+        const { error: insertError } = await supabase.from('user_xp_history').insert({
+            user_id: user.id,
+            amount: targetAchievement.xp,
+            source: 'achievement',
+        })
+        if (insertError) {
+            console.error('XP insert failed:', insertError.message)
+            return { error: 'Erro ao adicionar XP.' }
+        }
     }
 
     // 4. Update user metadata

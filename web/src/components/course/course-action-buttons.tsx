@@ -110,21 +110,22 @@ export function CourseActionButtons({ courseId, hasAccess, firstLessonId, pricin
 }
 
 interface TrailerButtonProps {
+    courseId: string;
     hasAccess: boolean;
     firstLessonId: string | null;
     brandColor: string;
 }
 
-export function TrailerButton({ hasAccess, firstLessonId, brandColor }: TrailerButtonProps) {
+export function TrailerButton({ courseId, hasAccess, firstLessonId, brandColor }: TrailerButtonProps) {
     const router = useRouter();
     const [showMessage, setShowMessage] = useState(false);
 
     const handleClick = () => {
         if (hasAccess && firstLessonId) {
             router.push(`/dashboard/aula/${firstLessonId}`);
-        } else if (firstLessonId) {
-            // Preview: go to lesson page (it should handle preview mode)
-            router.push(`/dashboard/aula/${firstLessonId}`);
+        } else if (!hasAccess) {
+            // User doesn't have access — redirect to checkout
+            router.push(`/checkout/${courseId}`);
         } else {
             setShowMessage(true);
             setTimeout(() => setShowMessage(false), 3000);

@@ -96,6 +96,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                     {/* Play Trailer Button */}
                     {firstLesson?.video_id && (
                         <TrailerButton
+                            courseId={courseId}
                             hasAccess={hasAccess}
                             firstLessonId={firstLesson.id}
                             brandColor={brandColor}
