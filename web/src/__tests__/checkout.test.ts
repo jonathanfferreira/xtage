@@ -9,8 +9,6 @@ vi.mock('next/headers', () => ({
     })
 }));
 
-}));
-
 // Mock Supabase
 const mockFrom = vi.fn();
 const mockSelect = vi.fn();
@@ -72,14 +70,6 @@ vi.mock('@/utils/rate-limit', () => ({
 // Mock CSRF validation: validateCsrf retorna null quando OK, string com erro quando inválido
 vi.mock('@/utils/csrf', () => ({
     validateCsrf: () => null,
-}));
-
-// Mock next/headers
-vi.mock('next/headers', () => ({
-    cookies: () => ({
-        getAll: () => [],
-        get: () => null, // Add get
-    })
 }));
 
 describe('Checkout API - Input Validation', () => {
@@ -223,5 +213,67 @@ describe('Checkout API - Interest Calculation', () => {
         // 100 * (1.0299)^3 ≈ 109.21
         expect(finalValue).toBeGreaterThan(coursePrice);
         expect(finalValue).toBeCloseTo(109.21, 1);
+    });
+});
+
+describe('Checkout API - Integration', () => {
+    beforeEach(() => {
+        vi.resetModules();
+        vi.clearAllMocks();
+    });
+
+    it('should process a valid checkout request correctly (Zod Integration)', async () => {
+        // Mock API responses for external fetch calls
+        global.fetch = vi.fn().mockImplementation((url) => {
+            if (url.includes('/customers')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve({ data: [{ id: 'cust_123' }] })
+                });
+            }
+            if (url.includes('/payments')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve({ id: 'pay_123', status: 'PENDING' })
+                });
+            }
+            return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+        });
+
+        // Setup mock Supabase responses
+        mockSingle.mockResolvedValueOnce({
+            data: { id: 'course-id', title: 'Test Course', price: 100.00, tenants: { split_percent: 10, asaas_wallet_id: 'wallet_123' } },
+            error: null,
+        });
+        mockSingle.mockResolvedValueOnce({
+            data: { id: 'existing-user-id' },
+            error: null,
+        });
+
+        const { POST } = await import('../app/api/checkout/route');
+
+        const request = new Request('http://localhost/api/checkout', {
+            method: 'POST',
+            body: JSON.stringify({
+                name: 'Valid User',
+                email: 'valid@example.com',
+                phone: '11999999999',
+                cpf: '12345678901',
+                courseId: '550e8400-e29b-41d4-a716-446655440000',
+                paymentMethod: 'pix',
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        const response = await POST(request);
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data.success).toBe(true);
+        expect(data.paymentId).toBe('pay_123');
+        expect(data.status).toBe('PENDING');
+
+        // Restore global fetch
+        vi.restoreAllMocks();
     });
 });
