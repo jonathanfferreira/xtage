@@ -65,7 +65,7 @@ export default async function CertificatePage({ params }: Props) {
                         description: `Conclusão de curso por ${user?.full_name}`,
                         dateCreated: cert.issued_at,
                         credentialCategory: 'Certificate',
-                        recognizedBy: { '@type': 'Organization', name: tenant?.name || 'Xpace On' },
+                        recognizedBy: { '@type': 'Organization', name: tenant?.name || 'XTAGE' },
                     })
                 }}
             />
@@ -86,7 +86,7 @@ export default async function CertificatePage({ params }: Props) {
                                 <Image src={tenant.logo_url} alt={tenant.name} width={32} height={32} className="rounded" />
                             )}
                             <span className="text-white font-bold text-sm uppercase tracking-widest">
-                                {tenant?.name || 'Xpace On'}
+                                {tenant?.name || 'XTAGE'}
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export default async function CertificatePage({ params }: Props) {
                         </div>
                         <div className="text-right">
                             <p className="text-[#333] text-[10px] font-mono">Verificável em</p>
-                            <p className="text-[#555] text-[10px] font-mono">xpace.on/c/{cert.public_slug}</p>
+                            <p className="text-[#555] text-[10px] font-mono">xtage.app/c/{cert.public_slug}</p>
                         </div>
                     </div>
                 </div>

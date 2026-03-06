@@ -139,7 +139,7 @@ export default function AppearanceSettingsPage() {
                             onClick={() => fileInputRef.current?.click()}
                         >
                             {form.logo_url ? (
-                                <Image src={form.logo_url} alt="Logo" fill className="object-cover" />
+                                <img src={form.logo_url} alt="Logo" className="w-full h-full object-cover" />
                             ) : (
                                 <div className="w-full h-full bg-[#111] flex items-center justify-center">
                                     <Camera size={28} className="text-[#444] group-hover:text-primary transition-colors" />
@@ -204,13 +204,10 @@ export default function AppearanceSettingsPage() {
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-[#888] text-xs font-mono uppercase tracking-widest mb-2 flex items-center gap-2">
-                            <LinkIcon size={12} /> URL da Vitrine (Slug)
-                        </label>
-                        <div className="flex bg-[#111] border border-[#333] rounded overflow-hidden focus-within:border-white/50 transition-colors">
+                    <div className="flex gap-2">
+                        <div className="flex-1 flex bg-[#111] border border-[#333] rounded overflow-hidden focus-within:border-white/50 transition-colors">
                             <span className="bg-[#1a1a1a] text-[#666] px-4 py-2.5 text-sm font-mono border-r border-[#333]">
-                                xpace.on/
+                                xtage.app/
                             </span>
                             <input
                                 type="text"
@@ -221,9 +218,16 @@ export default function AppearanceSettingsPage() {
                                 placeholder="minha-escola"
                             />
                         </div>
-                        <p className="text-[#555] text-[10px] font-mono mt-1">
-                            Este é o endereço público da sua vitrine de cursos.
-                        </p>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                navigator.clipboard.writeText(`https://xtage.app/${form.slug}`)
+                                setMessage({ text: 'Link da vitrine copiado!', type: 'success' })
+                            }}
+                            className="px-4 bg-[#111] border border-[#333] hover:border-primary/50 text-white rounded transition-colors flex items-center gap-2 text-xs font-mono uppercase shrink-0"
+                        >
+                            <LinkIcon size={14} /> Copiar
+                        </button>
                     </div>
                 </div>
 

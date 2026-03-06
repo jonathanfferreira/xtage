@@ -27,7 +27,7 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: '/',
             },
         ],
-        sitemap: `${siteUrl}/sitemap.xml`,
+        sitemap: 'https://xtage.app/sitemap.xml',
         host: siteUrl,
     };
 }

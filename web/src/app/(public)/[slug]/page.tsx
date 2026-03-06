@@ -62,7 +62,6 @@ async function getTenantProfile(slug: string) {
         .from('tenants')
         .select('id, name, slug, bio, avatar_url, instagram, owner_id, brand_color, logo_url')
         .eq('slug', slug)
-        .eq('status', 'active')
         .single();
 
     if (!tenant) return null;
@@ -318,9 +317,9 @@ export default async function GenericProfilePage({ params }: { params: Promise<{
                     <div className="flex-1 mt-2">
                         <div className="inline-flex items-center gap-2 border border-white/20 px-3 py-1 mb-4 text-[10px] font-mono tracking-widest uppercase bg-white/5 backdrop-blur-sm">
                             {tenant.logo_url && (
-                                <Image src={tenant.logo_url} alt={tenant.name} width={16} height={16} className="rounded-sm object-contain" />
+                                <img src={tenant.logo_url} alt={tenant.name} className="w-4 h-4 rounded-sm object-contain" />
                             )}
-                            {tenant.logo_url ? "ESCOLA PARCEIRA" : "CRIADOR XPACE"}
+                            {tenant.logo_url ? "ESCOLA PARCEIRA" : "CRIADOR XTAGE"}
                         </div>
                         <h1 className="text-5xl md:text-6xl font-heading uppercase tracking-tight mb-4" style={{ color: brandColor, WebkitTextStroke: '1px white' }}>
                             {tenant.name}

@@ -5,6 +5,7 @@ import { StudioSidebar } from './studio-sidebar';
 import { Menu } from 'lucide-react';
 import { NotificationBell } from '@/components/layout/notification-bell';
 import Image from 'next/image';
+import { StudioOnboardingModal } from './onboarding/studio-onboarding';
 
 export function StudioLayoutWrapper({
     children,
@@ -19,6 +20,7 @@ export function StudioLayoutWrapper({
 
     return (
         <div className="flex bg-[#050505] min-h-screen text-[#ededed] font-sans selection:bg-primary/30 selection:text-white">
+            <StudioOnboardingModal />
             <StudioSidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} tenant={tenant} />
 
             <main className="flex-1 flex flex-col relative overflow-x-hidden min-w-0">

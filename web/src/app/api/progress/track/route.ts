@@ -73,12 +73,31 @@ export async function POST(req: Request) {
 
         if (error) throw error;
 
-        // Atualiza o XP total do usuário
+        // Atualiza o total de XP
         await supabase.rpc('increment_user_xp', { p_user_id: user.id, p_xp: xpAmount });
+
+        // Notifica o aluno sobre o XP ganho
+        await supabase.rpc('create_notification', {
+            p_user_id: user.id,
+            p_title: 'Aula Concluída! 🔥',
+            p_message: `Você ganhou +${xpAmount} XP. Continue evoluindo no seu ritmo!`,
+            p_type: 'achievement',
+        });
 
         // Atualiza o streak (chama função DB)
         const { data: streakData } = await supabase.rpc('update_streak', { p_user_id: user.id });
         const streak = streakData?.[0];
+
+        // Se for um novo recorde, notifica!
+        if (streak?.is_new_record) {
+            await supabase.rpc('create_notification', {
+                p_user_id: user.id,
+                p_title: 'NOVO RECORDE! 🏆',
+                p_message: `Você alcançou sua maior marca: ${streak.current_streak} dias seguidos de dança!`,
+                p_type: 'achievement',
+                p_link_url: '/dashboard',
+            });
+        }
 
         return NextResponse.json({
             status: 'success',

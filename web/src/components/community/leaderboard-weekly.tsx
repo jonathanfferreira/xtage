@@ -20,7 +20,7 @@ async function getLeaderboard(): Promise<LeaderboardRow[]> {
     );
     const { data } = await supabase
         .from('leaderboard_weekly')
-        .select('user_id, full_name, avatar_url, weekly_xp')
+        .select('user_id, full_name, avatar_url, weekly_xp, instagram')
         .order('weekly_xp', { ascending: false })
         .limit(10);
 
@@ -110,11 +110,11 @@ export async function LeaderboardWeekly() {
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className={`font-heading text-sm uppercase truncate ${isCurrentUser ? 'text-primary drop-shadow-[0_0_8px_#6324b2]' : 'text-white'}`}>
+                                <h4 className={`font-heading text-sm uppercase ${isCurrentUser ? 'text-primary drop-shadow-[0_0_8px_#6324b2]' : 'text-white'}`}>
                                     {user.full_name || 'Anônimo'} {isCurrentUser && '(Você)'}
                                 </h4>
                                 {user.instagram && (
-                                    <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[10px] text-[#888] hover:text-secondary transition-colors mt-0.5">
+                                    <a href={`https://instagram.com/${user.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[10px] text-[#666] hover:text-primary transition-colors cursor-pointer mt-0.5">
                                         <Instagram size={10} />
                                         <span>{user.instagram}</span>
                                     </a>

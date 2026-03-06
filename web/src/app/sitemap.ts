@@ -37,16 +37,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticUrls: MetadataRoute.Sitemap = [
         {
-            url: siteUrl,
+            url: 'https://xtage.app',
             lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 1.0,
+            changeFrequency: 'yearly',
+            priority: 1,
         },
         {
-            url: `${siteUrl}/explore`,
+            url: 'https://xtage.app/explorer',
             lastModified: new Date(),
-            changeFrequency: 'daily',
-            priority: 0.9,
+            changeFrequency: 'monthly',
+            priority: 0.8,
         },
         {
             url: `${siteUrl}/seja-parceiro`,

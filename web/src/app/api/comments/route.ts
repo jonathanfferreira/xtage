@@ -165,6 +165,30 @@ export async function POST(request: NextRequest) {
 
         if (error) throw error;
 
+        // If it's a reply, notify the original comment author
+        if (parent_id) {
+            try {
+                const { data: parentComment } = await supabase
+                    .from('comments')
+                    .select('user_id, lesson_id, tenants(id)')
+                    .eq('id', parent_id)
+                    .single();
+
+                if (parentComment && parentComment.user_id !== user.id) {
+                    await supabase.rpc('create_notification', {
+                        p_user_id: parentComment.user_id,
+                        p_title: 'Novo comentário! 💬',
+                        p_message: `${user.user_metadata?.full_name || 'Alguém'} respondeu ao seu comentário.`,
+                        p_type: 'info',
+                        p_link_url: `/course/lesson/${lesson_id}`, // Adjust link logic as needed
+                        p_tenant_id: (parentComment as any).tenants?.id
+                    });
+                }
+            } catch (replyNotifErr) {
+                console.error('[COMMENT] Reply notification error:', replyNotifErr);
+            }
+        }
+
         return NextResponse.json({ comment: { ...newComment, replies: [], currentUserLiked: false } });
     } catch (error: any) {
         console.error("Erro ao enviar comentário:", error.message);

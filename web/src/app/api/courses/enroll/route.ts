@@ -101,6 +101,7 @@ export async function POST(request: Request) {
                 .eq('id', user.id)
                 .single()
 
+            // Notify the course creator about the new enrollment
             await supabase.rpc('create_notification', {
                 p_user_id: (courseInfo.tenants as any).owner_id,
                 p_title: 'Nova Matrícula! 🎉',
@@ -108,7 +109,17 @@ export async function POST(request: Request) {
                 p_type: 'enrollment',
                 p_link_url: '/studio',
                 p_tenant_id: courseInfo.tenant_id,
-            })
+            });
+
+            // Notify the student (Welcome message)
+            await supabase.rpc('create_notification', {
+                p_user_id: user.id,
+                p_title: `Bem-vindo ao ${courseInfo.title}! 🎬`,
+                p_message: 'Sua jornada começa agora. Clique aqui para assistir sua primeira aula!',
+                p_type: 'success',
+                p_link_url: `/course/${course_id}`,
+                p_tenant_id: courseInfo.tenant_id,
+            });
         }
     } catch (notifErr) {
         console.error('[ENROLL] Notification error (non-critical):', notifErr)

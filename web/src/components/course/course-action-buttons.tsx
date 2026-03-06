@@ -123,9 +123,11 @@ export function TrailerButton({ courseId, hasAccess, firstLessonId, brandColor }
     const handleClick = () => {
         if (hasAccess && firstLessonId) {
             router.push(`/dashboard/aula/${firstLessonId}`);
-        } else if (!hasAccess) {
-            // User doesn't have access — redirect to checkout
-            router.push(`/checkout/${courseId}`);
+        } else if (firstLessonId) {
+            // Se não tem acesso, enviamos para a página da aula com flag de preview
+            // ou podemos manter na página atual se houver um modal. 
+            // Como o usuário reclamou que "leva para meus acessos", vamos garantir que ele veja o conteúdo.
+            router.push(`/dashboard/aula/${firstLessonId}?preview=true`);
         } else {
             setShowMessage(true);
             setTimeout(() => setShowMessage(false), 3000);

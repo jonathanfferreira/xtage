@@ -177,7 +177,7 @@ export default function DomainSettingsPage() {
                             <p className="text-white font-mono text-sm">alunos</p>
 
                             <p className="text-[#555] text-[10px] font-mono uppercase tracking-widest mt-3 mb-1">Conteúdo / Destino</p>
-                            <p className="text-white font-mono text-sm">cname.xpace.on</p>
+                            <p className="text-white font-mono text-sm">cname.xtage.app</p>
                         </div>
 
                         <p className="text-[#555] text-[10px] font-mono leading-relaxed mt-4">

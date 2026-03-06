@@ -26,9 +26,29 @@ export default function ConfigPage() {
     const [antiPiracy, setAntiPiracy] = useState(true)
     const [deviceText, setDeviceText] = useState('Windows • Chrome')
     const [saving, setSaving] = useState(false)
+    const [instagram, setInstagram] = useState('')
+    const [gender, setGender] = useState('N')
     const supabase = createClient()
 
     useEffect(() => {
+        // Fetch current user data
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profile } = await supabase
+                    .from('users')
+                    .select('instagram, gender')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile) {
+                    if (profile.instagram) setInstagram(profile.instagram);
+                    if (profile.gender) setGender(profile.gender);
+                }
+            }
+        };
+        fetchUser();
+
         // Inicializa estado visual (forçado dark theme local no app para não ser quebrado)
         const savedTheme = localStorage.getItem('xpace-theme') || 'dark';
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -119,16 +139,33 @@ export default function ConfigPage() {
     const handleSave = async () => {
         setSaving(true)
 
-        // Persist preferences to localStorage
-        localStorage.setItem('xpace-theme', theme)
-        localStorage.setItem('xpace-lang', language)
-        localStorage.setItem('xpace-anti-piracy', String(antiPiracy))
-        localStorage.setItem('xpace-notifications', String(notifications))
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { error } = await supabase
+                    .from('users')
+                    .update({
+                        instagram: instagram.replace('@', ''),
+                        gender: gender
+                    })
+                    .eq('id', user.id);
 
-        await new Promise(r => setTimeout(r, 300))
+                if (error) throw error;
+            }
 
-        setSaving(false)
-        alert('Configurações salvas com sucesso!')
+            // Persist preferences to localStorage
+            localStorage.setItem('xpace-theme', theme)
+            localStorage.setItem('xpace-lang', language)
+            localStorage.setItem('xpace-anti-piracy', String(antiPiracy))
+            localStorage.setItem('xpace-notifications', String(notifications))
+
+            alert('Configurações salvas com sucesso!')
+        } catch (err) {
+            console.error('Erro ao salvar:', err);
+            alert('Falha ao salvar as configurações no servidor.');
+        } finally {
+            setSaving(false)
+        }
     }
 
     return (
@@ -177,6 +214,47 @@ export default function ConfigPage() {
                         }
                     }}
                 />
+
+                {/* Perfil Social */}
+                <div className="bg-[#0A0A0A] border border-[#222] rounded-sm p-5 space-y-4">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-sm bg-[#111] border border-[#222] flex items-center justify-center text-secondary">
+                            <Globe size={18} />
+                        </div>
+                        <div>
+                            <h3 className="font-heading text-sm uppercase tracking-widest text-white">Seu Perfil</h3>
+                            <p className="text-[10px] font-sans text-[#555]">Como você aparece na comunidade</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-[10px] font-mono text-[#555] uppercase tracking-widest block mb-1.5">Instagram</label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#444] text-xs font-mono">@</span>
+                                <input
+                                    type="text"
+                                    value={instagram}
+                                    onChange={e => setInstagram(e.target.value)}
+                                    placeholder="seu_perfil"
+                                    className="w-full bg-[#050505] border border-[#222] text-white font-sans text-xs pl-8 pr-3 py-2.5 rounded outline-none focus:border-secondary transition-colors"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-mono text-[#555] uppercase tracking-widest block mb-1.5">Tratamento</label>
+                            <select
+                                value={gender}
+                                onChange={e => setGender(e.target.value)}
+                                className="w-full bg-[#050505] border border-[#222] text-white font-sans text-xs px-3 py-2.5 rounded outline-none focus:border-secondary transition-colors h-[38px]"
+                            >
+                                <option value="N">Neutro (Dancer)</option>
+                                <option value="M">Masculino (Bem-vindo)</option>
+                                <option value="F">Feminino (Bem-vinda)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Language */}
                 <div className="bg-[#0A0A0A] border border-[#222] rounded-sm p-5 flex items-center justify-between">
