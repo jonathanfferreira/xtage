@@ -11,7 +11,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 export async function POST(request: Request) {
     const ip = getClientIp(request);
-    const { limited } = rateLimit(`auth:register:${ip}`, 3);
+    const { limited } = await rateLimit(`auth:register:${ip}`, 3);
     if (limited) {
         return NextResponse.json(
             { error: "Muitas tentativas de registro. Tente novamente em 1 minuto." },

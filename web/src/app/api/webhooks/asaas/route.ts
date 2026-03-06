@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { timingSafeEqual } from "crypto";
 
 // Admin client - bypasses RLS for server-to-server webhook
 const supabaseAdmin = createClient(
@@ -21,7 +22,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        if (token !== WEBHOOK_SECRET) {
+        // Timing-safe comparison para prevenir timing attack
+        const tokenBuf = Buffer.from(token ?? "");
+        const secretBuf = Buffer.from(WEBHOOK_SECRET);
+        const tokenValid = tokenBuf.length === secretBuf.length && timingSafeEqual(tokenBuf, secretBuf);
+        if (!tokenValid) {
             console.warn("[ASAAS WEBHOOK] ⛔ Token inválido ou ausente.");
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

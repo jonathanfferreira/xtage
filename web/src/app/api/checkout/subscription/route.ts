@@ -17,7 +17,7 @@ const supabaseAdmin = createClient(
 export async function POST(request: Request) {
     // Rate limiting: 3 tentativas/min por IP
     const ip = getClientIp(request);
-    const { limited } = rateLimit(ip, 3);
+    const { limited } = await rateLimit(ip, 3);
     if (limited) {
         return NextResponse.json(
             { error: "Muitas tentativas. Tente novamente em 1 minuto." },

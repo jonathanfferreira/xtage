@@ -53,13 +53,13 @@ export async function POST(request: Request) {
     const isPaid = course.pricing_type !== 'free' && Number(course.price) > 0
 
     if (isPaid) {
-        // TODO: Integrate with ASAAS payment flow
-        // For now, return a message that payment is required
+        // Cursos pagos devem passar pelo checkout Asaas.
+        // O frontend deve redirecionar o usuário para a página de checkout.
         return NextResponse.json({
-            error: 'Este curso requer pagamento. Integração de pagamento em breve.',
             requires_payment: true,
             course_id: course.id,
             price: course.price,
+            checkout_url: `/checkout/${course.id}`,
         }, { status: 402 })
     }
 
