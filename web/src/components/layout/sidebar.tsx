@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Home, PlaySquare, Award, User, Settings, LogOut, BarChart3, Rocket, Compass, Handshake, Smartphone, ShoppingBag } from 'lucide-react';
+import { Home, PlaySquare, Award, User, Settings, LogOut, BarChart3, Rocket, Compass, Handshake, Smartphone, ShoppingBag, Bell } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
@@ -52,6 +52,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                     <div className="px-4 text-[10px] uppercase tracking-widest text-[#444] font-display opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity mb-2">Sistema</div>
 
                     <SidebarItem href="/dashboard/perfil" icon={<User size={20} />} label="Identidade" active={pathname?.startsWith('/dashboard/perfil')} onClick={onClose} />
+                    <SidebarItem href="/dashboard/notificacoes" icon={<Bell size={20} />} label="Notificações" active={pathname?.startsWith('/dashboard/notificacoes')} onClick={onClose} />
                     <SidebarItem href="/dashboard/config" icon={<Settings size={20} />} label="Configuração" active={pathname?.startsWith('/dashboard/config')} onClick={onClose} />
 
                     <div className="my-4 border-t border-[#1a1a1a] mx-2"></div>
