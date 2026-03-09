@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
                 });
             } catch (emailErr) {
                 // Não-crítico: o lead já foi salvo no banco
-                console.warn('[WAITLIST] Falha ao enviar e-mail de confirmação:', emailErr);
+                console.error('[WAITLIST] Falha no Resend (audience/email):', JSON.stringify(emailErr));
             }
         }
 
