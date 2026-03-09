@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     // Rate limit: max 3 partner applications per minute per IP
     const ip = getClientIp(request);
-    const { limited } = rateLimit(`partner:${ip}`, 3);
+    const { limited } = await rateLimit(`partner:${ip}`, 3);
     if (limited) {
         return NextResponse.json(
             { error: 'Muitas tentativas. Tente novamente em 1 minuto.' },

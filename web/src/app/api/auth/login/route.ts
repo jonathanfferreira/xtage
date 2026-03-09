@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
     const ip = getClientIp(request);
-    const { limited } = rateLimit(`auth:login:${ip}`, 10);
+    const { limited } = await rateLimit(`auth:login:${ip}`, 10);
     if (limited) {
         return NextResponse.json(
             { error: "Muitas tentativas de login. Tente novamente em 1 minuto." },

@@ -46,6 +46,19 @@ export async function POST(request: NextRequest) {
     const { courseId } = body;
     if (!courseId) return NextResponse.json({ error: 'courseId obrigatório' }, { status: 400 });
 
+    // Validação explícita de matrícula ativa — defesa em profundidade antes de chamar o RPC
+    const { data: enrollment } = await supabase
+        .from('enrollments')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('course_id', courseId)
+        .eq('status', 'active')
+        .maybeSingle();
+
+    if (!enrollment) {
+        return NextResponse.json({ error: 'Você não está matriculado neste curso.' }, { status: 403 });
+    }
+
     // Chama função do DB para emitir certificado se 100% completo
     const { data: certId, error } = await supabaseAdmin
         .rpc('emit_certificate_if_complete', {

@@ -21,7 +21,7 @@ const DEFAULT_SPLIT_PERCENT = Number(process.env.PLATFORM_SPLIT_PERCENT || 10);
 export async function POST(request: Request) {
     // Rate limit: max 5 checkout attempts per minute per IP
     const ip = getClientIp(request);
-    const { limited } = rateLimit(ip, 5);
+    const { limited } = await rateLimit(ip, 5);
     if (limited) {
         return NextResponse.json(
             { error: "Muitas tentativas. Tente novamente em 1 minuto." },
@@ -35,8 +35,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Requisição inválida." }, { status: 403 });
     }
 
-    // eslint-disable-next-line no-console
-    console.log("🟢 POST /api/checkout", ASAAS_API_KEY ? "[ASAAS LIVE]" : "[MOCK MODE]", `IP: ${ip}`);
+    console.log("🟢 POST /api/checkout — iniciando", `IP: ${ip}`);
 
     try {
         let rawBody: unknown;
@@ -246,6 +245,7 @@ export async function POST(request: Request) {
         }
 
         // 6. Create Asaas Payment
+        let splitFailed = false;
         const chargeRes = await fetch(`${ASAAS_API_URL}/payments`, {
             method: "POST",
             headers: { "access_token": ASAAS_API_KEY, "Content-Type": "application/json" },
@@ -260,7 +260,14 @@ export async function POST(request: Request) {
 
             // If wallet error, retry without split (platform absorbs full amount)
             if (errDesc.toLowerCase().includes('wallet') && chargePayload.split) {
-                console.warn("Retrying charge without split due to invalid wallet...");
+                // ALERTA CRÍTICO: split falhou, professor NÃO receberá automaticamente
+                console.error("[CHECKOUT] ⚠️ SPLIT FALHOU — cobrança sem split. Professor precisa receber manualmente.", {
+                    professorWalletId,
+                    courseId,
+                    finalValue,
+                    errDesc,
+                });
+                splitFailed = true;
                 delete chargePayload.split;
                 const retryRes = await fetch(`${ASAAS_API_URL}/payments`, {
                     method: "POST",
@@ -288,18 +295,21 @@ export async function POST(request: Request) {
                 payment_method: paymentMethod,
             }).select('id').single();
 
-            // Split audit trail
+            // Split audit trail: registra mesmo quando split falhou (split_failed=true indica repasse manual necessário)
             if (savedTx?.id && professorWalletId) {
-                const platformAmount = Number((finalValue - professorFixedSplit).toFixed(2));
+                const platformAmount = splitFailed
+                    ? finalValue  // plataforma ficou com tudo no fallback
+                    : Number((finalValue - professorFixedSplit).toFixed(2));
                 await supabaseAdmin.from('split_audit').insert({
                     transaction_id: savedTx.id,
                     professor_wallet_id: professorWalletId,
-                    professor_amount: professorFixedSplit,
+                    professor_amount: splitFailed ? 0 : professorFixedSplit,
                     platform_amount: platformAmount,
                     total_amount: finalValue,
                     split_percent: splitPercent,
                     affiliate_user_id: affiliateUserId,
-                    affiliate_amount: affiliateCommissionValue
+                    affiliate_amount: affiliateCommissionValue,
+                    split_failed: splitFailed,
                 });
             }
         }
@@ -328,8 +338,9 @@ export async function POST(request: Request) {
             status: chargeData.status,
         });
 
-    } catch (error: any) {
-        console.error("🔴 CHECKOUT ERROR:", error?.message || "Unknown error");
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : "Erro desconhecido";
+        console.error("🔴 CHECKOUT ERROR:", msg);
+        return NextResponse.json({ error: "Erro ao processar pagamento. Tente novamente ou contate o suporte." }, { status: 500 });
     }
 }

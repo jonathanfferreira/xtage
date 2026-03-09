@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { timingSafeEqual } from 'crypto'
 
 
 
@@ -22,7 +23,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
-        if (authHeader !== BUNNY_WEBHOOK_SECRET) {
+        // Timing-safe comparison para prevenir timing attack
+        const headerBuf = Buffer.from(authHeader ?? '');
+        const secretBuf = Buffer.from(BUNNY_WEBHOOK_SECRET);
+        const tokenValid = headerBuf.length === secretBuf.length && timingSafeEqual(headerBuf, secretBuf);
+        if (!tokenValid) {
             console.warn('[BUNNY WEBHOOK] Token de autenticacao invalido ou ausente.')
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
@@ -35,17 +40,28 @@ export async function POST(request: Request) {
 
         if (Status === 3) {
             if (VideoGuid) {
-                await supabaseAdmin.from('lessons').update({
-                    status: 'published', // Altera de 'processing' / 'draft' para 'published'
-                    duration: Length || 0 // Captura os Segundos
-                }).eq('video_id', VideoGuid)
+                const { error: updateErr } = await supabaseAdmin
+                    .from('lessons')
+                    .update({ status: 'published', duration: Length || 0 })
+                    .eq('video_id', VideoGuid)
 
-                console.log(`[BUNNY WEBHOOK] Sucesso. Banco de dados sincronizado para o VideoID: ${VideoGuid}.`)
+                if (updateErr) {
+                    console.error(`[BUNNY WEBHOOK] ⚠️ Falha ao atualizar lesson no DB para VideoID: ${VideoGuid}`, updateErr.message)
+                    return NextResponse.json({ error: 'DB update failed' }, { status: 500 })
+                }
+                console.log(`[BUNNY WEBHOOK] ✅ Banco sincronizado para VideoID: ${VideoGuid}.`)
             }
         } else if (Status === 4 || Status === 5 || Status === 6) {
             if (VideoGuid) {
-                await supabaseAdmin.from('lessons').update({ status: 'failed' }).eq('video_id', VideoGuid)
-                console.error(`[BUNNY WEBHOOK] Falha de Encode/Transcodificação recebida pela Nuvem pro VideoID: ${VideoGuid}.`)
+                const { error: failErr } = await supabaseAdmin
+                    .from('lessons')
+                    .update({ status: 'failed' })
+                    .eq('video_id', VideoGuid)
+
+                if (failErr) {
+                    console.error(`[BUNNY WEBHOOK] ⚠️ Falha ao marcar lesson como 'failed': ${VideoGuid}`, failErr.message)
+                }
+                console.error(`[BUNNY WEBHOOK] ❌ Encode falhou para VideoID: ${VideoGuid} (Status: ${Status}).`)
             }
         }
 

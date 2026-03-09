@@ -12,8 +12,10 @@ export default function HomeScreen({ navigation }) {
     const [streak, setStreak] = useState(0);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [loadError, setLoadError] = useState(false);
 
     const loadData = useCallback(async () => {
+        setLoadError(false);
         try {
             const { data: { user: authUser } } = await supabase.auth.getUser();
             if (!authUser) return;
@@ -68,6 +70,7 @@ export default function HomeScreen({ navigation }) {
             if (releases) setNewReleases(releases);
         } catch (err) {
             console.error('HomeScreen load error:', err);
+            setLoadError(true);
         } finally {
             setLoading(false);
             setRefreshing(false);
@@ -152,6 +155,26 @@ export default function HomeScreen({ navigation }) {
         return (
             <View className="flex-1 bg-black items-center justify-center">
                 <ActivityIndicator color="#6324b2" size="large" />
+            </View>
+        );
+    }
+
+    if (loadError) {
+        return (
+            <View className="flex-1 bg-black items-center justify-center px-8">
+                <Sparkles color="#333" size={48} />
+                <Text className="text-[#555] text-center mt-4 uppercase tracking-widest text-sm">
+                    Erro ao carregar conteúdo
+                </Text>
+                <Text className="text-[#444] text-xs text-center mt-2">
+                    Verifique sua conexão e tente novamente.
+                </Text>
+                <TouchableOpacity
+                    onPress={() => { setLoading(true); loadData(); }}
+                    className="mt-6 border border-[#333] px-6 py-3 rounded"
+                >
+                    <Text className="text-white text-xs uppercase tracking-widest font-bold">Tentar Novamente</Text>
+                </TouchableOpacity>
             </View>
         );
     }

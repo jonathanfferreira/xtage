@@ -17,11 +17,15 @@ export function AuthProvider({ children }) {
 
     // Fetch user profile from public.users
     const fetchProfile = async (userId) => {
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from('users')
             .select('id, email, full_name, avatar_url, role')
             .eq('id', userId)
             .single();
+        if (error) {
+            console.error('[AuthContext] fetchProfile error:', error.message);
+            return;
+        }
         setProfile(data);
     };
 

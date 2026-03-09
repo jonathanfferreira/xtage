@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trophy, Flame, Star, BookOpen, Calendar, ArrowUpRight, Play, CheckCircle2, Lock, FileText, Repeat } from 'lucide-react';
+import { FollowButton } from '@/components/community/follow-button';
 
 const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,6 +17,28 @@ const supabaseAnon = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+
+// --- GET CURRENT USER + FOLLOW STATE ---
+
+async function getCurrentUserAndFollow(targetUserId: string) {
+    const cookieStore = await cookies();
+    const supabaseUser = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { cookies: { getAll: () => cookieStore.getAll() } }
+    );
+    const { data: { user } } = await supabaseUser.auth.getUser();
+    if (!user || user.id === targetUserId) return { currentUserId: null, isFollowing: false };
+
+    const { data } = await supabaseAdmin
+        .from('follows')
+        .select('follower_id')
+        .eq('follower_id', user.id)
+        .eq('following_id', targetUserId)
+        .maybeSingle();
+
+    return { currentUserId: user.id, isFollowing: !!data };
+}
 
 // --- ALUNO PROFILE LOGIC ---
 
@@ -164,6 +189,8 @@ export default async function GenericProfilePage({ params }: { params: Promise<{
 
         if (!profile) notFound();
 
+        const { currentUserId, isFollowing } = await getCurrentUserAndFollow(profile.id);
+
         const joinedDate = new Date(profile.created_at).toLocaleDateString('pt-BR', {
             month: 'long', year: 'numeric'
         });
@@ -213,6 +240,11 @@ export default async function GenericProfilePage({ params }: { params: Promise<{
                                 <Calendar size={12} className="text-[#555]" />
                                 <span className="text-[#555] text-xs font-mono">membro desde {joinedDate}</span>
                             </div>
+                            {currentUserId && (
+                                <div className="mt-4 flex justify-center sm:justify-start">
+                                    <FollowButton targetUserId={profile.id} initialIsFollowing={isFollowing} />
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -289,6 +321,10 @@ export default async function GenericProfilePage({ params }: { params: Promise<{
     const data = await getTenantProfile(decodedSlug);
     if (!data) notFound();
 
+    const { currentUserId: tenantCurrentUserId, isFollowing: tenantIsFollowing } = data.tenant.owner_id
+        ? await getCurrentUserAndFollow(data.tenant.owner_id)
+        : { currentUserId: null, isFollowing: false };
+
     const { tenant, courses, activePlan } = data;
     const brandColor = tenant.brand_color || "#6324b2";
 
@@ -333,6 +369,11 @@ export default async function GenericProfilePage({ params }: { params: Promise<{
                             <a href={`https://instagram.com/${tenant.instagram.replace('@', '')}`} target="_blank" rel="noopener" className="inline-block mt-4 text-sm text-primary hover:text-white transition-colors">
                                 @{tenant.instagram.replace('@', '')}
                             </a>
+                        )}
+                        {tenantCurrentUserId && tenant.owner_id && (
+                            <div className="mt-5">
+                                <FollowButton targetUserId={tenant.owner_id} initialIsFollowing={tenantIsFollowing} />
+                            </div>
                         )}
                     </div>
                 </div>

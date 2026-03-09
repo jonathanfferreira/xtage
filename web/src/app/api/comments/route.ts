@@ -143,6 +143,30 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'O comentário não pode ser vazio.' }, { status: 400 });
         }
 
+        // Verifica se o usuário tem acesso ao curso desta aula
+        const { data: lesson } = await supabase
+            .from('lessons')
+            .select('course_id, courses!course_id(pricing_type, price)')
+            .eq('id', lesson_id)
+            .single();
+
+        if (lesson) {
+            const isPaidCourse = (lesson.courses as any)?.pricing_type !== 'free' && Number((lesson.courses as any)?.price) > 0;
+            if (isPaidCourse) {
+                const { data: enrollment } = await supabase
+                    .from('enrollments')
+                    .select('id')
+                    .eq('user_id', user.id)
+                    .eq('course_id', lesson.course_id)
+                    .eq('status', 'active')
+                    .maybeSingle();
+
+                if (!enrollment) {
+                    return NextResponse.json({ error: 'Você precisa estar matriculado no curso para comentar.' }, { status: 403 });
+                }
+            }
+        }
+
         // Enviar comentário
         const { data: newComment, error } = await supabase
             .from('comments')

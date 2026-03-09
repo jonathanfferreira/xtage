@@ -54,13 +54,10 @@ export async function POST(request: Request) {
         const ownerEmail = tenant.owner?.email || `contact+${tenantId}@xtage.app`
         // const ownerName = tenant.owner?.full_name || tenant.name
 
-        // 3. Criar a Subconta no Asaas (Para que os Splits financeiros funcionem)
-        let newWalletId = `mocked_wallet_${Date.now()}`
-
-        // Mock wallet — professor must complete KYC at /studio/configuracoes/pagamentos to create a real Asaas SubAccount
-        // The KYC page detects the 'mocked_' prefix and shows the KYC form
+        // Wallet placeholder — professor deve completar KYC em /studio/configuracoes/pagamentos
+        // para criar uma SubConta real no Asaas. A página de KYC detecta o prefixo 'mocked_'.
+        const newWalletId = `mocked_wallet_${Date.now()}`
         console.log(`[MASTER] Aprovando ${tenant.name} com wallet placeholder. Professor deve completar KYC para receber splits.`)
-        newWalletId = `mocked_wallet_${Date.now()}`
 
         // 5. Create a Bunny.net Collection for this tenant's videos
         let bunnyCollectionId: string | null = null;
@@ -112,8 +109,8 @@ export async function POST(request: Request) {
         })
 
 
-    } catch (e: any) {
+    } catch (e: unknown) {
         console.error("Master Approve Error:", e)
-        return NextResponse.json({ error: e.message || 'Server Exception' }, { status: 500 })
+        return NextResponse.json({ error: 'Erro interno ao processar aprovação.' }, { status: 500 })
     }
 }

@@ -53,13 +53,13 @@ export async function POST(request: Request) {
     const isPaid = course.pricing_type !== 'free' && Number(course.price) > 0
 
     if (isPaid) {
-        // TODO: Integrate with ASAAS payment flow
-        // For now, return a message that payment is required
+        // Cursos pagos devem passar pelo checkout Asaas.
+        // O frontend deve redirecionar o usuário para a página de checkout.
         return NextResponse.json({
-            error: 'Este curso requer pagamento. Integração de pagamento em breve.',
             requires_payment: true,
             course_id: course.id,
             price: course.price,
+            checkout_url: `/checkout/${course.id}`,
         }, { status: 402 })
     }
 
@@ -78,13 +78,16 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: enrollErr.message }, { status: 500 })
     }
 
-    // Award XP for enrollment
-    await supabase.from('user_xp_history').insert({
+    // Award XP for enrollment (non-critical — log failure but don't block response)
+    const { error: xpError } = await supabase.from('user_xp_history').insert({
         user_id: user.id,
         xp_amount: 50,
         source: 'enrollment',
         description: `Matrícula no curso`,
-    }).then(() => { })
+    });
+    if (xpError) {
+        console.error('[ENROLL] Falha ao registrar XP (não-crítico):', xpError.message);
+    }
 
     // Notify the course creator about the new enrollment
     try {

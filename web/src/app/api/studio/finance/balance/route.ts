@@ -58,14 +58,15 @@ export async function GET(request: Request) {
             const errDetails = await asaasRes.json().catch(() => ({}));
             console.error('[FINANCE] Falha ao checar saldo:', errDetails);
 
-            // Retorna um fallback vazio em vez de quebrar a página da escola, mas sem flag de erro agressivo.
+            // Retorna null para sinalizar ao frontend que o dado não está disponível (não confundir com saldo real = 0)
             return NextResponse.json({
-                balance: 0,
-                income_expected: 0,
+                balance: null,
+                income_expected: null,
                 wallet_id: walletId,
                 is_mock: false,
+                api_error: true,
                 pix_key: tenant.pix_key || null,
-                warning: 'Não foi possível consultar as informações financeiras reais agora.'
+                warning: 'Não foi possível consultar as informações financeiras agora. Tente novamente em instantes.',
             });
         }
 
