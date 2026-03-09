@@ -21,6 +21,9 @@ CREATE INDEX IF NOT EXISTS idx_certificates_course  ON certificates(course_id);
 -- RLS
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "User sees own certificates" ON certificates;
+DROP POLICY IF EXISTS "Public read by slug" ON certificates;
+
 -- Aluno vê seus próprios certificados
 CREATE POLICY "User sees own certificates"
     ON certificates FOR SELECT
