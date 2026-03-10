@@ -192,8 +192,8 @@ export default function LandingPage() {
                 <Users size={16} className="text-green-500" />
               </div>
               <div>
-                <p className="text-white text-xs font-bold">5.200+ membros</p>
-                <p className="text-[#666] text-[10px]">Lista de espera</p>
+                <p className="text-white text-xs font-bold">Lista de espera</p>
+                <p className="text-[#666] text-[10px]">Abertura em 29 ABR</p>
               </div>
             </div>
           </motion.div>
@@ -210,8 +210,8 @@ export default function LandingPage() {
       >
         <div className="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-[#1a1a1a]">
           {[
-            { value: '5.200+', label: 'Na lista de espera', color: 'text-primary' },
-            { value: '29 ABR', label: 'Data de lançamento', color: 'text-secondary' },
+            { value: '29 ABR', label: 'Abertura da plataforma', color: 'text-primary' },
+            { value: '100%', label: 'Foco em dança urbana', color: 'text-secondary' },
             { value: '100%', label: 'Construído por dançarinos', color: 'text-accent' },
             { value: '∞', label: 'Estilos suportados', color: 'text-yellow-400' },
           ].map((stat, i) => (
@@ -512,7 +512,7 @@ export default function LandingPage() {
               {/* Social Links */}
               <div className="flex items-center gap-4">
                 <a
-                  href="https://instagram.com/xtage.app"
+                  href="https://instagram.com/xtageapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-[#111] border border-[#222] flex items-center justify-center text-[#666] hover:text-white hover:border-[#444] hover:bg-[#1a1a1a] transition-all duration-200"
