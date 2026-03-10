@@ -117,6 +117,11 @@ export async function POST(request: Request) {
         };
 
         if (paymentMethod === "credit" && creditCard) {
+            // CPF obrigatório para cartão — sem ele o Asaas rejeita ou levanta flag de fraude
+            if (!cpf) {
+                return NextResponse.json({ error: 'CPF é obrigatório para pagamento com cartão de crédito.' }, { status: 422 });
+            }
+
             subscriptionPayload.creditCard = {
                 holderName: creditCard.holderName,
                 number: creditCard.number,
@@ -127,7 +132,7 @@ export async function POST(request: Request) {
             subscriptionPayload.creditCardHolderInfo = {
                 name,
                 email,
-                cpfCnpj: cpf || "00000000000",
+                cpfCnpj: cpf,
             };
         }
 

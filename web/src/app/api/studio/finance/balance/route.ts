@@ -71,9 +71,13 @@ export async function GET(request: Request) {
         }
 
         const data = await asaasRes.json();
+        // Asaas /finance/balance retorna `balance` (saldo disponível).
+        // Valores a receber pendentes ficam em endpoints separados (/finance/receivable).
+        // `estimatedUpdate` não é um campo oficial — campo deixado como fallback seguro.
+        const incomeExpected = data.totalTransferValue ?? data.estimatedUpdate ?? data.totalBalance ?? 0;
         return NextResponse.json({
-            balance: data.balance || 0,
-            income_expected: (data.estimatedUpdate || 0), // ou algo como incomingTransfer
+            balance: data.balance ?? 0,
+            income_expected: incomeExpected,
             wallet_id: walletId,
             is_mock: false,
             pix_key: tenant.pix_key || null

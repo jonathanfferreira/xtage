@@ -227,13 +227,21 @@ export async function POST(request: Request) {
         }
 
         if (paymentMethod === 'credit' && creditCard) {
+            // Cartão exige CPF e CEP — sem eles o Asaas rejeita ou levanta flag de fraude
+            if (!cpf) {
+                return NextResponse.json({ error: 'CPF é obrigatório para pagamento com cartão de crédito.' }, { status: 422 });
+            }
+            if (!creditCard.postalCode) {
+                return NextResponse.json({ error: 'CEP é obrigatório para pagamento com cartão de crédito.' }, { status: 422 });
+            }
+
             chargePayload.creditCard = creditCard;
             chargePayload.creditCardHolderInfo = {
                 name,
                 email,
-                cpfCnpj: cpf || "00000000000",
-                postalCode: creditCard.postalCode || "00000000",
-                addressNumber: creditCard.addressNumber || "0",
+                cpfCnpj: cpf,
+                postalCode: creditCard.postalCode,
+                addressNumber: creditCard.addressNumber || 'S/N',
                 phone
             };
 
