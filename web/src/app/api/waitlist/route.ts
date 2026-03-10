@@ -72,19 +72,20 @@ export async function POST(request: NextRequest) {
             <p style="color:#ccc;font-size:16px;line-height:1.6;margin:0 0 24px">Oi, <strong style="color:#fff">${name.trim()}</strong>!</p>
             <p style="color:#aaa;font-size:15px;line-height:1.6;margin:0 0 24px">
               ${isCreator
-                ? 'Você se cadastrou como <strong style="color:#eb00bc">Criador de Conteúdo</strong>. Quando abrirmos as portas, você vai ser um dos primeiros a poder cadastrar sua escola, criar seus cursos e começar a monetizar no XTAGE.'
-                : 'Você se cadastrou como <strong style="color:#6324b2">Dançarino</strong>. Quando abrirmos as portas, você vai ter acesso antecipado para explorar os melhores cursos de dança do Brasil.'}
+                ? 'Você se cadastrou como <strong style="color:#eb00bc">Professor</strong>. Quando abrirmos as portas, você vai ser um dos primeiros a poder cadastrar sua escola, criar seus cursos e começar a monetizar no XTAGE.'
+                : 'Você se cadastrou como <strong style="color:#6324b2">Aluno</strong>. Quando abrirmos as portas, você vai ter acesso antecipado para explorar os melhores cursos de dança do Brasil.'}
             </p>
             <table cellpadding="0" cellspacing="0" style="background:#111;border:1px solid #222;border-radius:8px;padding:20px 24px;margin:0 0 32px;width:100%">
               <tr>
                 <td>
                   <p style="margin:0 0 4px;color:#666;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-family:monospace">DATA DE LANÇAMENTO</p>
-                  <p style="margin:0;color:#fff;font-size:24px;font-weight:900;font-family:monospace">29 DE MARÇO DE 2026</p>
+                  <p style="margin:0;color:#fff;font-size:24px;font-weight:900;font-family:monospace">29 DE ABRIL DE 2026</p>
+                  <p style="margin:4px 0 0;color:#666;font-size:11px;font-family:monospace;letter-spacing:2px;text-transform:uppercase">Dia Internacional da Dança</p>
                 </td>
               </tr>
             </table>
             <p style="color:#666;font-size:13px;line-height:1.6;margin:0 0 32px">
-              Guarda esse e-mail. Quando o app abrir, você será notificado em primeira mão — antes de todo mundo.
+              Guarda esse e-mail. No dia 29 de Abril você será notificado em primeira mão — antes de todo mundo.
             </p>
             <table cellpadding="0" cellspacing="0" style="width:100%">
               <tr>
