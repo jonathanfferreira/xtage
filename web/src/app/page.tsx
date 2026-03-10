@@ -44,6 +44,9 @@ export default function LandingPage() {
         </div>
       </motion.header>
 
+      {/* Pré-Save / Waitlist — topo da página */}
+      <WaitlistSection />
+
       {/* Hero Section */}
       <main className="relative z-10 pt-32 pb-20 md:pt-48 md:pb-32 px-6">
         <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
@@ -243,9 +246,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Pré-Save / Waitlist */}
-      <WaitlistSection />
 
       {/* Modern Footer */}
       <footer className="relative z-10 border-t border-[#111] bg-[#020202] pt-16 pb-8">
