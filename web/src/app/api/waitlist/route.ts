@@ -43,14 +43,33 @@ export async function POST(request: NextRequest) {
                 const firstName = name.trim().split(' ')[0];
                 const lastName = name.trim().split(' ').slice(1).join(' ') || undefined;
 
-                // Adiciona à audience "Público" com a propriedade customizada `type`
-                // Crie a propriedade `type` (texto) em Público > Propriedades,
-                // depois crie os Segmentos: "Alunos" (type=aluno) e "Professores" (type=criador)
+                const addToAudience = async (audienceId: string) => {
+                    const res = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: cleanEmail,
+                            first_name: firstName,
+                            last_name: lastName || undefined,
+                            unsubscribed: false,
+                        }),
+                    });
+                    const body = await res.json();
+                    console.log(`[WAITLIST] Resend audience ${audienceId}:`, res.status, JSON.stringify(body));
+                };
+
+                // Audience geral (todos os leads)
                 const mainAudienceId = process.env.RESEND_AUDIENCE_ID || '8cfa20f6-1adb-4921-9e48-5ee36453543c';
-                await resend.contacts.create(
-                    { email: cleanEmail, firstName, lastName, unsubscribed: false, data: { type } },
-                    { audienceId: mainAudienceId },
-                );
+                await addToAudience(mainAudienceId);
+
+                // Audience específica por tipo
+                const typeAudienceId = isCreator
+                    ? process.env.RESEND_AUDIENCE_ID_PROFESSORES
+                    : process.env.RESEND_AUDIENCE_ID_ALUNOS;
+                if (typeAudienceId) await addToAudience(typeAudienceId);
 
                 // 3. E-mail de confirmação personalizado por tipo
                 const subject = isCreator
