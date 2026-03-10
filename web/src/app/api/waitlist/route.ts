@@ -43,27 +43,18 @@ export async function POST(request: NextRequest) {
                 const firstName = name.trim().split(' ')[0];
                 const lastName = name.trim().split(' ').slice(1).join(' ') || undefined;
 
-                const contactPayload = {
+                // Adiciona à audience "Público" com a propriedade customizada `type`
+                // Crie a propriedade `type` (texto) em Público > Propriedades,
+                // depois crie os Segmentos: "Alunos" (type=aluno) e "Professores" (type=criador)
+                const mainAudienceId = process.env.RESEND_AUDIENCE_ID || '8cfa20f6-1adb-4921-9e48-5ee36453543c';
+                await resend.contacts.create({
+                    audienceId: mainAudienceId,
                     email: cleanEmail,
                     firstName,
                     lastName,
                     unsubscribed: false,
-                };
-
-                // 1. Audience principal "Público" — todos os leads
-                const mainAudienceId = process.env.RESEND_AUDIENCE_ID || '8cfa20f6-1adb-4921-9e48-5ee36453543c';
-                await resend.contacts.create({ audienceId: mainAudienceId, ...contactPayload });
-
-                // 2. Audience segmentada por tipo (Alunos ou Professores)
-                //    Crie as audiences no Resend e adicione os IDs no Vercel:
-                //    RESEND_AUDIENCE_ALUNOS_ID e RESEND_AUDIENCE_PROFESSORES_ID
-                const typeAudienceId = isCreator
-                    ? process.env.RESEND_AUDIENCE_PROFESSORES_ID
-                    : process.env.RESEND_AUDIENCE_ALUNOS_ID;
-
-                if (typeAudienceId) {
-                    await resend.contacts.create({ audienceId: typeAudienceId, ...contactPayload });
-                }
+                    data: { type },
+                });
 
                 // 3. E-mail de confirmação personalizado por tipo
                 const subject = isCreator
