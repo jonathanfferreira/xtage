@@ -47,10 +47,21 @@ export async function POST(request: NextRequest) {
                 // Crie a propriedade `type` (texto) em Público > Propriedades,
                 // depois crie os Segmentos: "Alunos" (type=aluno) e "Professores" (type=criador)
                 const mainAudienceId = process.env.RESEND_AUDIENCE_ID || '8cfa20f6-1adb-4921-9e48-5ee36453543c';
-                await resend.contacts.create(
-                    { email: cleanEmail, firstName, lastName, unsubscribed: false, data: { type } },
-                    { audienceId: mainAudienceId },
-                );
+                // Usa fetch direto pois o SDK v6 ainda não tipou custom properties (data)
+                await fetch(`https://api.resend.com/audiences/${mainAudienceId}/contacts`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: cleanEmail,
+                        first_name: firstName,
+                        last_name: lastName || undefined,
+                        unsubscribed: false,
+                        data: { type },
+                    }),
+                });
 
                 // 3. E-mail de confirmação personalizado por tipo
                 const subject = isCreator
