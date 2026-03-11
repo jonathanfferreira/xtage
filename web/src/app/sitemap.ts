@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 export const revalidate = 3600; // Recria sitemap a cada 1h
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xtage.app';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xpace.dance';
     const supabase = await createClient();
 
     // Busca todos os cursos publicados
@@ -37,13 +37,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticUrls: MetadataRoute.Sitemap = [
         {
-            url: 'https://xtage.app',
+            url: 'https://xpace.dance',
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 1,
         },
         {
-            url: 'https://xtage.app/explorer',
+            url: 'https://xpace.dance/explorer',
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,

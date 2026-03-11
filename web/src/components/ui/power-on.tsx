@@ -9,7 +9,7 @@ export function PowerOnPreloader({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Pula a animação se for a mesma sessão pra não irritar quem dá refresh
-        if (sessionStorage.getItem('xtage-powered')) {
+        if (sessionStorage.getItem('xpace-powered')) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setHasStarted(true);
         }
@@ -17,7 +17,7 @@ export function PowerOnPreloader({ children }: { children: React.ReactNode }) {
 
     const handlePowerOn = () => {
         setIsPoweringUp(true);
-        sessionStorage.setItem('xtage-powered', 'true');
+        sessionStorage.setItem('xpace-powered', 'true');
         // Simula a inicialização brutalista que escala e esvanece (1.2s)
         setTimeout(() => {
             setHasStarted(true);
@@ -39,7 +39,7 @@ export function PowerOnPreloader({ children }: { children: React.ReactNode }) {
                 >
                     <Image
                         src="/images/xpace-on-sticker.png"
-                        alt="Power On XTAGE"
+                        alt="Power On XPACE"
                         fill
                         className="object-contain"
                         priority

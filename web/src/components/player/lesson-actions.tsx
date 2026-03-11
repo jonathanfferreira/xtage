@@ -54,8 +54,8 @@ export function LessonActions({ lessonId, initialLikes, initialIsLiked }: Lesson
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
-                title: 'XTAGE',
-                text: 'Olha essa aula surreal na XTAGE!',
+                title: 'XPACE',
+                text: 'Olha essa aula surreal na XPACE!',
                 url: window.location.href,
             }).catch(console.error);
         } else {

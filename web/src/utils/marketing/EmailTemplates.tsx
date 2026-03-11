@@ -28,9 +28,9 @@ export const WelcomeEmail = ({
     loginEmail,
     loginPassword,
     brandColor = '#6324b2', // Fallback da Plataforma
-    brandLogo = 'https://xtage.app/images/logo-light.png',
+    brandLogo = 'https://xpace.dance/images/logo-light.png',
 }: WelcomeEmailProps & { brandColor?: string; brandLogo?: string }) => {
-    const previewText = `Seu acesso ao XTAGE: ${courseName} foi liberado!`;
+    const previewText = `Seu acesso ao XPACE: ${courseName} foi liberado!`;
 
     return (
         <Html>
@@ -38,7 +38,7 @@ export const WelcomeEmail = ({
             <Preview>{previewText}</Preview>
             <Body style={main}>
                 <Container style={container}>
-                    {/* Header com Logo XTAGE ou Parceiro */}
+                    {/* Header com Logo XPACE ou Parceiro */}
                     <Section style={header}>
                         <Img
                             src={brandLogo}
@@ -50,7 +50,7 @@ export const WelcomeEmail = ({
 
                     {/* Banner Hero */}
                     <Section style={heroBanner}>
-                        <Heading style={h1}>Bem-vindo ao XTAGE, {studentName}!</Heading>
+                        <Heading style={h1}>Bem-vindo ao XPACE, {studentName}!</Heading>
                         <Text style={heroText}>Seu pagamento foi confirmado e seu acesso ao <strong>{courseName}</strong> está pronto para começar.</Text>
                     </Section>
 
@@ -75,7 +75,7 @@ export const WelcomeEmail = ({
                             </Section>
                         ) : (
                             <Section style={btnContainer}>
-                                <Link href="https://xtage.app/login" style={{ ...button, backgroundColor: brandColor }}>
+                                <Link href="https://xpace.dance/login" style={{ ...button, backgroundColor: brandColor }}>
                                     Acessar Plataforma
                                 </Link>
                             </Section>
@@ -86,7 +86,7 @@ export const WelcomeEmail = ({
                     <Section style={footer}>
                         <Text style={footerText}>
                             Em caso de dúvidas, responda a este e-mail ou contate nosso suporte. <br />
-                            <Link href="https://xtage.app" style={footerLink}>xtage.app</Link>
+                            <Link href="https://xpace.dance" style={footerLink}>xpace.dance</Link>
                         </Text>
                     </Section>
                 </Container>
@@ -191,7 +191,7 @@ const btnContainer = {
 };
 
 const button = {
-    backgroundColor: '#6324b2', // Roxo Primary XTAGE
+    backgroundColor: '#6324b2', // Roxo Primary XPACE
     borderRadius: '4px',
     color: '#fff',
     fontSize: '16px',

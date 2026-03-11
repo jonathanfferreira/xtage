@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xtage.app';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xpace.dance';
 
     return {
         rules: [
@@ -27,7 +27,7 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: '/',
             },
         ],
-        sitemap: 'https://xtage.app/sitemap.xml',
+        sitemap: 'https://xpace.dance/sitemap.xml',
         host: siteUrl,
     };
 }

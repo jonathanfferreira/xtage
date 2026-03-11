@@ -57,7 +57,7 @@ export async function POST(request: Request) {
             value: Number(amount),
             pixAddressKey: pixKey,
             pixAddressKeyType: pixKeyType,
-            description: `Saque XTAGE: ${tenant.name}`,
+            description: `Saque XPACE: ${tenant.name}`,
             scheduleDate: new Date().toISOString().split('T')[0]
         };
 

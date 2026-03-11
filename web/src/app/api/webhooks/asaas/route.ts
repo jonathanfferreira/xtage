@@ -83,7 +83,7 @@ export async function POST(request: Request) {
             if (customerEmail) {
                 try {
                     const { sendCartRecoveryEmail } = await import("@/utils/marketing/CartRecovery");
-                    const backUrl = payload.payment?.invoiceUrl || "https://xtage.app/checkout";
+                    const backUrl = payload.payment?.invoiceUrl || "https://xpace.dance/checkout";
                     await sendCartRecoveryEmail(customerEmail, "Dancer", backUrl);
                 } catch (e) {
                     console.warn("[ASAAS WEBHOOK] Cart recovery email fail (non-critical)", e);
@@ -259,12 +259,12 @@ async function handleOneTimePaymentReceived(paymentId: string, customerEmail: st
 
                 const tenant = courseData?.tenants as { name?: string; brand_color?: string; logo_url?: string } | null;
                 const brandColor = tenant?.brand_color || "#6324b2";
-                const brandLogo = tenant?.logo_url || "https://xtage.app/images/logo-light.png";
+                const brandLogo = tenant?.logo_url || "https://xpace.dance/images/logo-light.png";
 
                 const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
                     type: "magiclink",
                     email: customerEmail,
-                    options: { redirectTo: "https://xtage.app/dashboard" },
+                    options: { redirectTo: "https://xpace.dance/dashboard" },
                 });
 
                 const htmlBody = await renderWelcomeEmail({
@@ -277,9 +277,9 @@ async function handleOneTimePaymentReceived(paymentId: string, customerEmail: st
                 });
 
                 await resend.emails.send({
-                    from: `${tenant?.name || "XTAGE"} <contato@xtage.app>`,
+                    from: `${tenant?.name || "XPACE"} <contato@xpace.dance>`,
                     to: [customerEmail],
-                    subject: `✅ Acesso Liberado: ${courseData?.title || "XTAGE"}`,
+                    subject: `✅ Acesso Liberado: ${courseData?.title || "XPACE"}`,
                     html: htmlBody,
                 });
 

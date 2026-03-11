@@ -105,7 +105,7 @@ export default function PerfilPage() {
 
     const handleDeleteAccount = async () => {
         setShowDeleteModal(false)
-        setMessage({ text: 'Para excluir sua conta, envie um e-mail para suporte@xtage.app com o assunto "Excluir Conta". Processamos a solicitação em até 48h.', type: 'error' })
+        setMessage({ text: 'Para excluir sua conta, envie um e-mail para suporte@xpace.dance com o assunto "Excluir Conta". Processamos a solicitação em até 48h.', type: 'error' })
     }
 
     return (

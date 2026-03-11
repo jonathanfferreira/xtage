@@ -105,7 +105,7 @@ export default async function AffiliatesDashboardPage() {
                     {affiliates.map((aff: any) => {
                         const tenantName = aff.tenants?.name || 'Escola Invisível';
                         const slug = aff.tenants?.slug || 'xpace';
-                        const affiliateLink = `https://${slug}.xtage.app/?ref=${aff.affiliate_code}`;
+                        const affiliateLink = `https://${slug}.xpace.dance/?ref=${aff.affiliate_code}`;
                         const metrics = aff.metrics;
 
                         return (

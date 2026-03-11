@@ -12,7 +12,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 export async function POST(request: Request) {
     if (process.env.PRE_LAUNCH === 'true') {
         return NextResponse.json(
-            { error: 'Cadastros abertos em 29 de Abril. Junte-se à lista de espera em xtage.app!' },
+            { error: 'Cadastros abertos em 29 de Abril. Junte-se à lista de espera em xpace.dance!' },
             { status: 503 }
         );
     }

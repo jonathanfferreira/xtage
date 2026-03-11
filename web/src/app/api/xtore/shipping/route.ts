@@ -41,7 +41,7 @@ export async function POST(request: Request) {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${MELHOR_ENVIO_TOKEN}`,
-                        'User-Agent': 'XTAGE Aplicação de E-commerce (suporte@xtage.com.br)'
+                        'User-Agent': 'XPACE Aplicação de E-commerce (suporte@xpace.dance)'
                     },
                     body: JSON.stringify(payload)
                 });

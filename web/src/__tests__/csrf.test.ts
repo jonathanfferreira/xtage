@@ -4,7 +4,7 @@ describe('validateCsrf', () => {
     beforeEach(() => {
         vi.resetModules();
         vi.stubEnv('NODE_ENV', 'production');
-        vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://app.xtage.com.br');
+        vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://app.xpace.dance');
     });
 
     afterEach(() => {
@@ -15,7 +15,7 @@ describe('validateCsrf', () => {
         vi.stubEnv('NODE_ENV', 'development');
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             // No headers
         });
@@ -27,7 +27,7 @@ describe('validateCsrf', () => {
     it('should return error if both origin and referer are missing', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             // No headers
         });
@@ -39,10 +39,10 @@ describe('validateCsrf', () => {
     it('should allow valid origin', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
-                origin: 'https://app.xtage.com.br',
+                origin: 'https://app.xpace.dance',
             },
         });
 
@@ -53,7 +53,7 @@ describe('validateCsrf', () => {
     it('should reject mismatched origin', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 origin: 'https://evil.com',
@@ -67,7 +67,7 @@ describe('validateCsrf', () => {
     it('should handle invalid origin format', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 origin: 'not-a-valid-url',
@@ -81,10 +81,10 @@ describe('validateCsrf', () => {
     it('should allow valid referer when origin is missing', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
-                referer: 'https://app.xtage.com.br/dashboard',
+                referer: 'https://app.xpace.dance/dashboard',
             },
         });
 
@@ -95,7 +95,7 @@ describe('validateCsrf', () => {
     it('should reject mismatched referer when origin is missing', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 referer: 'https://evil.com/dashboard',
@@ -109,7 +109,7 @@ describe('validateCsrf', () => {
     it('should handle invalid referer format when origin is missing', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 referer: 'not-a-valid-url',
@@ -123,11 +123,11 @@ describe('validateCsrf', () => {
     it('should use origin over referer if both are present', async () => {
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 origin: 'https://evil.com',
-                referer: 'https://app.xtage.com.br/dashboard',
+                referer: 'https://app.xpace.dance/dashboard',
             },
         });
 
@@ -139,7 +139,7 @@ describe('validateCsrf', () => {
         vi.stubEnv('NEXT_PUBLIC_SITE_URL', '');
         const { validateCsrf } = await import('../utils/csrf');
 
-        const request = new Request('https://api.xtage.com.br/data', {
+        const request = new Request('https://api.xpace.dance/data', {
             method: 'POST',
             headers: {
                 origin: 'https://evil.com',

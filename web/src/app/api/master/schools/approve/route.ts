@@ -51,7 +51,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'School already active.' }, { status: 400 })
         }
 
-        const ownerEmail = tenant.owner?.email || `contact+${tenantId}@xtage.app`
+        const ownerEmail = tenant.owner?.email || `contact+${tenantId}@xpace.dance`
         // const ownerName = tenant.owner?.full_name || tenant.name
 
         // Wallet placeholder — professor deve completar KYC em /studio/configuracoes/pagamentos

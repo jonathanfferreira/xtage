@@ -29,7 +29,7 @@ export const InvoiceEmail: React.FC<InvoiceEmailProps> = ({
     transactionId,
     brandColor = '#6324b2',
     brandLogo,
-    schoolName = 'XTAGE',
+    schoolName = 'XPACE',
     paidAt,
 }) => {
     const formattedDate = paidAt
@@ -131,7 +131,7 @@ export const InvoiceEmail: React.FC<InvoiceEmailProps> = ({
                                 <tr>
                                     <td>
                                         <a
-                                            href={process.env.NEXT_PUBLIC_SITE_URL ?? 'https://xtage.app'}
+                                            href={process.env.NEXT_PUBLIC_SITE_URL ?? 'https://xpace.dance'}
                                             style={{
                                                 display: 'inline-block',
                                                 backgroundColor: brandColor,

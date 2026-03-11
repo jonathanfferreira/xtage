@@ -39,7 +39,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="relative w-32 h-8">
-              <Image src="/images/xpace-on-branco.png" alt="XTAGE" fill className="object-contain object-left" />
+              <Image src="/images/xpace-on-branco.png" alt="XPACE" fill className="object-contain object-left" />
             </div>
             <Link href="/explore" className="hidden md:block text-sm font-semibold text-white hover:text-primary transition-colors uppercase tracking-widest">
               Explorar Catálogo
@@ -141,7 +141,7 @@ export default function LandingPage() {
               <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
               <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
               <div className="flex-1 text-center hidden md:block">
-                <span className="text-[10px] font-mono text-[#555] bg-[#000] px-4 py-1 rounded-full border border-[#222]">xtage.app/dashboard</span>
+                <span className="text-[10px] font-mono text-[#555] bg-[#000] px-4 py-1 rounded-full border border-[#222]">xpace.dance/dashboard</span>
               </div>
             </div>
             <div className="relative w-full h-full bg-[#050505] overflow-hidden">
@@ -235,7 +235,7 @@ export default function LandingPage() {
           >
             <span className="inline-block text-[10px] font-mono text-primary uppercase tracking-widest border border-primary/30 bg-primary/5 px-3 py-1.5 rounded-full mb-4">Plataforma</span>
             <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-4 uppercase tracking-tight">Evolução em <span className="text-secondary">Ultra Definição</span></h2>
-            <p className="text-[#666] font-light max-w-2xl mx-auto">Muito mais que um player. O XTAGE foi desenhado com inteligência e ferramentas gamificadas para garantir seu desenvolvimento real.</p>
+            <p className="text-[#666] font-light max-w-2xl mx-auto">Muito mais que um player. O XPACE foi desenhado com inteligência e ferramentas gamificadas para garantir seu desenvolvimento real.</p>
           </motion.div>
 
           <motion.div
@@ -250,7 +250,7 @@ export default function LandingPage() {
               { icon: <Zap size={28} className="text-secondary" />, title: "Sistema de XP", desc: "Transforme treino em jogo. Acumule pontos por aula finalizada e suba no Ranking Global." },
               { icon: <Shield size={28} className="text-accent" />, title: "Painel do Professor", desc: "Ferramentas para criadores. Gerencie cursos, alunos e seu financeiro em um só lugar." },
               { icon: <Flame size={28} className="text-orange-500" />, title: "Programa Afiliados", desc: "Recomende cursos e receba comissões. Monetize sua influência dentro do ecossistema." },
-              { icon: <Star size={28} className="text-yellow-400" />, title: "Conquistas", desc: "Desbloqueie badges, participe de desafios e exiba seu nível no perfil XTAGE." },
+              { icon: <Star size={28} className="text-yellow-400" />, title: "Conquistas", desc: "Desbloqueie badges, participe de desafios e exiba seu nível no perfil XPACE." },
               { icon: <Smartphone size={28} className="text-green-400" />, title: "Cross-Platform PWA", desc: "Experiência nativa no celular ou tablet. Seu treino vai junto com você." },
             ].map((card, i) => (
               <motion.div key={i} variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }} transition={{ duration: 0.5 }}>
@@ -367,7 +367,7 @@ export default function LandingPage() {
                 highlight: true,
               },
               {
-                quote: "Sempre quis uma plataforma brasileira séria, focada em dança de verdade. O XTAGE parece ser exatamente isso.",
+                quote: "Sempre quis uma plataforma brasileira séria, focada em dança de verdade. O XPACE parece ser exatamente isso.",
                 name: "Rafael T.",
                 role: "Estudante de Popping, MG",
                 stars: 5,
@@ -436,14 +436,14 @@ export default function LandingPage() {
             />
             <PricingModelCard
               title="Assinatura VIP"
-              desc="Assine sua escola favorita ou o passe global XTAGE e acesse catálogos completos."
+              desc="Assine sua escola favorita ou o passe global XPACE e acesse catálogos completos."
               features={["Cobrança mensal ou anual", "Acesso a múltiplos cursos", "Cancele a qualquer momento", "Benefícios exclusivos do curador"]}
               highlighted
             />
             <PricingModelCard
               title="Para Escolas (OS)"
               desc="Traga sua escola real para o app e tenha o controle da sua tecnologia."
-              features={["White-label na plataforma", "Painel XTAGE OS de gestão", "Múltiplos professores por escola", "Gateway de pagamentos com Split"]}
+              features={["White-label na plataforma", "Painel XPACE OS de gestão", "Múltiplos professores por escola", "Gateway de pagamentos com Split"]}
             />
           </div>
         </div>
@@ -469,7 +469,7 @@ export default function LandingPage() {
             </h2>
 
             <p className="text-[#888] text-lg mb-12 max-w-xl mx-auto">
-              Garanta sua vaga na lista VIP e seja o primeiro a acessar quando o XTAGE abrir as portas.
+              Garanta sua vaga na lista VIP e seja o primeiro a acessar quando o XPACE abrir as portas.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -504,7 +504,7 @@ export default function LandingPage() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="relative w-32 h-8 mb-5">
-                <Image src="/images/xpace-on-branco.png" alt="XTAGE" fill className="object-contain object-left" />
+                <Image src="/images/xpace-on-branco.png" alt="XPACE" fill className="object-contain object-left" />
               </div>
               <p className="text-[#555] text-sm max-w-sm leading-relaxed mb-6">
                 Elevando a arte e o aprendizado físico para a era digital. A tecnologia não substitui — ela te impulsiona.
@@ -512,7 +512,7 @@ export default function LandingPage() {
               {/* Social Links */}
               <div className="flex items-center gap-4">
                 <a
-                  href="https://instagram.com/xtageapp"
+                  href="https://instagram.com/xpaceapp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-[#111] border border-[#222] flex items-center justify-center text-[#666] hover:text-white hover:border-[#444] hover:bg-[#1a1a1a] transition-all duration-200"
@@ -521,7 +521,7 @@ export default function LandingPage() {
                   <Instagram size={16} />
                 </a>
                 <a
-                  href="https://tiktok.com/@xtage.app"
+                  href="https://tiktok.com/@xpace.dance"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-[#111] border border-[#222] flex items-center justify-center text-[#666] hover:text-white hover:border-[#444] hover:bg-[#1a1a1a] transition-all duration-200"
@@ -530,7 +530,7 @@ export default function LandingPage() {
                   <Music2 size={16} />
                 </a>
                 <a
-                  href="https://youtube.com/@xtage"
+                  href="https://youtube.com/@xpace"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-[#111] border border-[#222] flex items-center justify-center text-[#666] hover:text-white hover:border-[#444] hover:bg-[#1a1a1a] transition-all duration-200"
@@ -563,7 +563,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-[#111] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span className="text-[#333] text-xs font-mono uppercase">© 2026 XTAGE. Todos os direitos reservados.</span>
+            <span className="text-[#333] text-xs font-mono uppercase">© 2026 XPACE. Todos os direitos reservados.</span>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-green-500/70 text-xs font-mono uppercase tracking-widest">Sistemas Operacionais</span>

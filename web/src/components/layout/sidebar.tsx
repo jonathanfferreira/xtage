@@ -33,7 +33,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                         <Image src="/images/xpace-logo-branca.png" alt="X" width={24} height={24} className="object-contain" />
                     </div>
                     <div className="w-[180px] shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex justify-center ml-2 relative">
-                        <Image src="/images/xpace-logo-branca.png" alt="XTAGE" width={120} height={32} className="object-contain" />
+                        <Image src="/images/xpace-logo-branca.png" alt="XPACE" width={120} height={32} className="object-contain" />
                     </div>
                 </div>
 
@@ -64,7 +64,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                 {/* Footer Actions */}
                 <div className="p-3 border-t border-[#151515] flex flex-col gap-2">
                     <button
-                        onClick={() => { localStorage.removeItem('xtage-pwa-dismissed'); window.location.reload(); }}
+                        onClick={() => { localStorage.removeItem('xpace-pwa-dismissed'); window.location.reload(); }}
                         className="w-full flex items-center p-3 rounded bg-transparent hover:bg-primary/10 text-primary transition-colors relative overflow-hidden group/btn border border-transparent hover:border-primary/30"
                     >
                         <span className="w-5 shrink-0 flex justify-center z-10">

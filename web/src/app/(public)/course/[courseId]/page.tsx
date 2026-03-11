@@ -28,10 +28,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const course = await getCourse(courseId);
     if (!course) return { title: 'Curso não encontrado' };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xtage.app';
-    const title = `${course.title} — ${course.tenants?.name || 'XTAGE'}`;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xpace.dance';
+    const title = `${course.title} — ${course.tenants?.name || 'XPACE'}`;
     const description = course.description ||
-        `Aprenda com este curso exclusivo de ${course.tenants?.name || 'XTAGE'}. Acesso imediato, aulas em alta definição.`;
+        `Aprenda com este curso exclusivo de ${course.tenants?.name || 'XPACE'}. Acesso imediato, aulas em alta definição.`;
 
     return {
         title,
@@ -61,7 +61,7 @@ export default async function PublicCoursePage({ params }: PageProps) {
 
     if (!course) return notFound();
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xtage.app';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xpace.dance';
 
     // JSON-LD Schema.org Course
     const jsonLd = {
@@ -71,7 +71,7 @@ export default async function PublicCoursePage({ params }: PageProps) {
         description: course.description || '',
         provider: {
             '@type': 'Organization',
-            name: course.tenants?.name || 'XTAGE',
+            name: course.tenants?.name || 'XPACE',
             url: siteUrl,
         },
         offers: {
@@ -112,7 +112,7 @@ export default async function PublicCoursePage({ params }: PageProps) {
                 <header className="fixed top-0 inset-x-0 z-50 bg-black/60 backdrop-blur-md border-b border-white/5">
                     <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                         <Link href="/" className="relative w-24 h-6 opacity-80 hover:opacity-100 transition-opacity">
-                            <Image src="/images/xpace-on-branco.png" alt="XTAGE" fill className="object-contain object-left" />
+                            <Image src="/images/xpace-on-branco.png" alt="XPACE" fill className="object-contain object-left" />
                         </Link>
                         <Link href="/explore" className="text-xs font-semibold text-[#888] hover:text-white transition-colors uppercase tracking-widest">
                             &larr; Voltar ao Catálogo

@@ -11,8 +11,8 @@ export async function middleware(request: NextRequest) {
     // Lista de domínios internos da plataforma (sem resolução customizada)
     const internalDomains = [
         'localhost',
-        'xtage.app',
-        'www.xtage.app',
+        'xpace.dance',
+        'www.xpace.dance',
         'xpaceon.vercel.app',
         process.env.NEXT_PUBLIC_SITE_URL?.replace(/https?:\/\//, '') || '',
     ].filter(Boolean);

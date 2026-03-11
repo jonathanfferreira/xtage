@@ -33,7 +33,7 @@ export async function POST(req: Request) {
         const { title, text, url } = body;
 
         webpush.setVapidDetails(
-            'mailto:suporte@xtage.app',
+            'mailto:suporte@xpace.dance',
             process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
             process.env.VAPID_PRIVATE_KEY!
         );
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
         if (error || !subs) throw new Error("Erro ao buscar subscriptions: " + error?.message);
 
         const payload = JSON.stringify({
-            title: title || 'XTAGE',
+            title: title || 'XPACE',
             body: text || 'Temos uma novidade para você!',
             url: url || '/'
         });
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
         // Audit log
         await logAuditEvent(user.id, 'push_broadcast_sent', 'push_subscriptions', undefined, {
-            title: title || 'XTAGE',
+            title: title || 'XPACE',
             recipientCount: subs.length,
         });
 
