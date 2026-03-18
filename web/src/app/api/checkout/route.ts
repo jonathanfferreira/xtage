@@ -155,7 +155,7 @@ export async function POST(request: Request) {
                 },
             ],
             mode: 'payment',
-            success_url: `${origin}/c/${courseId}?success=true&session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${origin}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/checkout/${courseId}?canceled=true`,
             metadata: {
                 userId: userId || "",
