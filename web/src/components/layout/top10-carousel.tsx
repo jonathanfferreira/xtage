@@ -60,11 +60,16 @@ export async function Top10Carousel() {
                         key={lesson.id}
                         className="relative shrink-0 w-[280px] h-[160px] group snap-start block pl-10"
                     >
-                        {/* Luxe Number Design - Ultra Premium Gold */}
+                        {/* Luxe Number Design - Ultra Premium Gold/Silver/Bronze */}
                         <div
                             className="absolute -left-6 bottom-0 font-display font-black text-[140px] leading-[0.8] tracking-tighter z-30 select-none pointer-events-none drop-shadow-[0_15px_25px_rgba(0,0,0,1)]"
                         >
-                            <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#F9E5C9] via-[#D4AF37] to-[#8A6327] drop-shadow-sm opacity-100">
+                            <span className={`text-transparent bg-clip-text bg-gradient-to-b drop-shadow-sm opacity-100 ${
+                                index === 0 ? "from-[#F9E5C9] via-[#D4AF37] to-[#8A6327]" : 
+                                index === 1 ? "from-[#E8E8E8] via-[#A0A5A8] to-[#595D62]" : 
+                                index === 2 ? "from-[#FADCAF] via-[#CD7F32] to-[#6A3805]" : 
+                                "from-[#FFFFFF] via-[#CCCCCC] to-[#555555]"
+                            }`}>
                                 {index + 1}
                             </span>
                         </div>
