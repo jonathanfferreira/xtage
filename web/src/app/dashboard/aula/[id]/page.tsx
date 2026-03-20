@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { VideoPlayer } from "@/components/player/video-player";
 import { LessonSidebar } from "@/components/player/lesson-sidebar";
 import { LessonComments } from "@/components/dashboard/lesson-comments";
@@ -30,7 +31,28 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
         .eq('id', lessonId)
         .single();
 
-    if (!lesson) redirect('/dashboard/cursos');
+    if (!lesson) {
+        // If lesson is null, it could be deleted OR the user was blocked by RLS (not enrolled & not free).
+        // Let's use the Admin client to check if it actually exists.
+        const supabaseAdmin = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+        const { data: adminLesson } = await supabaseAdmin
+            .from('lessons')
+            .select('course_id')
+            .eq('id', lessonId)
+            .single();
+
+        if (adminLesson?.course_id) {
+            // It exists but the user is blocked from viewing it.
+            // Redirect them to the storefront sales page to buy the course!
+            redirect(`/course/${adminLesson.course_id}`);
+        } else {
+            // The lesson truly doesn't exist
+            redirect('/dashboard/cursos');
+        }
+    }
 
     // Gera o token Server-Side (com validade de 6h e blindado por HMAC SHA256)
     const secureTokenUrl = lesson.video_id ? generateBunnyTokenizedUrl(lesson.video_id) : undefined;
