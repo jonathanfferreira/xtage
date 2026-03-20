@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
                 if (courseId && userId) {
                     // 1. Confirm transaction
-                    await supabaseAdmin
+                    const { error: txError } = await supabaseAdmin
                         .from("transactions")
                         .update({ 
                             status: "confirmed",
@@ -42,32 +42,46 @@ export async function POST(req: Request) {
                         })
                         .eq("stripe_checkout_session_id", session.id);
 
+                    if (txError) {
+                        console.error('❌ Error updating transaction:', txError);
+                        throw new Error(`Failed to update transaction: ${txError.message}`);
+                    }
+
                     // 2. Create Enrollment
-                    await supabaseAdmin
+                    const { error: enrollError } = await supabaseAdmin
                         .from("enrollments")
                         .upsert({
                             user_id: userId,
                             course_id: courseId,
-                            status: "active",
-                            enrolled_at: new Date().toISOString()
+                            status: "active"
                         }, { onConflict: 'user_id,course_id' });
+
+                    if (enrollError) {
+                        console.error('❌ Error creating enrollment:', enrollError);
+                        throw new Error(`Failed to create enrollment: ${enrollError.message}`);
+                    }
 
                     console.log(`✅ Enrollment created for user ${userId} in course ${courseId}`);
                 }
 
                 if (planId && userId) {
                     // Handle Subscription completion
-                    await supabaseAdmin
+                    const { error: subError } = await supabaseAdmin
                         .from("subscriptions")
                         .upsert({
                             user_id: userId,
                             plan_id: planId,
                             tenant_id: session.metadata.tenantId,
                             stripe_subscription_id: session.subscription,
-                            status: "ACTIVE",
+                            status: "active",
                             current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Placeholder, updated by invoice.succeeded
                         }, { onConflict: 'user_id,plan_id' });
                     
+                    if (subError) {
+                        console.error('❌ Error activating subscription:', subError);
+                        throw new Error(`Failed to activate subscription: ${subError.message}`);
+                    }
+
                     console.log(`✅ Subscription activated for user ${userId} on plan ${planId}`);
                 }
                 break;
