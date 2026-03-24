@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 import { CertificateActions } from '@/components/certificate/certificate-actions';
 
 export const metadata: Metadata = {
-    title: 'Certificado de Conclusão | XTAGE',
+    title: 'Certificado de Conclusão | XPACE',
 };
 
 interface Params {
@@ -43,8 +43,8 @@ export default async function CertificadoPage({ params }: Params) {
         redirect('/dashboard/cursos');
     }
 
-    const tenantName = Array.isArray(course.tenants) ? course.tenants[0]?.name : (course.tenants as any)?.name || 'Academia XTAGE Oficial';
-    const studentName = userData?.full_name || user.user_metadata?.full_name || 'Estudante XTAGE';
+    const tenantName = Array.isArray(course.tenants) ? course.tenants[0]?.name : (course.tenants as any)?.name || 'Academia XPACE Oficial';
+    const studentName = userData?.full_name || user.user_metadata?.full_name || 'Estudante XPACE';
     const issuedDate = cert?.issued_at
         ? new Date(cert.issued_at).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric', day: 'numeric' })
         : new Date().toLocaleDateString('pt-BR', { month: 'long', year: 'numeric', day: 'numeric' });
@@ -60,7 +60,7 @@ export default async function CertificadoPage({ params }: Params) {
                         <Award className="text-primary w-10 h-10" />
                         <span className="text-transparent bg-clip-text text-gradient-neon">Mural de Honra</span>
                     </h1>
-                    <p className="text-[#888] font-sans">Seu certificado oficial e criptografado de conclusão na rede XTAGE.</p>
+                    <p className="text-[#888] font-sans">Seu certificado oficial e criptografado de conclusão na rede XPACE.</p>
                 </div>
                 <CertificateActions publicSlug={cert?.public_slug ?? null} />
             </div>
@@ -88,7 +88,7 @@ export default async function CertificadoPage({ params }: Params) {
                     {/* Logo/Header */}
                     <div className="mb-10 w-full flex justify-between items-start opacity-80">
                         <div className="flex flex-col text-left">
-                            <Image src="/images/xpace-logo-branca.png" alt="XTAGE" width={140} height={40} className="object-contain" />
+                            <Image src="/images/xpace-logo-branca.png" alt="XPACE" width={140} height={40} className="object-contain" />
                             <span className="text-[8px] font-mono tracking-widest text-[#666] uppercase mt-2">Autenticidade Verificada na Blockchain</span>
                         </div>
                         <div className="text-right flex flex-col gap-1">

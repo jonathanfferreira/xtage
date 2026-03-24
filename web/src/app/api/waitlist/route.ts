@@ -73,11 +73,11 @@ export async function POST(request: NextRequest) {
 
                 // 3. E-mail de confirmação personalizado por tipo
                 const subject = isCreator
-                    ? '🎓 Sua escola no XTAGE está reservada!'
-                    : '🎵 Você está na lista VIP do XTAGE!';
+                    ? '🎓 Sua escola no XPACE está reservada!'
+                    : '🎵 Você está na lista VIP do XPACE!';
 
                 await resend.emails.send({
-                    from: 'XTAGE <contato@xtage.app>',
+                    from: 'XPACE <contato@xtage.app>',
                     to: [cleanEmail],
                     subject,
                     tags: [
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
       <table width="600" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;max-width:600px;width:100%">
         <tr>
           <td style="background:linear-gradient(135deg,${isCreator ? '#eb00bc,#6324b2' : '#6324b2,#eb00bc'});padding:32px 40px;text-align:center">
-            <p style="margin:0 0 8px;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:4px;text-transform:uppercase;font-family:monospace">XTAGE — PRÉ-LANÇAMENTO</p>
+            <p style="margin:0 0 8px;color:rgba(255,255,255,0.7);font-size:11px;letter-spacing:4px;text-transform:uppercase;font-family:monospace">XPACE — PRÉ-LANÇAMENTO</p>
             <h1 style="margin:0;color:#fff;font-size:28px;font-weight:900;text-transform:uppercase;letter-spacing:2px">Você está dentro! 🔥</h1>
           </td>
         </tr>
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
             <p style="color:#aaa;font-size:15px;line-height:1.6;margin:0 0 24px">
               ${isCreator
-                ? 'Quando abrirmos as portas, você vai ser um dos primeiros a poder <strong style="color:#eb00bc">cadastrar sua escola</strong>, criar seus cursos e começar a monetizar no XTAGE.'
+                ? 'Quando abrirmos as portas, você vai ser um dos primeiros a poder <strong style="color:#eb00bc">cadastrar sua escola</strong>, criar seus cursos e começar a monetizar no XPACE.'
                 : 'Quando abrirmos as portas, você vai ter acesso antecipado para <strong style="color:#9c6fe8">explorar os melhores cursos de dança</strong> do Brasil.'}
             </p>
 
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
             <table cellpadding="0" cellspacing="0" style="width:100%">
               <tr>
                 <td align="center">
-                  <a href="https://xtage.app" style="display:inline-block;background:linear-gradient(135deg,#6324b2,#eb00bc);color:#fff;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:16px 40px;border-radius:6px">Visitar XTAGE.APP</a>
+                  <a href="https://xtage.app" style="display:inline-block;background:linear-gradient(135deg,#6324b2,#eb00bc);color:#fff;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:16px 40px;border-radius:6px">Visitar XPACE.APP</a>
                 </td>
               </tr>
             </table>
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
         </tr>
         <tr>
           <td style="padding:24px 40px;border-top:1px solid #1a1a1a;text-align:center">
-            <p style="margin:0;color:#444;font-size:12px;font-family:monospace">© 2026 XTAGE • <a href="https://xtage.app/privacidade" style="color:#555">Privacidade</a></p>
+            <p style="margin:0;color:#444;font-size:12px;font-family:monospace">© 2026 XPACE • <a href="https://xtage.app/privacidade" style="color:#555">Privacidade</a></p>
           </td>
         </tr>
       </table>

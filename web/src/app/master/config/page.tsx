@@ -89,7 +89,7 @@ export default function MasterConfigPage() {
                             <p className="text-[#555] text-xs mt-1">Gerenciada via variável de ambiente ASAAS_API_KEY no servidor.</p>
                         </div>
                         <div>
-                            <label className="block text-xs font-mono text-[#888] uppercase mb-1">Taxa de Split Padrão (XTAGE %)</label>
+                            <label className="block text-xs font-mono text-[#888] uppercase mb-1">Taxa de Split Padrão (XPACE %)</label>
                             <input
                                 type="number"
                                 value={splitRate}

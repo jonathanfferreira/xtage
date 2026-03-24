@@ -141,7 +141,7 @@ export default function LandingPage() {
               <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
               <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
               <div className="flex-1 text-center hidden md:block">
-                <span className="text-[10px] font-mono text-[#555] bg-[#000] px-4 py-1 rounded-full border border-[#222]">xpace.app/dashboard</span>
+                <span className="text-[10px] font-mono text-[#555] bg-[#000] px-4 py-1 rounded-full border border-[#222]">xtage.app/dashboard</span>
               </div>
             </div>
             <div className="relative w-full h-full bg-[#050505] overflow-hidden">
@@ -521,7 +521,7 @@ export default function LandingPage() {
                   <Instagram size={16} />
                 </a>
                 <a
-                  href="https://tiktok.com/@xpace.app"
+                  href="https://tiktok.com/@xtage.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-[#111] border border-[#222] flex items-center justify-center text-[#666] hover:text-white hover:border-[#444] hover:bg-[#1a1a1a] transition-all duration-200"

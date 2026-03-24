@@ -62,7 +62,7 @@ export default function StudioUploadPage() {
             if (!authRes.ok) throw new Error(authData.error || 'Falha na autorização com a Mux');
             const { id: uploadId, url: uploadUrl } = authData;
 
-            // 2. Cria a aula no banco da Xtage já com a Intenção de Upload
+            // 2. Cria a aula no banco da XPACE já com a Intenção de Upload
             const lessonRes = await fetch('/api/studio/lessons', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

@@ -104,7 +104,7 @@ export function UsernameSetupModal({ onComplete }: { onComplete: (username: stri
                     </h2>
                     <p className="text-[#666] text-sm mt-2 leading-relaxed">
                         Seu perfil público ficará em<br />
-                        <span className="text-white font-mono">xpace.app/@{username || 'seunome'}</span>
+                        <span className="text-white font-mono">xtage.app/@{username || 'seunome'}</span>
                     </p>
                 </div>
 

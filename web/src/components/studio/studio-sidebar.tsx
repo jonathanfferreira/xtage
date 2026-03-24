@@ -82,7 +82,7 @@ export function StudioSidebar({ isOpen, onClose, tenant }: { isOpen?: boolean, o
                             {tenant?.name || 'Studio'}
                         </h2>
                         <p className="text-[#666] text-[10px] font-mono uppercase tracking-widest mt-1 truncate">
-                            {tenant?.slug ? `xpace.app/${tenant.slug}` : 'Sua Escola'}
+                            {tenant?.slug ? `xtage.app/${tenant.slug}` : 'Sua Escola'}
                         </p>
                     </div>
                 </div>

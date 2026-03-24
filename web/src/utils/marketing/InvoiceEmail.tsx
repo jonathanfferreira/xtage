@@ -29,7 +29,7 @@ export const InvoiceEmail: React.FC<InvoiceEmailProps> = ({
     transactionId,
     brandColor = '#6324b2',
     brandLogo,
-    schoolName = 'XTAGE',
+    schoolName = 'XPACE',
     paidAt,
 }) => {
     const formattedDate = paidAt

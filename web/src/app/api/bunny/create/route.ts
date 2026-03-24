@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
         // Create video in the tenant's collection (or root if no collection)
         const data = await createBunnyVideo(
-            title || 'Nova Aula XTAGE',
+            title || 'Nova Aula XPACE',
             tenant?.bunny_collection_id || null
         );
 

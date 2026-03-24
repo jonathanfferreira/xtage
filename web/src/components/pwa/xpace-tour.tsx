@@ -8,7 +8,7 @@ export function XpaceTour() {
 
     useEffect(() => {
         // Dispara o tour apenas na primeira vez do usuário, com um pequeno delay
-        const tourCompleted = localStorage.getItem('xtage-tour-completed');
+        const tourCompleted = localStorage.getItem('xpace-tour-completed');
         if (!tourCompleted) {
             const timer = setTimeout(() => {
                 setRun(true);
@@ -66,7 +66,7 @@ export function XpaceTour() {
         if (finishedStatuses.includes(status)) {
             // Marca o tour como concluído
             setRun(false);
-            localStorage.setItem('xtage-tour-completed', 'true');
+            localStorage.setItem('xpace-tour-completed', 'true');
         }
     };
 

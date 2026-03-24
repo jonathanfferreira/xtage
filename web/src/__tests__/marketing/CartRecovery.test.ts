@@ -70,9 +70,9 @@ describe('sendCartRecoveryEmail', () => {
     const sendCallArg = sendMock.mock.calls[0][0];
 
     // Based on the actual source code, assert the fields we know
-    expect(sendCallArg.from).toBe('XTAGE <suporte@xtage.app>');
+    expect(sendCallArg.from).toBe('XPACE <suporte@xtage.app>');
     expect(sendCallArg.to).toEqual([mockUserEmail]);
-    expect(sendCallArg.subject).toBe('⚠️ Seu treino na XTAGE ficou pausado na tela de pagamento!');
+    expect(sendCallArg.subject).toBe('⚠️ Seu treino na XPACE ficou pausado na tela de pagamento!');
     expect(sendCallArg.html).toContain(mockUserName);
     expect(sendCallArg.html).toContain(mockCheckoutUrl);
 

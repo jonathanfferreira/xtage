@@ -10,7 +10,7 @@ export function PwaInstallBanner() {
 
     useEffect(() => {
         // Verifica se o usuário já dispensou permanentemente
-        if (localStorage.getItem('xtage-pwa-dismissed') === 'true') return;
+        if (localStorage.getItem('xpace-pwa-dismissed') === 'true') return;
 
         // Verifica se já está instalado (Standalone)
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
@@ -55,7 +55,7 @@ export function PwaInstallBanner() {
 
     const handleDismiss = () => {
         setShowBanner(false);
-        localStorage.setItem('xtage-pwa-dismissed', 'true');
+        localStorage.setItem('xpace-pwa-dismissed', 'true');
     };
 
     if (!showBanner) return null;

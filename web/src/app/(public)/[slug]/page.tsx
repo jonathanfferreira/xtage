@@ -154,24 +154,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (decodedSlug.startsWith('@')) {
         const username = decodedSlug.replace(/^@/, '');
         const profile = await getStudentProfile(username);
-        if (!profile) return { title: 'Perfil não encontrado | XTAGE' };
+        if (!profile) return { title: 'Perfil não encontrado | XPACE' };
 
         return {
-            title: `@${profile.username} | XTAGE`,
-            description: profile.bio || `Conheça o perfil de ${profile.full_name} na XTAGE — plataforma de dança urbana.`,
+            title: `@${profile.username} | XPACE`,
+            description: profile.bio || `Conheça o perfil de ${profile.full_name} na XPACE — plataforma de dança urbana.`,
             openGraph: {
-                title: `@${profile.username} | XTAGE`,
-                description: profile.bio || `${profile.full_name} está evoluindo na XTAGE.`,
+                title: `@${profile.username} | XPACE`,
+                description: profile.bio || `${profile.full_name} está evoluindo na XPACE.`,
                 images: profile.avatar_url ? [{ url: profile.avatar_url }] : [],
             },
         };
     } else {
         const data = await getTenantProfile(decodedSlug);
-        if (!data) return { title: 'Escola não encontrada | XTAGE' };
+        if (!data) return { title: 'Escola não encontrada | XPACE' };
 
         return {
-            title: `${data.tenant.name} | XTAGE`,
-            description: data.tenant.bio || `Conheça os treinamentos de ${data.tenant.name} na XTAGE.`,
+            title: `${data.tenant.name} | XPACE`,
+            description: data.tenant.bio || `Conheça os treinamentos de ${data.tenant.name} na XPACE.`,
         };
     }
 }

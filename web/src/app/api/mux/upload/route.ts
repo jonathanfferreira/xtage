@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
       new_asset_settings: {
         playback_policy: ['signed'], // Somente acesso assinado/privado
         video_quality: 'basic',      // Presença de resolução adaptativa base sem custos excessivos no Mux
-        mp4_support: 'none'          // Reduz o custo para focar 100% no HLS
+        mp4_support: 'none',         // Reduz o custo para focar 100% no HLS
+        passthrough: `author:${user.email || user.id}` // Assinatura Organizacional para a MUX
       },
       cors_origin: '*', // O domínio que fará o request (Pode ser restringido pelo host)
     });

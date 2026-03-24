@@ -65,7 +65,7 @@ export default async function CertificatePage({ params }: Props) {
                         description: `Conclusão de curso por ${user?.full_name}`,
                         dateCreated: cert.issued_at,
                         credentialCategory: 'Certificate',
-                        recognizedBy: { '@type': 'Organization', name: tenant?.name || 'XTAGE' },
+                        recognizedBy: { '@type': 'Organization', name: tenant?.name || 'XPACE' },
                     })
                 }}
             />
@@ -86,7 +86,7 @@ export default async function CertificatePage({ params }: Props) {
                                 <Image src={tenant.logo_url} alt={tenant.name} width={32} height={32} className="rounded" />
                             )}
                             <span className="text-white font-bold text-sm uppercase tracking-widest">
-                                {tenant?.name || 'XTAGE'}
+                                {tenant?.name || 'XPACE'}
                             </span>
                         </div>
                         <div className="flex items-center gap-2">

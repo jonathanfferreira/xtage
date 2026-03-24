@@ -21,7 +21,7 @@ export function OnboardingModal() {
 
     useEffect(() => {
         const checkOnboarding = async () => {
-            const hasDoneLocal = localStorage.getItem('xtage_onboarding_done');
+            const hasDoneLocal = localStorage.getItem('xpace_onboarding_done');
             if (hasDoneLocal) return;
 
             const supabase = createClient();
@@ -32,7 +32,7 @@ export function OnboardingModal() {
                 if (!isComplete) {
                     setIsOpen(true);
                 } else {
-                    localStorage.setItem('xtage_onboarding_done', 'true');
+                    localStorage.setItem('xpace_onboarding_done', 'true');
                 }
             }
         };
@@ -52,7 +52,7 @@ export function OnboardingModal() {
                 interests: selected
             }
         });
-        localStorage.setItem('xtage_onboarding_done', 'true');
+        localStorage.setItem('xpace_onboarding_done', 'true');
         setIsOpen(false);
         setLoading(false);
     };
