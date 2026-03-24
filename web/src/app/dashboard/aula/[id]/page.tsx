@@ -55,7 +55,7 @@ export default async function AulaPage({ params }: { params: Promise<{ id: strin
     }
 
     // Gera o token JWT Server-Side para exibição segura na Mux (Validade de 6h com base na Session Key)
-    const secureTokenUrl = lesson.mux_playback_id ? generateMuxJwtToken(lesson.mux_playback_id) || undefined : undefined;
+    const secureTokenUrl = lesson.mux_playback_id ? await generateMuxJwtToken(lesson.mux_playback_id) || undefined : undefined;
 
     // Fetch all lessons of this course + user progress + course title in parallel
     const [{ data: allLessons }, { data: userProgress }, { data: courseData }, { data: userLike }, { data: watchData }] = await Promise.all([

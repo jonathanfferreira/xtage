@@ -1,6 +1,6 @@
 import Mux from '@mux/mux-node';
 
-export function generateMuxJwtToken(playbackId: string): string | null {
+export async function generateMuxJwtToken(playbackId: string): Promise<string | null> {
   try {
     const keyId = process.env.MUX_SIGNING_KEY;
     const keySecret = process.env.MUX_PRIVATE_KEY;
@@ -13,7 +13,7 @@ export function generateMuxJwtToken(playbackId: string): string | null {
     const mux = new Mux();
     
     // A API .jwt.signPlaybackId aceita o ID, e as configs do token (incluindo expiração)
-    const token = mux.jwt.signPlaybackId(playbackId, {
+    const token = await mux.jwt.signPlaybackId(playbackId, {
       keyId,
       keySecret,
       expiration: '6h', // O aluno tem 6 horas de sessão antes de precisar de refresh
