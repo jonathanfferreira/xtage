@@ -6,16 +6,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const FEATURES_LEFT = [
     { label: 'Dia Internacional da Dança', sub: '29 de Abril de 2026' },
-    { label: 'Acesso Antecipado', sub: 'Lista VIP exclusiva' },
-    { label: 'Cursos de Dança', sub: 'Os melhores do Brasil' },
-    { label: 'Comunidade', sub: 'Grupo VIP no WhatsApp' },
+    { label: 'Fila de Espera', sub: 'Seja notificado no lançamento' },
+    { label: 'Diversos Estilos', sub: 'Aprenda no seu próprio ritmo' },
+    { label: 'Notificações', sub: 'Receba alertas oficiais' },
 ];
 
 const FEATURES_RIGHT = [
-    { label: 'Para Alunos', sub: 'Aprenda com os melhores professores de dança' },
-    { label: 'Para Professores', sub: 'Crie sua escola e monetize seus cursos' },
-    { label: 'Plataforma Completa', sub: 'Vídeos, comunidade e certificados' },
-    { label: 'Lançamento Exclusivo', sub: 'Benefícios só para quem entrar primeiro' },
+    { label: 'Para Alunos', sub: 'Aprenda onde e como quiser' },
+    { label: 'Para Professores', sub: 'Crie sua própria escola digital' },
+    { label: 'Plataforma Completa', sub: 'Vídeos, ferramentas e performance' },
+    { label: 'Aviso de Abertura', sub: 'Seja alertado assim que abrir' },
 ];
 
 export function WaitlistSection() {
@@ -224,7 +224,7 @@ export function WaitlistSection() {
                                         <Check size={32} className="text-green-500" />
                                     </div>
                                     <h3 className="text-2xl font-bold text-white uppercase tracking-widest mb-2">Você está dentro!</h3>
-                                    <p className="text-[#888] mb-6">Confira seu e-mail — mandamos uma confirmação com tudo que você precisa saber para o dia 29 de Abril.</p>
+                                    <p className="text-[#888] mb-6">Confira seu e-mail — mandamos uma confirmação com tudo que você precisa saber.</p>
                                     <div className="flex items-center justify-center gap-2 text-sm text-[#666]">
                                         <Users size={14} />
                                         <span className="font-mono">{count !== null ? <><strong className="text-white">{count}</strong> pessoas já estão aguardando</> : 'Aguardando o lançamento'}</span>
@@ -286,7 +286,7 @@ export function WaitlistSection() {
 
                                     <div>
                                         <label className="block text-xs font-mono uppercase tracking-widest text-[#666] mb-1.5">
-                                            WhatsApp <span className="text-[#444]">(opcional — para grupo VIP)</span>
+                                            WhatsApp <span className="text-[#444]">(opcional)</span>
                                         </label>
                                         <input
                                             type="tel"
