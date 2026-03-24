@@ -81,54 +81,70 @@ export default async function XtorePage() {
                 </button>
             </div>
 
-            {/* Products Grid */}
-            {products && products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {products.map((p) => (
-                        <div key={p.id} className="group bg-[#0A0A0A] border border-[#1a1a1a] hover:border-[#333] rounded-lg overflow-hidden transition-all duration-300">
-                            {/* Product Image */}
-                            <div className="aspect-square bg-[#050505] relative overflow-hidden">
-                                {p.image_url ? (
-                                    <Image src={p.image_url} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                                ) : (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center opacity-30 group-hover:opacity-50 transition-opacity">
-                                        <ShoppingBag size={48} className="mb-4 text-[#888]" />
-                                        <span className="font-heading uppercase tracking-widest text-[#555] text-xs">Sem Imagem</span>
-                                    </div>
-                                )}
-                                <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm border border-[#222] px-3 py-1 rounded-full flex items-center gap-2">
-                                    {p.tenant.avatar_url && (
-                                        <img src={p.tenant.avatar_url} className="w-4 h-4 rounded-full" alt="Seller" />
-                                    )}
-                                    <span className="text-[10px] text-white font-mono uppercase tracking-widest truncate max-w-[80px]">{p.tenant.name}</span>
-                                </div>
-                            </div>
+            {/* Products Grid (Coming Soon Overlay) */}
+            <div className="relative">
+                {/* Overlay EM BREVE */}
+                <div className="absolute inset-0 z-50 bg-[#050505]/70 backdrop-blur-sm border border-[#222] rounded-xl flex flex-col items-center justify-center text-center p-8 mt-4">
+                    <Sparkles size={48} className="text-secondary mb-6 animate-pulse" />
+                    <h3 className="font-heading text-4xl md:text-5xl uppercase tracking-widest text-white mb-4">
+                        Em Breve
+                    </h3>
+                    <p className="text-[#888] font-sans max-w-md mx-auto text-lg">
+                        O Cofre está trancado. Continue ganhando XP nas aulas para ser um dos primeiros a desbloquear descontos insanos no Drop Oficial da XTORE.
+                    </p>
+                </div>
 
-                            {/* Product Info */}
-                            <div className="p-5">
-                                <h3 className="text-lg font-bold text-white mb-1 truncate">{p.name}</h3>
-                                <p className="text-xs text-[#666] mb-4 truncate">{p.description || "Produto exclusivo da XPACE."}</p>
-
-                                <div className="flex items-center justify-between mt-auto">
-                                    <div>
-                                        <div className="text-sm font-sans text-white/50 line-through">R$ {(p.price * 1.2).toFixed(2)}</div>
-                                        <div className="text-2xl font-display text-secondary">R$ {p.price.toFixed(2)}</div>
+                {/* Blurred Content */}
+                <div className="opacity-20 pointer-events-none select-none blur-[4px]">
+                    {products && products.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+                            {products.map((p) => (
+                                <div key={p.id} className="group bg-[#0A0A0A] border border-[#1a1a1a] rounded-lg overflow-hidden">
+                                    {/* Product Image */}
+                                    <div className="aspect-square bg-[#050505] relative overflow-hidden">
+                                        {p.image_url ? (
+                                            <Image src={p.image_url} alt={p.name} fill className="object-cover" />
+                                        ) : (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-30">
+                                                <ShoppingBag size={48} className="mb-4 text-[#888]" />
+                                                <span className="font-heading uppercase tracking-widest text-[#555] text-xs">Sem Imagem</span>
+                                            </div>
+                                        )}
+                                        <div className="absolute top-3 right-3 bg-black/80 backdrop-blur-sm border border-[#222] px-3 py-1 rounded-full flex items-center gap-2">
+                                            {p.tenant.avatar_url && (
+                                                <img src={p.tenant.avatar_url} className="w-4 h-4 rounded-full" alt="Seller" />
+                                            )}
+                                            <span className="text-[10px] text-white font-mono uppercase tracking-widest truncate max-w-[80px]">{p.tenant.name}</span>
+                                        </div>
                                     </div>
-                                    <button className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:bg-secondary hover:text-white transition-colors">
-                                        <ShoppingCart size={18} />
-                                    </button>
+
+                                    {/* Product Info */}
+                                    <div className="p-5">
+                                        <h3 className="text-lg font-bold text-white mb-1 truncate">{p.name}</h3>
+                                        <p className="text-xs text-[#666] mb-4 truncate">{p.description || "Produto exclusivo da XPACE."}</p>
+
+                                        <div className="flex items-center justify-between mt-auto">
+                                            <div>
+                                                <div className="text-sm font-sans text-white/50 line-through">R$ {(p.price * 1.2).toFixed(2)}</div>
+                                                <div className="text-2xl font-display text-secondary">R$ {p.price.toFixed(2)}</div>
+                                            </div>
+                                            <div className="w-10 h-10 rounded-full bg-[#222] text-[#888] flex items-center justify-center">
+                                                <ShoppingCart size={18} />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <div className="py-32 flex flex-col items-center justify-center border border-dashed border-[#222] rounded-xl bg-[#050505]">
+                            <ShoppingBag size={64} className="text-[#333] mb-6" />
+                            <h3 className="font-heading text-2xl uppercase text-white mb-2 tracking-widest">A XTORE VEM AÍ</h3>
+                            <p className="text-[#666] font-sans">Vitrine sendo abastecida.</p>
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <div className="py-32 flex flex-col items-center justify-center border border-dashed border-[#222] rounded-xl bg-[#050505]">
-                    <ShoppingBag size={64} className="text-[#333] mb-6" />
-                    <h3 className="font-heading text-2xl uppercase text-white mb-2 tracking-widest">Nenhum produto listado</h3>
-                    <p className="text-[#666] font-sans">A XTORE está sendo abastecida pelos professores. Volte amanhã!</p>
-                </div>
-            )}
+            </div>
         </div>
     )
 }

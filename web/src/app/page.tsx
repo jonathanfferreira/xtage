@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Play, Zap, Flame, MonitorPlay, Smartphone, Shield, Star, Users, BookOpen, Trophy, ChevronRight, Instagram, Youtube, Music2 } from 'lucide-react';
+import { ArrowRight, Play, Zap, Flame, MonitorPlay, Smartphone, Shield, Star, Users, BookOpen, Trophy, ChevronRight, Instagram, Youtube, Music2, ShoppingBag } from 'lucide-react';
 import { WaitlistSection } from '@/components/waitlist/waitlist-section';
 import { useEffect, useState } from 'react';
 
@@ -24,10 +24,13 @@ export default function LandingPage() {
 
       {/* Background Ambient Glows */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full mix-blend-screen opacity-50 animate-pulse-slow" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-secondary/10 blur-[180px] rounded-full mix-blend-screen opacity-40" />
-        <div className="absolute top-[40%] left-[50%] w-[30%] h-[30%] bg-accent/5 blur-[120px] rounded-full mix-blend-screen opacity-30" />
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-primary/30 blur-[150px] rounded-full mix-blend-screen opacity-60 animate-pulse-slow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[180px] rounded-full mix-blend-screen opacity-50" />
+        <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-accent/10 blur-[120px] rounded-full mix-blend-screen opacity-40" />
       </div>
+      
+      {/* Noise Texture Layer */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.04] mix-blend-overlay" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
 
       {/* Navbar */}
       <motion.header
@@ -78,10 +81,10 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-display text-5xl md:text-8xl leading-[1.1] md:leading-[1.0] font-bold text-white mb-4 tracking-tight"
+            className="font-display text-[12vw] md:text-[10vw] leading-[0.85] font-bold text-white mb-6 tracking-normal drop-shadow-[0_0_30px_rgba(255,255,255,0.1)]"
           >
             APRENDA{' '}
-            <span className="inline-block relative min-w-[280px] md:min-w-[540px] h-[1.1em] overflow-hidden align-bottom">
+            <span className="inline-block relative min-w-[320px] md:min-w-[640px] h-[1em] overflow-hidden align-bottom">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={styleIndex}
@@ -89,7 +92,7 @@ export default function LandingPage() {
                   animate={{ y: '0%', opacity: 1 }}
                   exit={{ y: '-100%', opacity: 0 }}
                   transition={{ duration: 0.4, ease: 'easeInOut' }}
-                  className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent block"
+                  className="absolute inset-0 text-transparent bg-clip-text bg-gradient-neon block drop-shadow-[0_0_40px_rgba(235,0,188,0.4)]"
                 >
                   {DANCE_STYLES[styleIndex]}
                 </motion.span>
@@ -118,7 +121,7 @@ export default function LandingPage() {
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Começar Jornada <ArrowRight size={18} />
               </span>
-              <div className="absolute inset-0 bg-[#ddd] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0" />
+              <div className="absolute inset-0 bg-gradient-neon scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0 opacity-80" />
             </Link>
             <Link href="/explore" className="w-full sm:w-auto px-10 py-5 bg-transparent border border-[#333] text-white hover:bg-[#111] hover:border-[#555] font-bold uppercase tracking-[0.2em] rounded-sm transition-all duration-300 text-sm flex items-center justify-center gap-2">
               <Play size={18} className="text-secondary" /> Ver Catálogo
@@ -187,6 +190,15 @@ export default function LandingPage() {
             transition={{ delay: 1.6 }}
             className="hidden md:flex absolute -right-8 bottom-16 flex-col gap-3"
           >
+            <div className="bg-[#111] border border-[#222] rounded-xl px-4 py-3 flex items-center gap-3 shadow-xl mb-3">
+              <div className="w-8 h-8 rounded-full bg-[#eb00bc]/20 flex items-center justify-center">
+                <ShoppingBag size={16} className="text-[#eb00bc]" />
+              </div>
+              <div>
+                <p className="text-white text-xs font-bold">XTORE App</p>
+                <p className="text-[#666] text-[10px]">Marketplace (Em Breve)</p>
+              </div>
+            </div>
             <div className="bg-[#111] border border-[#222] rounded-xl px-4 py-3 flex items-center gap-3 shadow-xl">
               <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
                 <Users size={16} className="text-green-500" />
@@ -247,7 +259,7 @@ export default function LandingPage() {
           >
             {[
               { icon: <MonitorPlay size={28} className="text-primary" />, title: "Ultra Definição", desc: "Player focado em dança com espelhamento dinâmico, loop de trecho e controle de velocidade preciso." },
-              { icon: <Zap size={28} className="text-secondary" />, title: "Sistema de XP", desc: "Transforme treino em jogo. Acumule pontos por aula finalizada e suba no Ranking Global." },
+              { icon: <Zap size={28} className="text-secondary" />, title: "XP & XTORE", desc: "Transforme treino em descontos. Acumule XP por aula e troque por itens exclusivos na XTORE (Em Breve)." },
               { icon: <Shield size={28} className="text-accent" />, title: "Painel do Professor", desc: "Ferramentas para criadores. Gerencie cursos, alunos e seu financeiro em um só lugar." },
               { icon: <Flame size={28} className="text-orange-500" />, title: "Programa Afiliados", desc: "Recomende cursos e receba comissões. Monetize sua influência dentro do ecossistema." },
               { icon: <Star size={28} className="text-yellow-400" />, title: "Conquistas", desc: "Desbloqueie badges, participe de desafios e exiba seu nível no perfil XPACE." },

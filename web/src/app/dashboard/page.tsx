@@ -131,13 +131,13 @@ export default async function DashboardPage() {
                     <p className="text-[#888] font-sans">Seu progresso sincronizado. Continue dominando o palco.</p>
                 </div>
                 <div className="flex gap-4 tour-step-1">
-                    <div className="bg-[#111] border border-[#222] px-4 py-2 rounded flex flex-col items-center justify-center min-w-[100px]">
-                        <span className="text-secondary font-display text-2xl">{data?.totalXp?.toLocaleString('pt-BR') || '0'}</span>
-                        <span className="text-[10px] text-[#555] font-mono uppercase tracking-widest">XP Acumulado</span>
+                    <div className="bg-[#111]/80 backdrop-blur-md border border-secondary/20 shadow-[0_0_20px_rgba(235,0,188,0.15)] px-4 py-2 rounded flex flex-col items-center justify-center min-w-[100px]">
+                        <span className="text-secondary font-display text-3xl drop-shadow-[0_0_10px_rgba(235,0,188,0.5)]">{data?.totalXp?.toLocaleString('pt-BR') || '0'}</span>
+                        <span className="text-[10px] text-[#888] font-mono uppercase tracking-widest">XP Acumulado</span>
                     </div>
-                    <div className="bg-[#111] border border-[#222] px-4 py-2 rounded flex flex-col items-center justify-center min-w-[100px]">
-                        <span className="text-accent font-display text-2xl">{String(data?.streak || 0).padStart(2, '0')}</span>
-                        <span className="text-[10px] text-[#555] font-mono uppercase tracking-widest">Sequência (Dias)</span>
+                    <div className="bg-[#111]/80 backdrop-blur-md border border-accent/20 shadow-[0_0_20px_rgba(255,82,0,0.15)] px-4 py-2 rounded flex flex-col items-center justify-center min-w-[100px]">
+                        <span className="text-accent font-display text-3xl drop-shadow-[0_0_10px_rgba(255,82,0,0.5)]">{String(data?.streak || 0).padStart(2, '0')}</span>
+                        <span className="text-[10px] text-[#888] font-mono uppercase tracking-widest">Sequência (Dias)</span>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
             <h2 className="font-display text-2xl mb-4 tracking-widest text-[#555] uppercase">Sessão Ativa</h2>
 
             {data?.latestCourse ? (
-                <div className="group relative border border-[#222] bg-[#0A0A0A] hover:border-primary/50 transition-colors duration-500 rounded-sm overflow-hidden mb-12 tour-step-2">
+                <div className="group relative border border-primary/20 bg-[#050505] shadow-[0_0_30px_rgba(99,36,178,0.15)] hover:shadow-[0_0_50px_rgba(99,36,178,0.3)] hover:border-primary/50 transition-all duration-500 rounded-sm overflow-hidden mb-12 tour-step-2">
                     <div className="absolute top-0 left-0 w-1 h-full bg-gradient-neon z-10"></div>
                     <div className="flex flex-col md:flex-row p-6 pl-8 gap-8 items-center relative z-20">
                         <div className="w-full md:w-64 h-36 bg-[#1A1A1A] relative border border-[#333] group-hover:border-primary/40 transition-colors flex shrink-0 items-center justify-center overflow-hidden">
@@ -170,12 +170,14 @@ export default async function DashboardPage() {
                             <p className="text-[#888] text-sm mb-6 line-clamp-2 max-w-2xl">{data.latestCourse.title}</p>
 
                             <div className="flex items-center gap-6">
-                                <Link href={`/dashboard/aula/${data.currentLesson?.id || data.latestCourse.id}`} className="border border-white hover:bg-white hover:text-black transition-colors px-6 py-2 pb-1.5 text-sm font-sans font-bold flex items-center gap-2">
-                                    <Play size={16} fill="currentColor" /> RETOMAR TREINO
+                                <Link href={`/dashboard/aula/${data.currentLesson?.id || data.latestCourse.id}`} className="relative group/btn border border-white/20 bg-white/5 backdrop-blur-md overflow-hidden transition-all duration-300 px-6 py-2 pb-1.5 text-sm font-sans font-bold flex items-center gap-2">
+                                    <div className="absolute inset-0 bg-white scale-x-0 group-hover/btn:scale-x-100 origin-left transition-transform duration-300 z-0"></div>
+                                    <Play size={16} fill="currentColor" className="relative z-10 group-hover/btn:text-black transition-colors" /> 
+                                    <span className="relative z-10 group-hover/btn:text-black transition-colors">RETOMAR TREINO</span>
                                 </Link>
                                 <div className="flex-1 max-w-xs flex items-center gap-3">
-                                    <div className="h-1 flex-1 bg-[#222] rounded-full overflow-hidden">
-                                        <div className="h-full bg-primary" style={{ width: `${data.progressPercent}%` }}></div>
+                                    <div className="h-1 flex-1 bg-[#111] border border-[#222] rounded-full overflow-hidden">
+                                        <div className="h-full bg-gradient-neon shadow-[0_0_10px_rgba(235,0,188,0.5)]" style={{ width: `${data.progressPercent}%` }}></div>
                                     </div>
                                     <span className="text-xs font-mono text-[#666] tracking-widest">{data.progressPercent}%</span>
                                 </div>
