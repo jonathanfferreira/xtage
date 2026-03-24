@@ -2,61 +2,100 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function PowerOnPreloader({ children }: { children: React.ReactNode }) {
-    const [hasStarted, setHasStarted] = useState(false);
-    const [isPoweringUp, setIsPoweringUp] = useState(false);
+    const [isPoweringUp, setIsPoweringUp] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        // Pula a animação se for a mesma sessão pra não irritar quem dá refresh
-        if (sessionStorage.getItem('xpace-powered')) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setHasStarted(true);
+        setIsMounted(true);
+        // Skip if already loaded in this session
+        if (sessionStorage.getItem('xpace-loaded')) {
+            setIsPoweringUp(false);
+            return;
         }
+
+        // Automatic sleek loading sequence
+        const timer1 = setTimeout(() => {
+            setIsPoweringUp(false);
+            sessionStorage.setItem('xpace-loaded', 'true');
+        }, 2500);
+
+        return () => clearTimeout(timer1);
     }, []);
 
-    const handlePowerOn = () => {
-        setIsPoweringUp(true);
-        sessionStorage.setItem('xpace-powered', 'true');
-        // Simula a inicialização brutalista que escala e esvanece (1.2s)
-        setTimeout(() => {
-            setHasStarted(true);
-        }, 1200);
-    };
-
-    if (hasStarted) return <>{children}</>;
+    if (!isMounted) return null; // Avoid hydration mismatch flash
 
     return (
         <>
-            <div className="fixed inset-0 z-[99999] bg-black flex flex-col items-center justify-center overflow-hidden">
-                {/* Glow/Luz atrás do sticker */}
-                <div className={`absolute w-64 h-64 bg-primary/30 rounded-full blur-[80px] transition-all duration-1000 ${isPoweringUp ? 'opacity-0 scale-150' : 'opacity-100 animate-pulse-slow'}`}></div>
-
-                {/* Sticker Button / Simbolo de ON */}
-                <button
-                    onClick={handlePowerOn}
-                    className={`relative z-10 w-48 h-48 sm:w-64 sm:h-64 rounded-full flex items-center justify-center transition-all duration-[1200ms] outline-none ${isPoweringUp ? 'scale-[4] opacity-0 blur-xl' : 'scale-100 cursor-pointer hover:scale-105 active:scale-95'}`}
-                >
-                    {/* Sticker do XPACE */}
-                    <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 animate-[stickerIn_0.6s_cubic-bezier(0.175,0.885,0.32,1.275)_2.4s_forwards]">
-                        <Image
-                            src="/images/xpace-on-sticker.png"
-                            alt="Power On XPACE"
-                            width={240}
-                            height={240}
-                            className="object-contain drop-shadow-[0_0_30px_rgba(99,36,178,0.5)] rotate-[-5deg]"
-                            priority
+            <AnimatePresence>
+                {isPoweringUp && (
+                    <motion.div 
+                        key="preloader"
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="fixed inset-0 z-[999999] bg-[#020202] flex flex-col items-center justify-center overflow-hidden"
+                    >
+                        {/* Background Ambient Glow */}
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 2, ease: "easeOut" }}
+                            className="absolute w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"
                         />
-                    </div>
-                </button>
 
-                {/* Hint Fading */}
-                <div className={`mt-16 text-center transition-opacity duration-300 ${isPoweringUp ? 'opacity-0' : 'opacity-100'}`}>
-                    <p className="text-white font-bold tracking-[0.3em] uppercase text-xs opacity-60 animate-pulse">Press to Start</p>
-                </div>
-            </div>
-            {/* Renderiza as children escondidas apenas por segurança do SEO e Hydration */}
-            <div style={{ display: 'none' }}>{children}</div>
+                        {/* Logo Animation */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="relative z-10 flex flex-col items-center"
+                        >
+                            <div className="relative w-48 h-12 md:w-64 md:h-16 mb-8 overflow-hidden">
+                                <Image
+                                    src="/images/xpace-logo-branca.png"
+                                    alt="XPACE"
+                                    fill
+                                    className="object-contain"
+                                    priority
+                                />
+                                {/* Light Sweep Effect over the Logo */}
+                                <motion.div 
+                                    initial={{ x: '-100%' }}
+                                    animate={{ x: '200%' }}
+                                    transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+                                />
+                            </div>
+
+                            {/* Sleek Loading Bar */}
+                            <div className="w-56 md:w-72 h-[1px] bg-white/10 overflow-hidden relative">
+                                <motion.div
+                                    initial={{ x: '-100%' }}
+                                    animate={{ x: '0%' }}
+                                    transition={{ duration: 1.8, delay: 0.2, ease: [0.8, 0, 0.2, 1] }}
+                                    className="absolute inset-0 bg-gradient-to-r from-primary to-[#ff0080]"
+                                />
+                            </div>
+                            
+                            {/* Loading Text */}
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.6 }}
+                                className="mt-8 text-[#555] font-mono text-[9px] uppercase tracking-[0.4em]"
+                            >
+                                Inicializando Ecossistema
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* The actual page underneath */}
+            {children}
         </>
     );
 }
