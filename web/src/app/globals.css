@@ -104,6 +104,11 @@
   }
 }
 
+/* Tema Professor — Laranja Avançado Company (#ff5200) como cor primária */
+.theme-professor {
+  --color-primary: #ff5200;
+}
+
 /* Inversão Visual de Tema - Configurações */
 .theme-light {
   filter: invert(1) hue-rotate(180deg);

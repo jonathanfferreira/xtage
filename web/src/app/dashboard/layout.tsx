@@ -14,21 +14,31 @@ export default function DashboardLayout({
 }) {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [needsUsername, setNeedsUsername] = useState(false);
+    const [isTeacher, setIsTeacher] = useState(false);
 
     useEffect(() => {
-        const checkUsername = async () => {
+        const init = async () => {
             const { createClient } = await import('@/utils/supabase/client');
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
-            const { data } = await supabase.from('users').select('username').eq('id', user.id).single();
-            if (!data?.username) setNeedsUsername(true);
+
+            const { data: userData } = await supabase.from('users').select('username').eq('id', user.id).single();
+            if (!userData?.username) setNeedsUsername(true);
+
+            const { data: tenant } = await supabase
+                .from('tenants')
+                .select('status')
+                .eq('owner_id', user.id)
+                .eq('status', 'active')
+                .maybeSingle();
+            setIsTeacher(!!tenant);
         };
-        checkUsername();
+        init();
     }, []);
 
     return (
-        <div className="flex bg-[#050505] min-h-screen text-[#ededed] font-sans selection:bg-primary/30 selection:text-white">
+        <div className={`flex bg-[#050505] min-h-screen text-[#ededed] font-sans selection:bg-primary/30 selection:text-white${isTeacher ? ' theme-professor' : ''}`}>
             {/* Sidebar fixo à esquerda (gaveta no mobile) */}
             <div className="print:hidden">
                 <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
