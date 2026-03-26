@@ -3,14 +3,28 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Home, PlaySquare, Award, User, Settings, LogOut, BarChart3, Rocket, Compass, Handshake, Smartphone, ShoppingBag, Bell } from 'lucide-react';
+import { Home, PlaySquare, Award, LogOut, BarChart3, Rocket, Compass, Handshake, Smartphone, ShoppingBag, LayoutDashboard } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
 export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
     const pathname = usePathname();
+    const [isTeacher, setIsTeacher] = useState(false);
+
     useEffect(() => {
-        // Tenants validation logic moved to creator studio module
+        const checkTeacherStatus = async () => {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            const { data: tenant } = await supabase
+                .from('tenants')
+                .select('status')
+                .eq('owner_id', user.id)
+                .eq('status', 'active')
+                .maybeSingle();
+            setIsTeacher(!!tenant);
+        };
+        checkTeacherStatus();
     }, []);
 
     return (
@@ -43,22 +57,22 @@ export function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () =>
                     <SidebarItem href="/dashboard" icon={<Home size={20} />} label="Home" active={pathname === '/dashboard'} onClick={onClose} />
                     <SidebarItem href="/dashboard/explore" icon={<Compass size={20} />} label="Navegar Cursos" active={pathname?.startsWith('/dashboard/explore')} onClick={onClose} />
                     <SidebarItem href="/dashboard/cursos" icon={<PlaySquare size={20} />} label="Meus Acessos" active={pathname?.startsWith('/dashboard/cursos')} onClick={onClose} />
-                    <SidebarItem href="/dashboard/afiliados" icon={<Handshake size={20} />} label="Parcerias" active={pathname?.startsWith('/dashboard/afiliados')} onClick={onClose} />
-                    <SidebarItem href="/dashboard/xtore" icon={<ShoppingBag size={20} />} label="XTORE" active={pathname?.startsWith('/dashboard/xtore')} onClick={onClose} />
                     <SidebarItem href="/dashboard/conquistas" icon={<Award size={20} />} label="Conquistas" active={pathname?.startsWith('/dashboard/conquistas')} onClick={onClose} />
                     <SidebarItem href="/dashboard/ranking" icon={<BarChart3 size={20} />} label="Ranking" active={pathname?.startsWith('/dashboard/ranking')} onClick={onClose} />
 
                     <div className="my-4 border-t border-[#1a1a1a] mx-2"></div>
-                    <div className="px-4 text-[10px] uppercase tracking-widest text-[#444] font-display opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity mb-2">Sistema</div>
 
-                    <SidebarItem href="/dashboard/perfil" icon={<User size={20} />} label="Identidade" active={pathname?.startsWith('/dashboard/perfil')} onClick={onClose} />
-                    <SidebarItem href="/dashboard/notificacoes" icon={<Bell size={20} />} label="Notificações" active={pathname?.startsWith('/dashboard/notificacoes')} onClick={onClose} />
-                    <SidebarItem href="/dashboard/config" icon={<Settings size={20} />} label="Configuração" active={pathname?.startsWith('/dashboard/config')} onClick={onClose} />
+                    <SidebarItem href="/dashboard/afiliados" icon={<Handshake size={20} />} label="Parcerias" active={pathname?.startsWith('/dashboard/afiliados')} onClick={onClose} />
+                    <SidebarItem href="/dashboard/xtore" icon={<ShoppingBag size={20} />} label="XTORE" active={pathname?.startsWith('/dashboard/xtore')} onClick={onClose} />
 
                     <div className="my-4 border-t border-[#1a1a1a] mx-2"></div>
                     <div className="px-4 text-[10px] uppercase tracking-widest text-[#444] font-display opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity mb-2">Criador</div>
 
-                    <SidebarItem href="/dashboard/partner" icon={<Rocket size={20} />} label="Seja um Professor" active={pathname?.startsWith('/dashboard/partner')} onClick={onClose} />
+                    {isTeacher ? (
+                        <SidebarItem href="/studio" icon={<LayoutDashboard size={20} />} label="Meu Studio" active={pathname?.startsWith('/studio')} onClick={onClose} />
+                    ) : (
+                        <SidebarItem href="/dashboard/partner" icon={<Rocket size={20} />} label="Seja um Professor" active={pathname?.startsWith('/dashboard/partner')} onClick={onClose} />
+                    )}
                 </nav>
 
                 {/* Footer Actions */}

@@ -139,10 +139,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                             <span className="text-white text-sm font-sans">{totalLessons} Aulas</span>
                         </div>
                         <div className="flex items-center gap-2 bg-[#0A0A0A] border border-[#222] rounded-lg px-4 py-2.5">
-                            <ShieldCheck size={16} className="text-green-500" />
-                            <span className="text-white text-sm font-sans">Certificado Digital</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-[#0A0A0A] border border-[#222] rounded-lg px-4 py-2.5">
                             <Star size={16} className="text-yellow-500" />
                             <span className="text-white text-sm font-sans">XP por Aula</span>
                         </div>

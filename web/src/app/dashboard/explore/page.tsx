@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Compass, Clock, Star, Play } from 'lucide-react';
+import { Search, Clock, Star, Play } from 'lucide-react';
 
 interface ExploreProps {
     searchParams: Promise<{ q?: string; category?: string }>;
@@ -69,28 +69,6 @@ export default async function ExplorePage({ searchParams }: ExploreProps) {
 
     return (
         <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-20">
-            {/* Header / Hero */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#0a0a0a] to-[#111] border border-[#1a1a1a] p-8 md:p-12">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -mr-20 -mt-20"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] -ml-20 -mb-20"></div>
-
-                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div>
-                        <h1 className="text-3xl md:text-5xl font-heading font-black tracking-tight uppercase mb-4 text-white">
-                            Descubra Novos <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Horizontes</span>
-                        </h1>
-                        <p className="text-[#888] font-sans text-lg max-w-xl">
-                            {query
-                                ? `Mostrando resultados para "${query}"`
-                                : "Explore milhares de cursos em nossa rede de criadores XPACE."}
-                        </p>
-                    </div>
-                    <div className="hidden md:flex items-center justify-center p-6 bg-white/5 border border-white/10 rounded-full backdrop-blur-sm">
-                        <Compass className="text-primary w-12 h-12" />
-                    </div>
-                </div>
-            </div>
-
             {/* Netflix Filter Buttons */}
             <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 pt-2">
                 {CATEGORIES.map((cat) => (

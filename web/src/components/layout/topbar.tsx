@@ -144,6 +144,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
     const [userAvatar, setUserAvatar] = useState('');
     const [totalXp, setTotalXp] = useState(0);
     const [streakDays, setStreakDays] = useState(0);
+    const [isTeacher, setIsTeacher] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -184,6 +185,15 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
                     const uniqueDays = new Set(streakData.map(r => new Date(r.created_at).toDateString()));
                     setStreakDays(uniqueDays.size);
                 }
+
+                // Verificar status de professor
+                const { data: tenant } = await supabase
+                    .from('tenants')
+                    .select('status')
+                    .eq('owner_id', user.id)
+                    .eq('status', 'active')
+                    .maybeSingle();
+                setIsTeacher(!!tenant);
             }
         };
         fetchUser();
@@ -199,6 +209,14 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
             >
                 <Menu size={24} />
             </button>
+
+            {/* Professor Badge (mobile visible) */}
+            {isTeacher && (
+                <Link href="/studio" className="flex sm:hidden items-center gap-1.5 border border-green-500/40 bg-green-500/10 text-green-400 rounded px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shrink-0"></span>
+                    Professor
+                </Link>
+            )}
 
             {/* Command/Search Input Mock */}
             <div className="flex-1 max-w-md hidden sm:block">
@@ -228,6 +246,13 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
                 <div className="w-px h-8 bg-[#222]"></div>
 
                 <div className="flex items-center gap-1 sm:gap-2">
+                    {isTeacher && (
+                        <Link href="/studio" className="hidden sm:flex items-center gap-1.5 border border-green-500/40 bg-green-500/10 hover:bg-green-500/20 text-green-400 rounded px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest transition-colors">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shrink-0"></span>
+                            Professor
+                        </Link>
+                    )}
+
                     <Link href="/dashboard/xtore" title="Acessar XTORE" className="hidden sm:flex items-center group relative border border-accent/20 bg-accent/5 hover:bg-accent/10 hover:border-accent/40 transition-all rounded px-3 py-1.5 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                         <span className="text-accent text-xs font-heading font-bold uppercase tracking-widest drop-shadow-[0_0_8px_rgba(255,51,0,0.5)] z-10">
