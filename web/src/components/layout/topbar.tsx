@@ -219,7 +219,7 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
             )}
 
             {/* Command/Search Input Mock */}
-            <div className="flex-1 max-w-md hidden sm:block">
+            <div className="flex-1 max-w-md">
                 <Suspense fallback={<div className="h-9 w-full bg-[#080808] border border-[#222] rounded-sm"></div>}>
                     <SearchInput />
                 </Suspense>

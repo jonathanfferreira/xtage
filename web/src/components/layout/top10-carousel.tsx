@@ -53,31 +53,31 @@ export async function Top10Carousel() {
                 <div className="bg-primary/20 border border-primary/50 text-primary text-[10px] uppercase tracking-widest px-2 py-0.5 font-bold">Novo</div>
             </div>
 
-            <div className="flex overflow-x-auto pt-4 pb-12 -mx-6 px-6 lg:-mx-10 lg:px-10 gap-x-8 lg:gap-x-12 no-scrollbar snap-x snap-mandatory">
+            <div className="flex overflow-x-auto pt-4 pb-12 -mx-4 px-4 md:-mx-6 md:px-6 lg:-mx-10 lg:px-10 gap-x-6 sm:gap-x-8 lg:gap-x-12 no-scrollbar snap-x snap-mandatory">
                 {lessons.map((lesson, index) => (
                     <Link
                         href={`/dashboard/aula/${lesson.id}`}
                         key={lesson.id}
-                        className="relative shrink-0 w-[240px] sm:w-[280px] h-[160px] group snap-start block pl-16 sm:pl-20"
+                        className="relative shrink-0 w-[200px] sm:w-[240px] md:w-[280px] h-[140px] sm:h-[160px] group snap-start block pl-12 sm:pl-16 md:pl-20"
                     >
-                        {/* 
+                        {/*
                             Netflix-style Big Number Design!
                             Outline, 3D structure, sitting exactly behind the thumbnail.
                         */}
                         <div
-                            className={`absolute -left-2 -bottom-6 font-display font-black text-[180px] sm:text-[220px] leading-[0.8] tracking-tighter z-0 select-none pointer-events-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.8)] text-transparent bg-clip-text bg-gradient-to-b opacity-90 ${
-                                index === 0 ? "from-[#F9E5C9] via-[#D4AF37] to-[#8A6327]" : 
-                                index === 1 ? "from-[#E8E8E8] via-[#A0A5A8] to-[#595D62]" : 
-                                index === 2 ? "from-[#FADCAF] via-[#CD7F32] to-[#6A3805]" : 
+                            className={`absolute -left-2 -bottom-4 sm:-bottom-6 font-display font-black text-[130px] sm:text-[180px] md:text-[220px] leading-[0.8] tracking-tighter z-0 select-none pointer-events-none drop-shadow-[0_15px_35px_rgba(0,0,0,0.8)] text-transparent bg-clip-text bg-gradient-to-b opacity-90 ${
+                                index === 0 ? "from-[#F9E5C9] via-[#D4AF37] to-[#8A6327]" :
+                                index === 1 ? "from-[#E8E8E8] via-[#A0A5A8] to-[#595D62]" :
+                                index === 2 ? "from-[#FADCAF] via-[#CD7F32] to-[#6A3805]" :
                                 "from-[#555] via-[#222] to-[#111]"
                             }`}
-                            style={{ WebkitTextStroke: '3px rgba(255,255,255,0.15)' }}
+                            style={{ WebkitTextStroke: '2px rgba(255,255,255,0.15)' }}
                         >
                             {index + 1}
                         </div>
 
                         {/* Thumbnail Box overlapping the number */}
-                        <div className="absolute right-0 top-0 bottom-0 w-[180px] md:w-[200px] bg-[#0A0A0A] border border-[#222] group-hover:border-primary/60 transition-colors shadow-2xl rounded-sm overflow-hidden z-10 flex flex-col justify-end p-4">
+                        <div className="absolute right-0 top-0 bottom-0 w-[150px] sm:w-[180px] md:w-[200px] bg-[#0A0A0A] border border-[#222] group-hover:border-primary/60 transition-colors shadow-2xl rounded-sm overflow-hidden z-10 flex flex-col justify-end p-3 sm:p-4">
                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                             <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-primary to-secondary" />
 

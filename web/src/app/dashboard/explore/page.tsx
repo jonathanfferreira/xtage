@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Clock, Star, Play } from 'lucide-react';
+import { ExploreSearchBar } from '@/components/explore/explore-search-bar';
 
 interface ExploreProps {
     searchParams: Promise<{ q?: string; category?: string }>;
@@ -68,7 +69,10 @@ export default async function ExplorePage({ searchParams }: ExploreProps) {
     const courses = await getSearchResults(query, category);
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-20">
+        <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-20">
+            {/* Search Bar */}
+            <ExploreSearchBar initialQuery={query} category={category} />
+
             {/* Netflix Filter Buttons */}
             <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 pt-2">
                 {CATEGORIES.map((cat) => (
