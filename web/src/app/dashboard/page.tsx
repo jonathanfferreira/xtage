@@ -22,6 +22,7 @@ async function getDashboardData(userAuth: any) {
         { data: completedData },
         { data: latestEnrollment },
         { data: userData },
+        userBadges,
     ] = await Promise.all([
         supabase
             .from('progress')
