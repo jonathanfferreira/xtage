@@ -1,6 +1,7 @@
 "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Youtube, Music2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -148,7 +149,11 @@ export default function LandingPage() {
             <a href="https://tiktok.com/@xtage.app" target="_blank" rel="noopener noreferrer" className="text-[#555] hover:text-white transition-colors"><Music2 size={18} /></a>
             <a href="https://youtube.com/@xpace" target="_blank" rel="noopener noreferrer" className="text-[#555] hover:text-white transition-colors"><Youtube size={18} /></a>
           </div>
-          <p className="text-[#333] text-xs font-mono uppercase">© 2026 XPACE. Todos os direitos reservados.</p>
+          <p className="text-[#333] text-xs font-mono uppercase mb-4">© 2026 XPACE. Todos os direitos reservados.</p>
+          <div className="flex gap-6 text-[10px] font-mono uppercase tracking-widest text-[#444]">
+            <Link href="/privacidade" className="hover:text-white transition-colors">Privacidade</Link>
+            <Link href="/termos" className="hover:text-white transition-colors">Termos</Link>
+          </div>
         </div>
       </footer>
 

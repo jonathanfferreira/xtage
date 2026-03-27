@@ -83,6 +83,7 @@ export const metadata: Metadata = {
 
 import { Analytics } from "@vercel/analytics/next";
 import { AffiliateTracker } from "@/components/providers/affiliate-tracker";
+import { CookieBanner } from "@/components/layout/cookie-banner";
 
 export default function RootLayout({
   children,
@@ -106,6 +107,7 @@ export default function RootLayout({
           <main id="main-content">
             {children}
           </main>
+          <CookieBanner />
         </PowerOnPreloader>
         <script dangerouslySetInnerHTML={{
           __html: `

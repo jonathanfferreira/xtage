@@ -108,10 +108,14 @@ export default function LoginPage() {
                     <SocialLoginButtons />
 
                     <div className="mt-6 text-center border-t border-surface pt-6">
-                        <p className="font-sans text-sm text-[#777777]">
+                        <p className="font-sans text-sm text-[#777777] mb-4">
                             Novo no ecossistema?{' '}
                             <Link href="/register" className="text-white hover:text-secondary transition-colors font-medium">Cadastre-se</Link>
                         </p>
+                        <div className="flex justify-center gap-4 text-[10px] font-mono uppercase tracking-widest text-[#333]">
+                            <Link href="/privacidade" className="hover:text-[#555] transition-colors">Privacidade</Link>
+                            <Link href="/termos" className="hover:text-[#555] transition-colors">Termos</Link>
+                        </div>
                     </div>
                 </div>
             </div>
