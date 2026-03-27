@@ -124,6 +124,7 @@ export default async function DashboardPage() {
     );
 
     const { data: { user } } = await supabase.auth.getUser();
+    const userId = user?.id;
     const data = user ? await getDashboardData(user) : null;
 
     const welcomeMsg = data?.gender === 'F' ? 'Bem-vinda,' : data?.gender === 'M' ? 'Bem-vindo,' : 'Bem-vindo(a),';
@@ -219,7 +220,7 @@ export default async function DashboardPage() {
             )}
 
             {/* Achievements Section */}
-            {data && <BadgeShowcase userId={user.id} />}
+            {userId && <BadgeShowcase userId={userId} />}
 
             <div className="mt-20">
                 <div className="flex items-center justify-between mb-6">
