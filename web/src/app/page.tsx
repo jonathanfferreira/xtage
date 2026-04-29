@@ -58,7 +58,7 @@ export default function LandingPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm"
           >
             <span className="w-2 h-2 rounded-full bg-[#eb00bc] animate-pulse" />
-            <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest">Abertura: 29 de Abril de 2026</span>
+            <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest">A REVOLUÇÃO DA DANÇA • JULHO 2026</span>
           </motion.div>
 
           <motion.div
@@ -122,7 +122,7 @@ export default function LandingPage() {
             className="grid grid-cols-2 md:grid-cols-4 gap-6"
           >
             {[
-              { icon: '🗓️', label: 'Dia Internacional', sub: 'da Dança — 29/04' },
+              { icon: '🗓️', label: 'Lançamento', sub: 'Julho de 2026' },
               { icon: '🎬', label: 'Streaming', sub: 'Premium 4K' },
               { icon: '⚡', label: 'Sistema XP', sub: 'Gamificação Real' },
               { icon: '🔒', label: 'Anti-Pirataria', sub: 'Sessão Única' },

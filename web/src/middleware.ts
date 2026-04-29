@@ -5,6 +5,13 @@ import { createServerClient } from '@supabase/ssr';
 export async function middleware(request: NextRequest) {
     const hostname = request.headers.get('host') || '';
 
+    // Modo de Manutenção (Save the Date)
+    if (process.env.MAINTENANCE_MODE === 'true' && !request.nextUrl.pathname.startsWith('/save-the-date')) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/save-the-date';
+        return NextResponse.redirect(url);
+    }
+
     // Remove porta para comparação (dev local: localhost:3000)
     const domain = hostname.replace(/:\d+$/, '');
 
