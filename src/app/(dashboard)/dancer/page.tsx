@@ -9,26 +9,12 @@ export default async function DancerDashboard() {
   if (!user) redirect('/login')
 
   // Busca paralela de todos os dados necessários
-  const [profileResult, schoolResult, inscriptionsResult, invoicesResult, festivalsResult] = await Promise.all([
+  const [profileResult, inscriptionsResult, invoicesResult, festivalsResult] = await Promise.all([
     supabase
       .from('profiles')
       .select('*')
       .eq('id', user.id)
       .single(),
-
-    supabase
-      .from('schools')
-      .select(`
-        id, name, city, state,
-        director:director_id ( full_name )
-      `)
-      .eq('id',
-        supabase
-          .from('inscriptions')
-          .select('choreographies(school_id)')
-          .eq('dancer_id', user.id)
-          .limit(1)
-      ),
 
     supabase
       .from('inscriptions')
@@ -48,7 +34,7 @@ export default async function DancerDashboard() {
     supabase
       .from('festivals')
       .select('id, name, start_date, end_date, registration_deadline, description')
-      .gte('registration_deadline', new Date().toISOString())
+      .eq('status', 'active')
       .order('start_date', { ascending: true })
       .limit(4),
   ])
@@ -73,9 +59,9 @@ export default async function DancerDashboard() {
   return (
     <DancerDashboardClient
       profile={profile}
-      inscriptions={inscriptions}
+      inscriptions={inscriptions as any}
       invoices={invoices}
-      festivals={festivals}
+      festivals={festivals ?? []}
       stats={stats}
     />
   )
