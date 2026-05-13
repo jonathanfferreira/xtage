@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import Link from 'next/link'
-import { LayoutDashboard, Users, LogOut, Settings, CalendarRange } from 'lucide-react'
+import { LayoutDashboard, Users, LogOut, Settings, CalendarRange, Trophy } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardLayout({
@@ -47,6 +47,11 @@ export default async function DashboardLayout({
           <Link href="/school" className="flex items-center px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-md transition-colors group">
             <Users className="w-5 h-5 mr-3 group-hover:text-accent transition-colors" />
             <span className="font-display uppercase text-sm tracking-wider">Minha Escola</span>
+          </Link>
+
+          <Link href="/ranking" className="flex items-center px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-md transition-colors group">
+            <Trophy className="w-5 h-5 mr-3 group-hover:text-highlight transition-colors" />
+            <span className="font-display uppercase text-sm tracking-wider">Ranking</span>
           </Link>
         </div>
 

@@ -1,20 +1,28 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* ── Cores ── */
   --color-background: #000000;
-  --color-surface: #1e1e1e;
-  --color-surface-hover: #2d2d2d;
+  --color-surface: #111111;
+  --color-surface-hover: #1a1a1a;
   --color-primary: #6324b2;
   --color-secondary: #eb00bc;
   --color-accent: #ff5200;
   --color-highlight: #ffd700;
   --color-info: #2300d0;
 
+  /* ── Tipografia xpace design system ── */
+  /* Poppins → corpo do texto */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  /* Chillax → títulos / headings */
+  --font-heading: var(--font-chillax), ui-sans-serif, system-ui, sans-serif;
+  /* Chillax → display / hero text */
+  --font-display: var(--font-chillax), ui-sans-serif, system-ui, sans-serif;
+  /* Steelfish → números, XP, rankings, dados */
+  --font-data: var(--font-steelfish), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ── Gradientes neon ── */
 @utility text-gradient-neon {
   background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
   -webkit-background-clip: text;
@@ -27,21 +35,44 @@
   background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
 }
 
+/* ── Utilitários de fonte ── */
+@utility font-data {
+  font-family: var(--font-data);
+}
+
 @layer base {
   body {
     background-color: var(--color-background);
     color: #ededed;
   }
-  
-  .font-display, .font-heading {
-    text-transform: uppercase;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: 0.05em;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    background: rgba(30, 30, 30, 0.4);
+    background: rgba(17, 17, 17, 0.6);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(99, 36, 178, 0.4);
+  }
+
+  .glow-secondary {
+    box-shadow: 0 0 20px rgba(235, 0, 188, 0.4);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px rgba(255, 82, 0, 0.4);
+  }
+
+  /* XP rank badge glow — usado no leaderboard */
+  .glow-gold {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   }
 }
