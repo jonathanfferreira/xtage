@@ -36,8 +36,23 @@
 }
 
 /* ── Utilitários de fonte ── */
+/* Chillax → títulos: sempre maiúsculas */
+@utility font-heading {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Steelfish → dados/números: sempre maiúsculas */
 @utility font-data {
   font-family: var(--font-data);
+  text-transform: uppercase;
 }
 
 @layer base {
@@ -48,6 +63,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 }
