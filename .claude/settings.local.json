@@ -7,7 +7,9 @@
       "mcp__claude_ai_Supabase__apply_migration",
       "Bash(npx vercel *)",
       "mcp__claude_ai_Vercel__list_deployments",
-      "mcp__claude_ai_Vercel__get_deployment_build_logs"
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "mcp__claude_ai_Supabase__get_logs",
+      "mcp__claude_ai_Supabase__execute_sql"
     ]
   }
 }

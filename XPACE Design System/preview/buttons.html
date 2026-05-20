@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>XPACE — Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body{margin:0;padding:28px;background:#050505;color:#fff;font-family:var(--xp-font-body);display:flex;flex-direction:column;gap:16px;align-items:flex-start;}
+  .clip{clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);}
+  .pri{background:#fff;color:#050505;padding:14px 28px;font-family:var(--xp-font-tech);font-size:18px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;display:inline-flex;gap:10px;align-items:center;}
+  .ghost{background:transparent;border:1px solid #fff;color:#fff;padding:13px 28px;font-family:var(--xp-font-tech);font-size:18px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;border-radius:9999px;}
+  .grad{position:relative;display:inline-block;}
+  .grad::before{content:"";position:absolute;inset:-2px;background:linear-gradient(90deg,#6324b2,#eb00bc);border-radius:12px;filter:blur(8px);opacity:.75;z-index:0;}
+  .grad>.btn{position:relative;z-index:1;background:#050505;color:#fff;padding:14px 28px;border-radius:9999px;font-family:var(--xp-font-tech);font-size:18px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;display:inline-flex;gap:10px;align-items:center;}
+  .gold{background:#ffd700;color:#050505;padding:14px 28px;border-radius:14px;font-family:var(--xp-font-tech);font-size:18px;letter-spacing:.2em;text-transform:uppercase;font-weight:900;box-shadow:0 0 24px rgba(255,215,0,.35);}
+</style></head>
+<body>
+<button class="pri clip">Garantir Anual <span>→</span></button>
+<button class="ghost">Matricule-se</button>
+<div class="grad"><button class="btn">Descubra Seu Estilo <span>→</span></button></div>
+<button class="gold">Quero ser VIP</button>
+</body></html>

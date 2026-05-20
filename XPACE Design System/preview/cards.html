@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>XPACE — Cards</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body{margin:0;padding:24px;background:#050505;color:#fff;font-family:var(--xp-font-body);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .clip{clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);}
+  .feature{background:#0a0a0a;padding:22px;border-left:4px solid #6324b2;position:relative;overflow:hidden;}
+  .feature h3{font-family:var(--xp-font-display);font-weight:900;font-size:28px;margin:0 0 12px;line-height:.95;text-transform:uppercase;}
+  .feature .sub{font-family:var(--xp-font-tech);font-size:10px;letter-spacing:.25em;color:#6324b2;text-transform:uppercase;margin-bottom:8px;}
+  .feature p{font-size:13px;color:#a0a0a0;line-height:1.55;border-left:1px solid #1f1f1f;padding-left:12px;margin:0;}
+  .ticket{background:linear-gradient(135deg,#6324b2,#eb00bc);padding:2px;position:relative;}
+  .ticket-inner{background:#0f0f0f;padding:22px;clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);}
+  .ticket h3{font-family:var(--xp-font-display);font-weight:900;font-size:32px;margin:0;background:linear-gradient(90deg,#6324b2,#eb00bc);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase;}
+  .ticket .meta{font-family:var(--xp-font-tech);font-size:11px;letter-spacing:.22em;color:#6324b2;text-transform:uppercase;margin-top:4px;}
+  .ticket .price{font-family:var(--xp-font-display);font-weight:900;font-size:48px;letter-spacing:-.03em;margin-top:12px;}
+  .ticket .price small{font-size:14px;color:#a0a0a0;font-weight:400;letter-spacing:0;font-family:var(--xp-font-body);}
+  .badge{position:absolute;top:0;right:0;background:linear-gradient(90deg,#6324b2,#eb00bc);padding:6px 14px;font-family:var(--xp-font-tech);font-size:10px;letter-spacing:.22em;text-transform:uppercase;clip-path:polygon(15px 0,100% 0,100% 100%,0 100%);}
+</style></head>
+<body>
+<div class="grid">
+  <div class="feature clip">
+    <div class="sub">Educação</div>
+    <h3>XPACE<br>Escola</h3>
+    <p>Hip Hop, Jazz Funk, K-Pop, Heels, Ballet. Do iniciante ao avançado.</p>
+  </div>
+  <div class="ticket clip">
+    <div class="ticket-inner">
+      <div class="badge">Melhor Valor</div>
+      <h3>Anual</h3>
+      <div class="meta">Fidelidade 90 dias</div>
+      <div class="price">R$165<small>/mês</small></div>
+    </div>
+  </div>
+</div>
+</body></html>

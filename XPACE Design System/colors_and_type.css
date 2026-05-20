@@ -1,0 +1,323 @@
+/* ============================================================
+   XPACE 2026 — "Holographic Evolution"
+   Source of truth for color + type tokens.
+   ============================================================ */
+
+/* ---------- WEBFONTS ---------- */
+@font-face {
+  font-family: "Chillax";
+  src: url("fonts/Chillax-Variable.ttf") format("truetype-variations");
+  font-weight: 200 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Chillax";
+  src: url("fonts/Chillax-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Chillax";
+  src: url("fonts/Chillax-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Chillax";
+  src: url("fonts/Chillax-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("fonts/Poppins-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Steelfish";
+  src: url("fonts/Steelfish-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Steelfish";
+  src: url("fonts/Steelfish-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Steelfish";
+  src: url("fonts/Steelfish-ExtraBold.otf") format("opentype");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Steelfish Outline";
+  src: url("fonts/Steelfish-Outline.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ---------- TOKENS ---------- */
+:root {
+  /* Brand triad — "Holographic Evolution" */
+  --xp-purple: #6324b2;       /* Pantone 266C — Loyalty & Mystery */
+  --xp-pink:   #eb00bc;       /* Rhodamine Red C — Connection & Energy */
+  --xp-orange: #ff5200;       /* Orange 021C — Adrenaline & Creativity */
+  --xp-cyber-pink: #eb00bc;   /* alias used in product code */
+  --xp-tertiary:   #ff5200;   /* alias for orange/tertiary in product code */
+
+  /* Hype accents (used sparingly, in PRO/VIP contexts) */
+  --xp-gold:   #ffd700;
+  --xp-gold-warm: #fdb931;
+  --xp-acid:   #00ff00;       /* PRO program signal color */
+
+  /* Neutrals — light theme */
+  --xp-bg:        #ffffff;    /* background */
+  --xp-surface:   #f8f8f8;    /* surface */
+  --xp-fg:        #121212;    /* primary text */
+  --xp-fg-muted:  #666666;    /* secondary text */
+  --xp-line:      #e5e5e5;    /* hairline borders */
+
+  /* Neutrals — dark theme */
+  --xp-bg-dark:        #050505;
+  --xp-surface-dark:   #0a0a0a;
+  --xp-surface-dark-2: #0f0f0f;
+  --xp-fg-dark:        #ffffff;
+  --xp-fg-muted-dark:  #a0a0a0;
+  --xp-line-dark:      #1f1f1f;
+
+  /* Semantic / functional */
+  --xp-success: #22c55e;     /* WhatsApp green / experimental booking */
+  --xp-warn:    #fdb931;
+  --xp-danger:  #ef4444;
+  --xp-info:    var(--xp-purple);
+
+  /* Tinted glass (purple haze) */
+  --xp-glass:        rgba(99, 36, 178, 0.05);
+  --xp-glass-strong: rgba(99, 36, 178, 0.12);
+
+  /* Type families */
+  --xp-font-display: "Chillax", "Inter Tight", system-ui, sans-serif;
+  --xp-font-body:    "Poppins", system-ui, sans-serif;
+  --xp-font-tech:    "Steelfish", "Bebas Neue", "Oswald", sans-serif;
+  --xp-font-outline: "Steelfish Outline", "Steelfish", sans-serif;
+  --xp-font-mono:    ui-monospace, "JetBrains Mono", monospace;
+
+  /* Type scale (clamp for hero, fixed for body) */
+  --xp-h1: clamp(56px, 9vw, 144px);   /* MOVA-SE / DANCE / GRADE */
+  --xp-h2: clamp(40px, 6vw, 96px);
+  --xp-h3: clamp(28px, 3.5vw, 56px);
+  --xp-h4: 32px;
+  --xp-h5: 24px;
+  --xp-eyebrow: 12px;                  /* font-tech, widely tracked */
+  --xp-body:    16px;
+  --xp-small:   14px;
+  --xp-micro:   10px;
+
+  /* Spacing — 4px base */
+  --xp-1:  4px;
+  --xp-2:  8px;
+  --xp-3:  12px;
+  --xp-4:  16px;
+  --xp-5:  24px;
+  --xp-6:  32px;
+  --xp-7:  48px;
+  --xp-8:  64px;
+  --xp-9:  96px;
+  --xp-10: 128px;
+
+  /* Radii — chunky on cards, fully round on CTAs */
+  --xp-radius-sm: 6px;
+  --xp-radius:    16px;
+  --xp-radius-lg: 24px;
+  --xp-radius-xl: 32px;
+  --xp-radius-pill: 9999px;
+
+  /* Borders */
+  --xp-border-thin:   1px;
+  --xp-border-medium: 2px;
+  --xp-border-thick:  4px; /* feature cards use a 4px left accent */
+
+  /* Shadows / neon glow */
+  --xp-shadow-sm:    0 1px 2px rgba(0,0,0,0.06);
+  --xp-shadow:       0 8px 24px rgba(0,0,0,0.08);
+  --xp-shadow-lg:    0 24px 60px rgba(0,0,0,0.18);
+  --xp-glow-purple:  0 0 24px rgba(99,36,178,0.45), 0 0 60px rgba(99,36,178,0.18);
+  --xp-glow-pink:    0 0 24px rgba(235,0,188,0.45), 0 0 60px rgba(235,0,188,0.20);
+  --xp-glow-orange:  0 0 24px rgba(255,82,0,0.45),  0 0 60px rgba(255,82,0,0.20);
+  --xp-glow-gold:    0 0 30px rgba(255,215,0,0.30);
+
+  /* Signature gradients */
+  --xp-grad-primary:  linear-gradient(90deg, var(--xp-purple) 0%, var(--xp-pink) 100%);
+  --xp-grad-hot:      linear-gradient(90deg, var(--xp-pink) 0%, var(--xp-orange) 100%);
+  --xp-grad-triad:    linear-gradient(90deg, var(--xp-purple) 0%, var(--xp-pink) 50%, var(--xp-orange) 100%);
+  --xp-grad-vip:      linear-gradient(90deg, var(--xp-gold) 0%, var(--xp-gold-warm) 50%, var(--xp-gold) 100%);
+  --xp-grad-haze:
+    radial-gradient(circle at 15% 50%, rgba(99,36,178,0.22) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(235,0,188,0.18) 0%, transparent 50%);
+
+  /* Motion */
+  --xp-ease:        cubic-bezier(0.22, 1, 0.36, 1);     /* ease-out-expo-ish */
+  --xp-ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --xp-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --xp-dur-fast:    180ms;
+  --xp-dur:         300ms;
+  --xp-dur-slow:    500ms;
+  --xp-dur-cinem:   700ms;
+}
+
+/* ---------- DARK THEME OVERRIDES ---------- */
+.dark, [data-theme="dark"] {
+  --xp-bg:       var(--xp-bg-dark);
+  --xp-surface:  var(--xp-surface-dark);
+  --xp-fg:       var(--xp-fg-dark);
+  --xp-fg-muted: var(--xp-fg-muted-dark);
+  --xp-line:     var(--xp-line-dark);
+}
+
+/* ---------- SEMANTIC ELEMENT BASELINES ---------- */
+html, body {
+  background: var(--xp-bg);
+  color: var(--xp-fg);
+  font-family: var(--xp-font-body);
+}
+
+/* All headings: Chillax, tight tracking, often UPPERCASE in product. */
+h1, .xp-h1 {
+  font-family: var(--xp-font-display);
+  font-weight: 900;
+  font-size: var(--xp-h1);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+h2, .xp-h2 {
+  font-family: var(--xp-font-tech);   /* Steelfish for H2 subtitles */
+  font-weight: 700;
+  font-size: var(--xp-h2);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+h3, .xp-h3 {
+  font-family: var(--xp-font-display);
+  font-weight: 800;
+  font-size: var(--xp-h3);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+h4, .xp-h4 {
+  font-family: var(--xp-font-display);
+  font-weight: 700;
+  font-size: var(--xp-h4);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+/* Eyebrow / category — Steelfish or Poppins-bold, ALL CAPS, wide tracking. */
+.xp-eyebrow {
+  font-family: var(--xp-font-tech);
+  font-weight: 700;
+  font-size: var(--xp-eyebrow);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Body — Poppins. The product uppercases body too; we don't force that here. */
+p, .xp-body {
+  font-family: var(--xp-font-body);
+  font-weight: 400;
+  font-size: var(--xp-body);
+  line-height: 1.6;
+  color: var(--xp-fg);
+}
+.xp-small {
+  font-family: var(--xp-font-body);
+  font-size: var(--xp-small);
+  line-height: 1.55;
+  color: var(--xp-fg-muted);
+}
+
+/* Tech label — Steelfish, used on prices, nav, buttons. */
+.xp-tech {
+  font-family: var(--xp-font-tech);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Numeric / display price — Chillax black, tight. */
+.xp-price {
+  font-family: var(--xp-font-display);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+/* Code / mono — used for "ID: XP-PRO-001" style ticket labels. */
+code, .xp-mono {
+  font-family: var(--xp-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- UTILITY CLASSES ---------- */
+.xp-gradient-text {
+  background: var(--xp-grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.xp-gradient-text-hot {
+  background: var(--xp-grad-hot);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.xp-gradient-text-vip {
+  background: var(--xp-grad-vip);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Cyber-cut card corners (chamfered top-left + bottom-right). */
+.xp-clip-card {
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+.xp-clip-button {
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+.xp-tag {
+  clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+}
+
+/* Glass panel — purple-tinted blur. */
+.xp-glass {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(99,36,178,0.05) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
+}

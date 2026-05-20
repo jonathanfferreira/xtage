@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>XPACE — Shadow & Glow</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body{margin:0;padding:32px;background:#050505;color:#fff;font-family:var(--xp-font-body);}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+  .card{background:#0a0a0a;border:1px solid #1f1f1f;border-radius:12px;height:120px;display:flex;align-items:center;justify-content:center;}
+  .lbl{position:absolute;bottom:8px;left:8px;font-family:var(--xp-font-tech);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#a0a0a0;}
+  .wrap{position:relative;}
+  .s1{box-shadow:0 1px 2px rgba(0,0,0,.6);}
+  .s2{box-shadow:0 8px 24px rgba(0,0,0,.55);}
+  .s3{box-shadow:0 0 24px rgba(99,36,178,.55),0 0 60px rgba(99,36,178,.25);}
+  .s4{box-shadow:0 0 24px rgba(235,0,188,.55),0 0 60px rgba(235,0,188,.25);}
+</style></head>
+<body>
+<div class="grid">
+  <div class="wrap"><div class="card s1"></div><div class="lbl">Shadow SM</div></div>
+  <div class="wrap"><div class="card s2"></div><div class="lbl">Shadow LG</div></div>
+  <div class="wrap"><div class="card s3"></div><div class="lbl">Glow Purple</div></div>
+  <div class="wrap"><div class="card s4"></div><div class="lbl">Glow Pink</div></div>
+</div>
+</body></html>

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>XPACE — Spacing & Radii</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body{margin:0;padding:24px;background:#fff;color:#050505;font-family:var(--xp-font-body);}
+  h4{font-family:var(--xp-font-tech);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:#888;margin:0 0 10px;}
+  .row{display:flex;gap:8px;align-items:flex-end;margin-bottom:18px;}
+  .bar{background:#6324b2;border-radius:4px;color:#fff;font-family:var(--xp-font-mono);font-size:10px;padding:4px;display:flex;align-items:flex-end;justify-content:center;}
+  .radii{display:flex;gap:10px;align-items:center;}
+  .pill{background:#050505;color:#fff;font-family:var(--xp-font-tech);font-size:11px;letter-spacing:.18em;padding:8px 14px;text-transform:uppercase;}
+</style></head>
+<body>
+<h4>Spacing scale (4px base)</h4>
+<div class="row">
+  <div class="bar" style="width:4px;height:24px;">4</div>
+  <div class="bar" style="width:8px;height:32px;">8</div>
+  <div class="bar" style="width:12px;height:40px;">12</div>
+  <div class="bar" style="width:16px;height:48px;">16</div>
+  <div class="bar" style="width:24px;height:56px;">24</div>
+  <div class="bar" style="width:32px;height:64px;">32</div>
+  <div class="bar" style="width:48px;height:72px;">48</div>
+  <div class="bar" style="width:64px;height:80px;">64</div>
+  <div class="bar" style="width:96px;height:88px;">96</div>
+</div>
+<h4>Radii</h4>
+<div class="radii">
+  <div class="pill" style="border-radius:6px;">SM 6</div>
+  <div class="pill" style="border-radius:16px;">MD 16</div>
+  <div class="pill" style="border-radius:24px;">LG 24</div>
+  <div class="pill" style="border-radius:32px;">XL 32</div>
+  <div class="pill" style="border-radius:9999px;">PILL</div>
+  <div class="pill" style="clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);border-radius:0;">CLIP</div>
+</div>
+</body></html>

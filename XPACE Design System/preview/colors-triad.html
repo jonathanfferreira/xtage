@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><title>XPACE — Holographic Triad</title>
+<link rel="stylesheet" href="../colors_and_type.css" />
+<style>
+  body{margin:0;padding:24px;background:#050505;color:#fff;font-family:var(--xp-font-body);}
+  .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .sw{border-radius:14px;padding:24px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+  .sw .name{font-family:var(--xp-font-display);font-weight:900;font-size:28px;letter-spacing:-.02em;text-transform:uppercase;line-height:1;}
+  .sw .meta{font-family:var(--xp-font-tech);font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.85;}
+  .sw .hex{font-family:var(--xp-font-mono);font-size:13px;opacity:.9;}
+  .glow-purple{box-shadow:0 0 30px rgba(99,36,178,.55);}
+  .glow-pink{box-shadow:0 0 30px rgba(235,0,188,.55);}
+  .glow-orange{box-shadow:0 0 30px rgba(255,82,0,.55);}
+</style></head>
+<body>
+<div class="row">
+  <div class="sw glow-purple" style="background:#6324b2;color:#fff;">
+    <div class="meta">Primary · Pantone 266C</div>
+    <div class="name">Purple</div>
+    <div class="hex">#6324B2 · --xp-purple</div>
+  </div>
+  <div class="sw glow-pink" style="background:#eb00bc;color:#fff;">
+    <div class="meta">Secondary · Rhodamine Red C</div>
+    <div class="name">Pink</div>
+    <div class="hex">#EB00BC · --xp-pink</div>
+  </div>
+  <div class="sw glow-orange" style="background:#ff5200;color:#fff;">
+    <div class="meta">Accent · Orange 021C</div>
+    <div class="name">Orange</div>
+    <div class="hex">#FF5200 · --xp-orange</div>
+  </div>
+</div>
+</body></html>
