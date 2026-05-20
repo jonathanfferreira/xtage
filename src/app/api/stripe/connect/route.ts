@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@/utils/supabase/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   try {
+    const stripe = new Stripe((process.env.STRIPE_SECRET_KEY as string) || 'dummy');
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser();
     
