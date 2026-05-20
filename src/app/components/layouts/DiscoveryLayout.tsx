@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/ui/Logo';
 import { Button } from '@/components/ui/button';
-import { UserCircle, Search, Ticket, ChevronDown, Menu, User, Building, Briefcase, LogOut, Plus } from 'lucide-react';
+import { UserCircle, Ticket, ChevronDown, Menu, User, Building, Briefcase, LogOut, Plus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useProfileStore } from '@/lib/profile-store';
 import { useAuthModal } from '@/lib/auth-modal-store';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import GlobalSearch from '../GlobalSearch';
 
 export default function DiscoveryLayout({ children }: { children: React.ReactNode }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -69,15 +70,8 @@ export default function DiscoveryLayout({ children }: { children: React.ReactNod
             </nav>
           </div>
 
-          {/* Central Search */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8 relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-hover:text-purple-400 transition-colors" />
-            <input
-              type="text"
-              placeholder="Buscar festivais, escolas, bailarinos..."
-              className="w-full bg-zinc-900/50 hover:bg-zinc-900 border border-zinc-800 rounded-full pl-10 pr-4 py-2 text-sm font-sans text-white focus:outline-none focus:border-purple-500 transition-all"
-            />
-          </div>
+          {/* Central Search — Autocomplete real */}
+          <GlobalSearch />
 
           {/* Right Actions */}
           <div className="flex items-center gap-4">
