@@ -1,19 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { LayoutDashboard, Music, ShieldAlert, QrCode, CheckCircle2, Search, Building2, Loader2, Clock } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Music, CheckCircle2, Search, Building2, Loader2, Clock, QrCode } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 export default function DancerView() {
-  const [isPaid, setIsPaid] = useState(false);
-  const [showCredential, setShowCredential] = useState(false);
-  
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState('');
   
@@ -21,27 +17,44 @@ export default function DancerView() {
   const [schoolState, setSchoolState] = useState<'loading' | 'none' | 'pending' | 'accepted'>('loading');
   const [mySchool, setMySchool] = useState<any>(null);
   
+  // Choreographies assigned to this dancer
+  const [myChoreographies, setMyChoreographies] = useState<any[]>([]);
+  const [loadingChoreos, setLoadingChoreos] = useState(false);
+
   // Search schools
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setUserId(session.user.id);
-        fetchUserData(session.user.id);
-        fetchMySchool(session.user.id);
-      }
-    });
-  }, []);
-
-  const fetchUserData = async (id: string) => {
+  const fetchUserData = useCallback(async (id: string) => {
     const { data } = await supabase.from('profiles').select('full_name').eq('id', id).single();
     if (data) setUserName(data.full_name);
-  };
+  }, []);
 
-  const fetchMySchool = async (dancerId: string) => {
+  const fetchMyChoreographies = useCallback(async (dancerId: string) => {
+    setLoadingChoreos(true);
+    const { data } = await supabase
+      .from('choreography_dancers')
+      .select(`
+        choreography_id,
+        choreographies (
+          id,
+          name,
+          category,
+          music_url,
+          status,
+          time_limit_seconds
+        )
+      `)
+      .eq('dancer_id', dancerId);
+    
+    if (data) {
+      setMyChoreographies(data.map(d => d.choreographies).filter(Boolean));
+    }
+    setLoadingChoreos(false);
+  }, []);
+
+  const fetchMySchool = useCallback(async (dancerId: string) => {
     try {
       const { data, error } = await supabase
         .from('school_dancers')
@@ -64,19 +77,32 @@ export default function DancerView() {
       } else {
         setMySchool(data.schools);
         setSchoolState(data.status as 'pending' | 'accepted');
+        if (data.status === 'accepted') {
+          fetchMyChoreographies(dancerId);
+        }
       }
     } catch (err) {
       console.error(err);
       setSchoolState('none');
     }
-  };
+  }, [fetchMyChoreographies]);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setUserId(session.user.id);
+        fetchUserData(session.user.id);
+        fetchMySchool(session.user.id);
+      }
+    });
+  }, [fetchUserData, fetchMySchool]);
 
   const handleSearchSchools = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     
     setIsSearching(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('schools')
       .select('id, name, city, state')
       .ilike('name', `%${searchQuery}%`)
@@ -98,7 +124,7 @@ export default function DancerView() {
       
       if (error) throw error;
       
-      toast.success('Solicitação enviada!');
+      toast.success('Solicitação enviada! Aguarde a aprovação do diretor.');
       fetchMySchool(userId);
     } catch (err: any) {
       toast.error('Erro ao solicitar ingresso: ' + err.message);
@@ -114,24 +140,29 @@ export default function DancerView() {
       
       setMySchool(null);
       setSchoolState('none');
+      setMyChoreographies([]);
       toast.success('Você saiu da escola.');
-    } catch (err) {
+    } catch {
       toast.error('Erro ao sair da escola.');
     }
   };
 
+  const formatDuration = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  };
+
   return (
-    <div className="p-4 md:p-6 max-w-lg mx-auto md:max-w-4xl space-y-6">
-      <div className="flex flex-col gap-2 mb-8">
+    <div className="p-4 md:p-6 max-w-5xl mx-auto space-y-6">
+      <div className="flex flex-col gap-1 mb-4">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Meu Portal</h2>
-        <p className="text-zinc-400 text-sm md:text-base">Bem-vindo(a) de volta, {userName || 'Bailarino'}.</p>
+        <p className="text-zinc-400 text-sm">Bem-vindo(a) de volta, {userName || 'Bailarino'}.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+        {/* Minha Escola */}
         <div className="space-y-6">
-          
-          {/* Minha Escola Card */}
           <Card className="bg-[#050505] border-zinc-800">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg text-white flex items-center gap-2">
@@ -146,7 +177,7 @@ export default function DancerView() {
               
               {schoolState === 'none' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-zinc-400">Você ainda não faz parte de nenhuma escola. Procure pelo nome para solicitar ingresso.</p>
+                  <p className="text-sm text-zinc-400">Você ainda não faz parte de nenhuma escola. Busque pelo nome para solicitar ingresso.</p>
                   <form onSubmit={handleSearchSchools} className="flex gap-2">
                     <Input 
                       placeholder="Nome da escola..." 
@@ -200,37 +231,85 @@ export default function DancerView() {
               )}
             </CardContent>
           </Card>
-          
+        </div>
+
+        {/* Minhas Coreografias */}
+        <div className="space-y-6">
           <Card className="bg-[#050505] border-zinc-800">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-white">Minhas Coreografias</CardTitle>
+              <CardTitle className="text-lg text-white flex items-center gap-2">
+                <Music className="w-5 h-5 text-purple-400" />
+                Minhas Coreografias
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="p-6 text-center border border-dashed border-zinc-700 rounded-lg bg-zinc-900/30">
-                <Music className="w-6 h-6 text-zinc-600 mx-auto mb-2" />
-                <p className="text-sm text-zinc-400">Nenhuma coreografia cadastrada para você ainda.</p>
-                <p className="text-xs text-zinc-500 mt-1">Seu diretor precisa adicioná-lo ao elenco da coreografia.</p>
-              </div>
+              {loadingChoreos ? (
+                <div className="flex justify-center p-4"><Loader2 className="w-6 h-6 animate-spin text-zinc-500" /></div>
+              ) : myChoreographies.length === 0 ? (
+                <div className="p-6 text-center border border-dashed border-zinc-700 rounded-lg bg-zinc-900/30">
+                  <Music className="w-6 h-6 text-zinc-600 mx-auto mb-2" />
+                  <p className="text-sm text-zinc-400">Nenhuma coreografia cadastrada para você ainda.</p>
+                  {schoolState === 'none' && (
+                    <p className="text-xs text-zinc-500 mt-1">Entre em uma escola primeiro.</p>
+                  )}
+                  {schoolState === 'pending' && (
+                    <p className="text-xs text-zinc-500 mt-1">Aguarde aprovação do diretor.</p>
+                  )}
+                  {schoolState === 'accepted' && (
+                    <p className="text-xs text-zinc-500 mt-1">Seu diretor ainda não te adicionou a nenhuma coreografia.</p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {myChoreographies.map((choreo: any) => (
+                    <div key={choreo.id} className="p-4 border border-zinc-800 rounded-lg bg-zinc-900/30 space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium text-white">{choreo.name}</p>
+                          <p className="text-xs text-zinc-400">{choreo.category}</p>
+                        </div>
+                        <Badge 
+                          variant="outline" 
+                          className={choreo.music_url 
+                            ? 'bg-green-500/10 text-green-400 border-green-500/50' 
+                            : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                          }
+                        >
+                          {choreo.music_url ? <><CheckCircle2 className="w-3 h-3 mr-1 inline" />Música OK</> : 'Sem Música'}
+                        </Badge>
+                      </div>
+                      {choreo.music_url && (
+                        <audio controls src={choreo.music_url} className="w-full h-8" />
+                      )}
+                      {choreo.time_limit_seconds && (
+                        <p className="text-xs text-zinc-500">
+                          ⏱ Tempo máx: {formatDuration(choreo.time_limit_seconds)}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Right Column: Stub Checkout for now */}
-        <div className="space-y-6">
-           <Card className="bg-[#0A0A0A] border-green-500/50 relative overflow-hidden opacity-50">
-             <div className="absolute top-0 left-0 w-full h-1 bg-green-500 opacity-80" />
-             <CardHeader className="pb-4">
-               <div className="flex items-center gap-2 mb-1">
-                 <CheckCircle2 className="w-5 h-5 text-green-400" />
-                 <CardTitle className="text-white text-lg">Inscrição Aprovada</CardTitle>
-               </div>
-               <CardDescription className="text-zinc-400 text-sm">
-                 Você ainda não possui faturas pendentes de festivais.
-               </CardDescription>
-             </CardHeader>
-           </Card>
+          {/* Credential stub (futuro) */}
+          {schoolState === 'accepted' && myChoreographies.length > 0 && (
+            <Card className="bg-[#050505] border-zinc-800 opacity-60">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg text-white flex items-center gap-2">
+                  <QrCode className="w-5 h-5 text-zinc-400" />
+                  Credencial Digital
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="p-4 text-center border border-dashed border-zinc-700 rounded-lg">
+                  <p className="text-xs text-zinc-500">Disponível após confirmação de pagamento.</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
-
       </div>
     </div>
   );
