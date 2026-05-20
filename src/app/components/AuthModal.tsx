@@ -126,7 +126,7 @@ export default function AuthModal() {
             {/* Logo + Título */}
             <div className="text-center space-y-2">
               <div className="flex justify-center mb-3">
-                <Logo size="sm" />
+                <Logo />
               </div>
               <h2 className="font-title text-2xl font-black text-white uppercase tracking-tight">
                 {view === 'login' ? 'Bem-vindo de volta' : 'Criar sua conta'}

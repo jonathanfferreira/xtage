@@ -20,7 +20,7 @@ export default function CheckoutSuccessPage() {
       </p>
 
       <div className="flex flex-col sm:flex-row items-center gap-4">
-        <Link href="/dashboard">
+        <Link href="/">
           <Button className="bg-white text-black hover:bg-zinc-200 font-bold px-8 py-6 h-auto text-lg rounded-xl flex items-center gap-2">
             Ver meus Ingressos <ArrowRight className="w-5 h-5" />
           </Button>

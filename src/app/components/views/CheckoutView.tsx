@@ -39,7 +39,7 @@ export default function CheckoutView() {
           <h2 className="text-3xl font-title text-white">Pagamento Aprovado!</h2>
           <p className="text-zinc-400">Seu status no evento foi atualizado para Confirmado. Você já pode visualizar suas credenciais.</p>
           <div className="pt-4">
-            <Button onClick={() => router.push('/dashboard')} className="w-full bg-neon-gradient text-white font-bold py-6">
+            <Button onClick={() => router.push('/')} className="w-full bg-neon-gradient text-white font-bold py-6">
               Voltar ao Painel
             </Button>
           </div>

@@ -101,7 +101,7 @@ export default function OnboardingPage() {
       }
       
       // Go to dashboard
-      router.push('/dashboard');
+      router.push('/');
       
     } catch (err: any) {
       setError(err.message || 'Erro ao salvar o perfil.');

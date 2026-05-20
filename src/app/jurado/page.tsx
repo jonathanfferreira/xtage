@@ -40,7 +40,7 @@ export default function JuradoDashboard() {
         </div>
 
         <div className="p-4 border-t border-zinc-900">
-           <Link href="/dashboard">
+           <Link href="/">
              <Button variant="outline" className="w-full justify-start bg-transparent border-zinc-700 text-zinc-400 hover:bg-zinc-900 mb-4 border-dashed">
                <LayoutDashboard className="w-4 h-4 mr-2" /> Voltar ao Hub
              </Button>
