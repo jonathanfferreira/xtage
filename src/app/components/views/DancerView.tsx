@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Music, CheckCircle2, Search, Building2, Loader2, Clock, QrCode } from 'lucide-react';
+import { Music, CheckCircle2, Search, Building2, Loader2, Clock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import DancerCredential from '../DancerCredential';
 
 export default function DancerView() {
   const [userId, setUserId] = useState<string | null>(null);
@@ -293,21 +294,14 @@ export default function DancerView() {
             </CardContent>
           </Card>
 
-          {/* Credential stub (futuro) */}
-          {schoolState === 'accepted' && myChoreographies.length > 0 && (
-            <Card className="bg-[#050505] border-zinc-800 opacity-60">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-white flex items-center gap-2">
-                  <QrCode className="w-5 h-5 text-zinc-400" />
-                  Credencial Digital
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="p-4 text-center border border-dashed border-zinc-700 rounded-lg">
-                  <p className="text-xs text-zinc-500">Disponível após confirmação de pagamento.</p>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Credencial Digital com QR Code */}
+          {schoolState === 'accepted' && userId && mySchool && (
+            <DancerCredential
+              dancerId={userId}
+              dancerName={userName || 'Bailarino'}
+              schoolName={mySchool.name}
+              choreographies={myChoreographies.map((c: any) => ({ name: c.name, category: c.category || '' }))}
+            />
           )}
         </div>
       </div>
